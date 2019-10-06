@@ -1,0 +1,17 @@
+language: java
+install: true
+
+jdk:
+- oraclejdk11
+
+os:
+  - linux
+  - osx
+  
+notifications:
+  email:
+    recipients:
+      - sabrina.musatian@yandex.ru
+      - alom2222@gmail.com
+    on_success: never 
+    on_failure: always 
