@@ -11,7 +11,7 @@ os:
 notifications:
   email:
     recipients:
-      - sabrina.musatian@yandex.ru
+#      - sabrina.musatian@yandex.ru
       - alom2222@gmail.com
     on_success: never 
     on_failure: always 
