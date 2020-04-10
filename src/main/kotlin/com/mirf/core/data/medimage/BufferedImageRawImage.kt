@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
 
-
 class BufferedImageRawImage : RawImageData {
     private val _image: BufferedImage
 
@@ -25,5 +24,19 @@ class BufferedImageRawImage : RawImageData {
         val baos = ByteArrayOutputStream()
         ImageIO.write(this._image, "jpg", baos);
         return baos.toByteArray()
+    }
+
+    fun grayscaleAsFloatArray(): FloatArray {
+        val res = FloatArray(getWidth() * getHeight())
+
+        var gray : Float = 0.0F
+        for (i in 0..getWidth() - 1) {
+            for (j in 0..this._image.height - 1) {
+                var pixel = this._image.getRGB(i, j) and 0xffffff
+                gray = ((pixel and 0x0000ff) + (pixel and 0x00ff00) shr 8 + (pixel and 0xff0000) shr 16) / 3.toFloat()
+                res[i * getWidth() + j] = gray / 255.toFloat()
+            }
+        }
+        return res
     }
 }
