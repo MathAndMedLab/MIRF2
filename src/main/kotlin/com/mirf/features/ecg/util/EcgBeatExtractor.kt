@@ -21,7 +21,7 @@ object EcgBeatExtractor {
         val beatImages = ArrayList<BufferedImageRawImage>(peaks.size - 2)
 
         for (i in 1..peaks.size - 2) {
-            val beatInterval = lead.copyOfRange(peaks[i - 1] + 20, peaks[i + 1] - 20)
+            val beatInterval = lead.copyOfRange(peaks[i - 1], peaks[i + 1] -40)
 
             val x: DoubleArray = DoubleArray(beatInterval.size)
             IntStream.range(0, beatInterval.size)
@@ -29,12 +29,13 @@ object EcgBeatExtractor {
 
             val plot = SignalPlot()
 
-            plot.plot(x, beatInterval, "-", Color.BLACK,1.0f)
+            plot.plot(x, beatInterval, "-", Color(100,100,255),1.0f)
             plot.displayGrid(false, false)
             plot.displayAxis(false, false)
 
             beatImages.add(BufferedImageRawImage(plot.getBufferedImage(128, 128)))
-            break
+
+            //plot.saveAsJpeg("beat231_" +  i.toString() + ".jpg", 128, 128)
         }
         return BufferedImageSeries(beatImages)
     }

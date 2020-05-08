@@ -31,10 +31,22 @@ class BufferedImageRawImage : RawImageData {
 
         var gray : Float = 0.0F
         for (i in 0..getWidth() - 1) {
+            var flag = false;
             for (j in 0..this._image.height - 1) {
                 var pixel = this._image.getRGB(i, j) and 0xffffff
-                gray = ((pixel and 0x0000ff) + (pixel and 0x00ff00) shr 8 + (pixel and 0xff0000) shr 16) / 3.toFloat()
+                gray = ((pixel and 0x0000ff) + ((pixel and 0x00ff00) shr 8) + ((pixel and 0xff0000) shr 16)) / 3.toFloat()
                 res[i * getWidth() + j] = gray / 255.toFloat()
+//                if (!flag) {
+//
+//                    if (((pixel and 0x0000ff) + (pixel and 0x00ff00) shr 8 + (pixel and 0xff0000) shr 16) != 255 * 3)  {
+//                        flag = true
+//                        println(i.toString() + " " + j.toString())
+//                        println((pixel and 0x0000ff) + ((pixel and 0x00ff00) shr 8) + ((pixel and 0xff0000) shr 16))
+//                        println(pixel and 0x0000ff)
+//                        println((pixel and 0x00ff00) shr 8)
+//                        println((pixel and 0xff0000) shr 16)
+//                    }
+//                }
             }
         }
         return res

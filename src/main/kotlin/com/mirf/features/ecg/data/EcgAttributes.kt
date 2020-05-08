@@ -9,6 +9,8 @@ object EcgAttributes {
             AttributeTagType.ECG)
     val LEADS = DataAttributeMockup<HashMap<EcgLeadType, ArrayList<Short>>>("leads", "2",
             AttributeTagType.ECG)
+    val LEADS_FILTERED = DataAttributeMockup<HashMap<EcgLeadType, DoubleArray>>("leads_filtered", "12",
+            AttributeTagType.ECG)
     val NUMBER_OF_SAMPLES = DataAttributeMockup<Int>("numSamples", "3",
             AttributeTagType.ECG)
     val SAMPLING_FREQUENCY = DataAttributeMockup<Int>("samplingFrequency", "4",

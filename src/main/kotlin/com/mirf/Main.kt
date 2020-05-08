@@ -7,6 +7,7 @@ import com.mirf.features.ecg.util.*
 import com.mirf.playground.DicomImageCircleMaskApplier
 import com.mirf.playground.NiftiTest
 import java.awt.Color
+import java.time.LocalDateTime
 
 
 object Main {
@@ -21,10 +22,10 @@ object Main {
      */
     fun runEcgPipeline() {
         val workflow: EcgClassificationWorkflow = EcgClassificationWorkflow.createFull(
-                "src/main/resources/ecg/100.dat",
-                "src/main/resources/ecg/100.hea",
+                "src/main/resources/ecg/231.dat",
+                "src/main/resources/ecg/231.hea",
                 "/home/alexandra/IdeaProjects/workingDirForMirf",
-                PatientInfo("Helen", 98))
+                PatientInfo("Leslie", 74, "W", LocalDateTime.now()))
 
         workflow.pipe.session.newRecord.plusAssign({ x, a -> println(a) })
 
