@@ -130,7 +130,7 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
             val ct = IHDImageData(imgData, slope, intercept)
             val brain = ct.brain_window()
             val subdural = ct.subdural_window()
-            val soft = ct.soft_window()
+            val soft = ct.bone_window()
             val arratCT : Array<IHDImageData> = arrayOf(brain, subdural, soft)
             return ct.concatCTImagesAndGetCTImage(arratCT)
         }

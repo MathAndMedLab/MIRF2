@@ -73,7 +73,7 @@ class IHDImageData : Data {
         return windowing(80, 200)
     }
 
-    fun bone_window(): IHDImageData {
+    fun soft_window(): IHDImageData {
         return windowing(600, 2000)
     }
 
@@ -85,7 +85,7 @@ class IHDImageData : Data {
         return windowing(600, 2800)
     }
 
-    fun soft_window(): IHDImageData {
+    fun bone_window(): IHDImageData {
         return windowing(40, 380)
     }
 
