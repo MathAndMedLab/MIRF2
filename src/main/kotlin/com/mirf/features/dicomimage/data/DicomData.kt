@@ -28,12 +28,13 @@ open class DicomData() : ImagingData<BufferedImage> {
     private lateinit var dicomAttributeCollection: DicomAttributeCollection
 
     constructor(dicomAttributeCollection: DicomAttributeCollection) : this() {
+        this.dicomAttributeCollection = dicomAttributeCollection
         bitsAllocated = Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.BitsAllocated))
         analisePixelData()
     }
 
-    constructor(dicomAttributeCollection: DicomAttributeCollection, array: FloatArray) : this() {
-        this.dicomAttributeCollection = dicomAttributeCollection
+    constructor(array: FloatArray) : this() {
+        //this.dicomAttributeCollection = dicomAttributeCollection
         floatArray = FloatArray(array.size)
         byteArray = ByteArray(array.size)
         intArray = IntArray(array.size)

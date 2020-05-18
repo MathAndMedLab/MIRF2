@@ -53,7 +53,7 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
             val CTImageExtractor = AlgorithmHostBlock<ImagingData<BufferedImage>, ImagingData<BufferedImage>>(
                     {x ->
                         createCTData(x, x.getImageDataAsIntArray()[0],
-                                x.getImageDataAsIntArray()[1], createIHDData(dicomInputFile))
+                                x.getImageDataAsIntArray()[1])
                     },
                     pipelineKeeper = pipe,
                     name = "CTImage extractor")
@@ -127,12 +127,12 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
             return IHDData(dicomAttributeCollection)
         }
 
-        fun createCTData(imgData: ImagingData<BufferedImage>, slope : Int, intercept : Int, dicom : DicomData): ImagingData<BufferedImage> {
+        fun createCTData(imgData: ImagingData<BufferedImage>, slope : Int, intercept : Int): ImagingData<BufferedImage> {
             val brain = Windowing(slope, intercept).brain_window(imgData.getImageDataAsFloatArray())
             val subdural = Windowing(slope, intercept).subdural_window(imgData.getImageDataAsFloatArray())
             val soft = Windowing(slope, intercept).bone_window(imgData.getImageDataAsFloatArray())
             val mix = Transp.flatten(Transp.transp_image(brain, subdural, soft))
-            return DicomData(dicom.getAtrib(), mix)
+            return DicomData(mix)
         }
     }
 
