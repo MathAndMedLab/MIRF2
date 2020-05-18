@@ -18,17 +18,37 @@ import kotlin.math.sqrt
 /**
  * Realize interface ImageData on dicom image format
  */
-open class DicomData(private var dicomAttributeCollection: DicomAttributeCollection) : ImagingData<BufferedImage> {
+open class DicomData() : ImagingData<BufferedImage> {
     private var bitsAllocated: Int = 0
     private lateinit var byteArray: ByteArray
     private lateinit var shortArray: ShortArray
     private lateinit var intArray: IntArray
+    private lateinit var floatArray: FloatArray
     private lateinit var cleanByteArrayPixelData: ByteArray
+    private lateinit var dicomAttributeCollection: DicomAttributeCollection
 
-
-    init {
+    constructor(dicomAttributeCollection: DicomAttributeCollection) : this() {
         bitsAllocated = Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.BitsAllocated))
         analisePixelData()
+    }
+
+    constructor(dicomAttributeCollection: DicomAttributeCollection, array: FloatArray) : this() {
+        this.dicomAttributeCollection = dicomAttributeCollection
+        floatArray = FloatArray(array.size)
+        byteArray = ByteArray(array.size)
+        intArray = IntArray(array.size)
+        shortArray = ShortArray(array.size)
+
+        for (i in array.indices) {
+            floatArray[i] = array[i]
+            byteArray[i] = array[i].toByte()
+            intArray[i] = array[i].toInt()
+            shortArray[i] = array[i].toShort()
+        }
+    }
+
+    fun getAtrib() : DicomAttributeCollection {
+        return dicomAttributeCollection
     }
 
     /**
@@ -287,4 +307,12 @@ open class DicomData(private var dicomAttributeCollection: DicomAttributeCollect
         get() = dicomAttributeCollection.buildHumanReadableImage().height
     override val attributes: AttributeCollection
         get() = dicomAttributeCollection
+
+    override fun getImageDataAsFloatArray(): FloatArray {
+        val floatArray = FloatArray(shortArray.size)
+        for (i in floatArray.indices) {
+            floatArray[i] = shortArray[i].toFloat()
+        }
+        return floatArray
+    }
 }

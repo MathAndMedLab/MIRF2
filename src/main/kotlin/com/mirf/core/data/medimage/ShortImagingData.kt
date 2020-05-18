@@ -41,4 +41,8 @@ class ShortImagingData(val rawPixels: ShortArray2D,
     override val attributes: AttributeCollection
         get() = TODO("Not yet implemented")
 
+    override fun getImageDataAsFloatArray(): FloatArray {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -11,7 +11,8 @@ import com.mirf.core.data.medimage.ImagingData
 import com.mirf.core.pipeline.AccumulatorWithAlgBlock
 import com.mirf.core.pipeline.AlgorithmHostBlock
 import com.mirf.core.pipeline.Pipeline
-import com.mirf.features.dicomimage.alg.IHDImageData
+import com.mirf.features.console.utils.Transp
+import com.mirf.features.dicomimage.alg.Windowing
 import com.mirf.features.dicomimage.data.DicomAttributeCollection
 import com.mirf.features.dicomimage.data.DicomData
 import com.mirf.features.dicomimage.data.IHDData
@@ -49,15 +50,15 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
                     pipelineKeeper = pipe
             )
 
-            val CTImageExtractor = AlgorithmHostBlock<ImagingData<BufferedImage>, IHDImageData>(
+            val CTImageExtractor = AlgorithmHostBlock<ImagingData<BufferedImage>, ImagingData<BufferedImage>>(
                     {x ->
                         createCTData(x, x.getImageDataAsIntArray()[0],
-                                x.getImageDataAsIntArray()[1])
+                                x.getImageDataAsIntArray()[1], createIHDData(dicomInputFile))
                     },
                     pipelineKeeper = pipe,
                     name = "CTImage extractor")
 
-            val classifier = AlgorithmHostBlock<IHDImageData, IntracranialHemorrhageDetectionDiagnosis>(
+            val classifier = AlgorithmHostBlock<ImagingData<BufferedImage>, IntracranialHemorrhageDetectionDiagnosis>(
                     {x -> val ctDiagnosis = IntracranialHemorrhageDetectionDiagnosis(x)
                         ctDiagnosis.classify();
                         ctDiagnosis
@@ -66,7 +67,7 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
                     name = "Classifier"
             )
 
-
+/*
             val imageReporter = AlgorithmHostBlock<ImagingData<BufferedImage>, PdfElementData>(
                     { x -> createHighlightedImages(x) },
                     "image before", pipe)
@@ -78,19 +79,19 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
                     pipe)
 
             val reportSaverBlock = RepositoryAccessorBlock<FileData, Data>(LocalRepositoryCommander(),
-                    RepoFileSaver(), "")
+                    RepoFileSaver(), "")*/
 
 
 
-            ctReader.dataReady += imageReporter::inputReady
+            //ctReader.dataReady += imageReporter::inputReady
 
             ctReader.dataReady += CTImageExtractor::inputReady
             CTImageExtractor.dataReady += classifier::inputReady
 
             //pdfBlock.dataReady += reportSaverBlock::inputReady
 
-            imageReporter.dataReady += pdfBlock::inputReady
-            pdfBlock.dataReady += reportSaverBlock::inputReady
+            //imageReporter.dataReady += pdfBlock::inputReady
+            //pdfBlock.dataReady += reportSaverBlock::inputReady
 
             pipe.session.newRecord += { _, b -> println(b) }
 
@@ -126,13 +127,12 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
             return IHDData(dicomAttributeCollection)
         }
 
-        fun createCTData(imgData: ImagingData<BufferedImage>, slope : Int, intercept : Int): IHDImageData {
-            val ct = IHDImageData(imgData, slope, intercept)
-            val brain = ct.brain_window()
-            val subdural = ct.subdural_window()
-            val soft = ct.bone_window()
-            val arratCT : Array<IHDImageData> = arrayOf(brain, subdural, soft)
-            return ct.concatCTImagesAndGetCTImage(arratCT)
+        fun createCTData(imgData: ImagingData<BufferedImage>, slope : Int, intercept : Int, dicom : DicomData): ImagingData<BufferedImage> {
+            val brain = Windowing(slope, intercept).brain_window(imgData.getImageDataAsFloatArray())
+            val subdural = Windowing(slope, intercept).subdural_window(imgData.getImageDataAsFloatArray())
+            val soft = Windowing(slope, intercept).bone_window(imgData.getImageDataAsFloatArray())
+            val mix = Transp.flatten(Transp.transp_image(brain, subdural, soft))
+            return DicomData(dicom.getAtrib(), mix)
         }
     }
 

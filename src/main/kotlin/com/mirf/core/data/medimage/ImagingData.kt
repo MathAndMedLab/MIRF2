@@ -9,6 +9,7 @@ interface ImagingData<I> : Data{
     fun getImageDataAsShortArray(): ShortArray
     fun getImageDataAsByteArray(): ByteArray
     fun getImageDataAsIntArray(): IntArray
+    fun getImageDataAsFloatArray(): FloatArray
 
     fun copy(): ImagingData<I>
     fun applyMask(mask: BooleanArray2D)

@@ -2,12 +2,13 @@ package com.mirf.playground.IHD
 
 import com.mirf.core.data.AttributeCollection
 import com.mirf.core.data.Data
+import com.mirf.core.data.medimage.ImagingData
 import com.mirf.features.deeplearning.tensorflow.TensorflowModelInterface
-import com.mirf.features.dicomimage.alg.IHDImageData
+import java.awt.image.BufferedImage
 
 class IntracranialHemorrhageDetectionDiagnosis : Data {
     // IntracranialHemorrhageDetection
-    lateinit var image : IHDImageData
+    lateinit var image : ImagingData<BufferedImage>
         private set
     var modelName  = "/Users/alexander.savelyev/IdeaProjects/Medical-images-research-framework/src/test/resources/dicomDataTest/512_512_3.pb"
         private set
@@ -18,14 +19,14 @@ class IntracranialHemorrhageDetectionDiagnosis : Data {
     var dims : Long = 512
         private set
 
-    constructor(image: IHDImageData) {
+    constructor(image: ImagingData<BufferedImage>) {
         this.image = image
     }
 
     private fun forward_pass(): FloatArray {
         val tfModel = TensorflowModelInterface(null, modelName, inputName, outputName, 6)
 
-        return tfModel.runModel(image.cTasFloatArray, 1, dims, dims, 3)
+        return tfModel.runModel(image.getImageDataAsFloatArray(), 1, dims, dims, 3)
     }
 
     fun classify() {
