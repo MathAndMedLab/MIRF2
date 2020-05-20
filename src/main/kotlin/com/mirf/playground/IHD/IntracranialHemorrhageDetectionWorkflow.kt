@@ -128,9 +128,9 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
         }
 
         fun createCTData(imgData: ImagingData<BufferedImage>, slope : Int, intercept : Int): ImagingData<BufferedImage> {
-            val brain = Windowing(slope, intercept).brain_window(imgData.getImageDataAsFloatArray())
-            val subdural = Windowing(slope, intercept).subdural_window(imgData.getImageDataAsFloatArray())
-            val soft = Windowing(slope, intercept).bone_window(imgData.getImageDataAsFloatArray())
+            val brain = Windowing(slope, intercept).brainWindow(imgData.getImageDataAsFloatArray())
+            val subdural = Windowing(slope, intercept).subduralWindow(imgData.getImageDataAsFloatArray())
+            val soft = Windowing(slope, intercept).boneWindow(imgData.getImageDataAsFloatArray())
             val mix = Transp.flatten(Transp.transp_image(brain, subdural, soft))
             return DicomData(mix)
         }

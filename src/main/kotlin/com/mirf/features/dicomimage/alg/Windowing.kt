@@ -30,51 +30,51 @@ class Windowing(slope: Int, intercept: Int) {
         return arr
     }
 
-    fun subdural_window(cTasFloatArray : FloatArray): FloatArray {
+    fun subduralWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,80, 200)
     }
 
-    fun soft_window(cTasFloatArray : FloatArray): FloatArray {
+    fun softWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,600, 2000)
     }
 
-    fun stroke_window(cTasFloatArray : FloatArray): FloatArray {
+    fun strokeWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,40, 40)
     }
 
-    fun temporal_window(cTasFloatArray : FloatArray): FloatArray {
+    fun temporalWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,600, 2800)
     }
 
-    fun bone_window(cTasFloatArray : FloatArray): FloatArray {
+    fun boneWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,40, 380)
     }
 
-    fun brain_window(cTasFloatArray : FloatArray): FloatArray {
+    fun brainWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray, 40, 80)
     }
 
-    fun lungs_window(cTasFloatArray : FloatArray): FloatArray {
+    fun lungsWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,600, 1500)
     }
 
-    fun mediastinum_window(cTasFloatArray : FloatArray): FloatArray {
+    fun mediastinumWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,50, 350)
     }
 
-    fun soft_tissues_window(cTasFloatArray : FloatArray): FloatArray {
+    fun softTissuesWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,50, 400)
     }
 
-    fun liver_window(cTasFloatArray : FloatArray): FloatArray {
+    fun liverWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,30, 150)
     }
 
-    fun spine_soft_tissues_window(cTasFloatArray : FloatArray): FloatArray {
+    fun spineSoftTissuesWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,50, 400)
     }
 
-    fun spine_bone_window(cTasFloatArray : FloatArray): FloatArray {
+    fun spineBoneWindow(cTasFloatArray : FloatArray): FloatArray {
         return windowing(cTasFloatArray,400, 1800)
     }
 }
