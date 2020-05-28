@@ -3,9 +3,10 @@ package com.mirf.core.data
 import com.mirf.core.data.attribute.DataAttribute
 import com.mirf.core.data.attribute.DataAttributeMockup
 import com.mirf.core.log.MirfLogFactory
+import java.io.Serializable
 
 //TODO: (avlomakin) implements Collection<DataAttribute>
-open class AttributeCollection constructor(list : Collection<DataAttribute<*>> = ArrayList()) : Cloneable {
+open class AttributeCollection constructor(list : Collection<DataAttribute<*>> = ArrayList()) : Cloneable, Serializable {
 
     protected open val log = MirfLogFactory.currentLogger
 

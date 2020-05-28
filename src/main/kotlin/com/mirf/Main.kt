@@ -24,7 +24,7 @@ object Main {
         val workflow: EcgClassificationWorkflow = EcgClassificationWorkflow.createFull(
                 "src/main/resources/ecg/231.dat",
                 "src/main/resources/ecg/231.hea",
-                "/home/alexandra/IdeaProjects/workingDirForMirf",
+                "",
                 PatientInfo("Leslie", 74, "W", LocalDateTime.now()))
 
         workflow.pipe.session.newRecord.plusAssign({ x, a -> println(a) })
