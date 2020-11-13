@@ -46,8 +46,8 @@ class DicomImageCircleMaskApplier {
                 { x -> createHighlightedImages(x) },
                 "image after", pipe)
 
-        val pdfBlock = AccumulatorWithAlgBlock(PdfElementsAccumulator(
-                "report"),
+        val pdfBlock = AccumulatorWithAlgBlock(
+                PdfElementsAccumulator("report"),
                 2,
                 "Accumulator",
                 pipe)

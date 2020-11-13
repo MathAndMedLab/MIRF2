@@ -4,9 +4,10 @@ import com.mirf.core.data.AttributeCollection
 import com.mirf.core.data.MirfData
 import com.mirf.core.data.attribute.AttributeTagType
 import com.mirf.core.data.attribute.DataAttributeMockup
+import java.io.Serializable
 import java.util.*
 
-class EcgData(override val attributes: AttributeCollection) : MirfData() {
+class EcgData(override val attributes: AttributeCollection) : MirfData(), Serializable {
 
     fun getAnalogSignal(type: EcgLeadType): DoubleArray {
         val lead = this.attributes.get(EcgAttributes.LEADS).get(type)

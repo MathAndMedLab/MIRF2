@@ -1,0 +1,53 @@
+{
+  "configurations": [
+    {
+      "blockType": "ReadDicomImageSeriesAlg",
+      "inputClassName": "com.mirf.features.repositoryaccessors.data.RepoRequest",
+      "outputClassName": "com.mirf.core.data.medimage.ImageSeries",
+      "algorithmClassName": "com.mirf.features.dicomimage.util.ReadDicomImageSeriesAlg",
+      "taskLimit": 2,
+      "orchestratorUri": "http://localhost:5000/"
+    },
+
+    {
+      "blockType": "EcgReaderAlg",
+      "inputClassName": "java.util.List",
+      "outputClassName": "com.mirf.features.ecg.EcgData",
+      "algorithmClassName": "com.mirf.features.ecg.util.EcgReaderAlg",
+      "taskLimit": 8,
+      "orchestratorUri": "http://localhost:5000/"
+    },
+    {
+      "blockType": "EcgBeatExtractorAlg",
+      "inputClassName": "com.mirf.features.ecg.EcgData",
+      "outputClassName": "com.mirf.core.data.medimage.BufferedImageSeries",
+      "algorithmClassName": "com.mirf.features.ecg.util.EcgBeatExtractorAlg",
+      "taskLimit": 8,
+      "orchestratorUri": "http://localhost:5000/"
+    },
+    {
+      "blockType": "EcgClassifierAlg",
+      "inputClassName": "com.mirf.core.data.medimage.BufferedImageSeries",
+      "outputClassName": "com.mirf.features.ecg.util.EcgDiagnosis",
+      "algorithmClassName": "com.mirf.features.ecg.util.EcgClassifierAlg",
+      "taskLimit": 8,
+      "orchestratorUri": "http://localhost:5000/"
+    },
+    {
+      "blockType": "EcgCleanerAlg",
+      "inputClassName": "com.mirf.features.ecg.EcgData",
+      "outputClassName": "com.mirf.features.ecg.EcgData",
+      "algorithmClassName": "com.mirf.features.ecg.util.EcgCleanerAlg",
+      "taskLimit": 8,
+      "orchestratorUri": "http://localhost:5000/"
+    },
+    {
+      "blockType": "CollectionDataAlg",
+      "inputClassName": "com.mirf.core.data.CollectionData",
+      "outputClassName": "com.mirf.core.data.FileData",
+      "algorithmClassName": "com.mirf.features.ecg.util.CollectionDataAlg",
+      "taskLimit": 8,
+      "orchestratorUri": "http://localhost:5000/"
+    }
+  ]
+}

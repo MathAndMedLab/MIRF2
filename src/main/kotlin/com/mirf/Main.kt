@@ -3,15 +3,12 @@ package com.mirf
 import com.mirf.features.ecg.EcgAttributes
 import com.mirf.features.ecg.EcgLeadType
 import com.mirf.features.ecg.EcgReader
-import com.mirf.features.ecg.util.EcgBeatExtractor
-import com.mirf.features.ecg.util.EcgClassificationWorkflow
-import com.mirf.features.ecg.util.EcgClassifier
-import com.mirf.features.ecg.util.PatientInfo
+import com.mirf.features.ecg.util.*
 import com.mirf.playground.DicomImageCircleMaskApplier
 import com.mirf.playground.NiftiTest
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.awt.Color
 import java.time.LocalDateTime
+
 
 object Main {
 
@@ -25,15 +22,19 @@ object Main {
      */
     fun runEcgPipeline() {
         val workflow: EcgClassificationWorkflow = EcgClassificationWorkflow.createFull(
-                "src/main/resources/ecg/100.dat",
-                "src/main/resources/ecg/100.hea",
-                "/home/alexandra/IdeaProjects/workingDirForMirf",
-                PatientInfo("Damn WorkPlease", 56, "M", LocalDateTime.now()))
+                "src/main/resources/ecg/231.dat",
+                "src/main/resources/ecg/231.hea",
+                "",
+                PatientInfo("Leslie", 74, "W", LocalDateTime.now()))
 
         workflow.pipe.session.newRecord.plusAssign({ x, a -> println(a) })
 
         workflow.exec()
     }
+
+
+
+
 
     /**
      * ECG from MIT-BIH classifier test

@@ -1,0 +1,8 @@
+[
+  { "id": 0, "blockType" : "ReadDicomImageSeriesAlg", "children": [1, 2] },
+  { "id": 1, "blockType" : "AddMaskAlg", "children": [3] },
+  { "id": 2, "blockType" : "ConvertImagesToPdfAlg", "children": [4] },
+  { "id": 3, "blockType" : "ConvertImagesToPdfAlg", "children": [4] },
+  { "id": 4, "blockType" : "PrepareReportAlg", "children": [5] },
+  { "id": 5, "blockType" : "SaveReportAlg", "children": [] }
+]
