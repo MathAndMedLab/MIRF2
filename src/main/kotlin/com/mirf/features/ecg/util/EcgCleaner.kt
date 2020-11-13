@@ -5,52 +5,42 @@ import com.mirf.core.data.attribute.DataAttributeCreator
 import com.mirf.features.ecg.EcgAttributes
 import com.mirf.features.ecg.EcgData
 import com.mirf.features.ecg.EcgLeadType
-import java.io.File
-import java.util.concurrent.TimeUnit
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.stream.Collectors
 import kotlin.math.min
 
 
 object EcgCleaner {
     fun filterNoises(ecgData: EcgData, leadType: EcgLeadType) : EcgData {
-
+        val sb = StringBuilder()
         val lead = ecgData.getAnalogSignal(leadType)
-
-        val attributes = AttributeCollection()
-        val filteredEcg = hashMapOf<EcgLeadType, DoubleArray>(EcgLeadType.II to lead.copyOfRange(0, min(5000, lead.size)))
-        attributes.add(DataAttributeCreator.createFromMock(EcgAttributes.LEADS_FILTERED, filteredEcg))
-        return EcgData(attributes)
-    }
-
-    private fun File.execute(vararg arguments: String): String {
-        val process = ProcessBuilder(*arguments)
-                .directory(this)
-                .start()
-                .also { it.waitFor(2, TimeUnit.MINUTES) }
-
-        if (process.exitValue() != 0) {
-            throw Exception(process.errorStream.bufferedReader().readText())
+        for (x in lead.copyOfRange(0, min(3000, lead.size))) {
+            sb.append(x)
+            sb.append(" ")
         }
-        return process.inputStream.bufferedReader().readText()
-    }
 
-    fun filterNoisesPython(ecgData: EcgData, leadType: EcgLeadType) : EcgData  {
-        val lead = ecgData.getAnalogSignal(leadType)
-
-        val python_arg = StringBuilder()
-        lead.take(Math.min(5000, lead.size)).forEach{ python_arg.append(it); python_arg.append(' '); }
-
-
-        var classPath = this.javaClass.getProtectionDomain().getCodeSource().getLocation().getPath()
-        var filtering_pref = "../../../util/filteringpy"
-
-        File(classPath + filtering_pref).execute(
-                "python3", "ecg_filtering.py", python_arg.toString())
-
+        val filteredSignal = executeFilteringScriptAndGetFilteredSignal(sb.toString())
         val attributes = AttributeCollection()
-        val filteredEcg = hashMapOf<EcgLeadType, DoubleArray>(EcgLeadType.II to lead.copyOfRange(0, min(5000, lead.size)))
+        val filteredEcg = hashMapOf<EcgLeadType, DoubleArray>(EcgLeadType.II to filteredSignal)
         attributes.add(DataAttributeCreator.createFromMock(EcgAttributes.LEADS_FILTERED, filteredEcg))
         return EcgData(attributes)
     }
 
+    private fun executeFilteringScriptAndGetFilteredSignal(ecgArrayString: String) : DoubleArray {
+        val pb = ProcessBuilder("python3", "/home/alexandra/MIRF2/src/main/resources/filteringpy/ecgFiltering.py", ecgArrayString)
+        val p = pb.start()
+        p.waitFor()
+        val bfr = BufferedReader(InputStreamReader(p.inputStream))
+        var line: String? = ""
+        var filteredValues = DoubleArray(0)
+        while (bfr.readLine().also { line = it } != null) {
+            val lineValues : List<Double>
+            lineValues = line?.split(' ')?.stream()?.filter{it.length!=0}?.map {it.toDouble()}?.collect(Collectors.toList()) as List<Double>
+            filteredValues = filteredValues.plus(lineValues)
+        }
+
+        return filteredValues
+    }
 }
 
