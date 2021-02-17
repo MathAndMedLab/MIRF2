@@ -6,12 +6,13 @@ import orchestrator.data.Command
 import orchestrator.data.NetworkInfo
 import orchestrator.data.Pipeline
 import orchestrator.data.ProcessSession
-import org.apache.catalina.servlet4preview.http.HttpServletRequest
+//import org.apache.catalina.servlet4preview.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URL
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 class OrchestratorController @Autowired constructor(
@@ -25,6 +26,8 @@ class OrchestratorController @Autowired constructor(
         @RequestParam("sessionId") sessionId: String,
         @RequestParam("pipeline") pipelineJson: String
     ) {
+        println("Received request from external service")
+
         val pipeline = Pipeline(pipelineJson)
 
         val repositoryUri = NetworkInfo.getFreeRepository()

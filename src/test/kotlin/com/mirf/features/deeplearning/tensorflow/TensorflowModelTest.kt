@@ -1,6 +1,7 @@
 package com.mirf.features.deeplearning.tensorflow
 
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.math.roundToInt
 
@@ -51,6 +52,7 @@ class TensorflowModelTest {
     }
 
     @Test
+    @Ignore
     fun Tensorflow_runEcgClassification() {
         val img_size = 128
         val modelName = "src/test/resources/ecg_tf_cnn.pb"

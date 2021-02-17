@@ -19,6 +19,8 @@ sealed class ProcessingResult{
     object FAILED_TO_STORE : ProcessingResult()
 }
 
+
+//first start orchestrator
 class OrchestratorClient constructor(private val orchestratorUri: String,
                                         private val blockType: String,
                                         private val taskLimit: Int) {

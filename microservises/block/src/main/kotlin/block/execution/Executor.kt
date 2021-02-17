@@ -35,21 +35,21 @@ object Executor {
         properties = StorageProperties
         orchestratorClient = _orchestratorClient
 
-        val classLoader = ClassLoader.getSystemClassLoader() as URLClassLoader
+        //val classLoader = ClassLoader.getSystemClassLoader() as URLClassLoader
 
         // input data
-        val input = ClassLoader.getSystemClassLoader()
+        val input = javaClass.classLoader
             .loadClass(blockInfo.inputClassName)
         inputClass = input
 
         // output data
-        val output = ClassLoader.getSystemClassLoader()
+        val output = javaClass.classLoader
             .loadClass(blockInfo.outputClassName)
         outputClass = output
 
         // algorithm
         val algorithm =
-            ClassLoader.getSystemClassLoader()
+            javaClass.classLoader
                 .loadClass(blockInfo.algorithmClassName)//.getDeclaredConstructor().newInstance()
         algorithmClass = algorithm
 

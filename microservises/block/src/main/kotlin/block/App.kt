@@ -12,7 +12,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import java.io.File
+import java.io.InputStream
 
 
 @SpringBootApplication
@@ -22,21 +22,46 @@ open class App {
     open fun init(storageService: StorageService): CommandLineRunner? {
         return CommandLineRunner { args: Array<String?>? ->
             try {
-                val file = File("configuration.json")
-                val json = file.readText()
-                val mapper = jacksonObjectMapper()
-                val configuration = mapper.readValue<BlockInfo>(json)
+                var blockType = System.getProperty("block.type")
 
-                val appProperties = File("application.properties")
-                val appPropertiesStrings = appProperties.readLines()
+                println("System property = " + blockType)
+
+                if (blockType == null) {
+                    blockType = "ecgReaderAlg"
+                }
+
+                val classLoader = javaClass.classLoader
+                val blockConfigurationStream: InputStream? = classLoader.getResourceAsStream(blockType + ".json")
+
+                val jsonBlockConfiguration : String
+
+                if (blockConfigurationStream == null) {
+                    throw IllegalArgumentException("Block configuration file not found: " + "blockType" + ".json")
+                } else {
+                    jsonBlockConfiguration = String(blockConfigurationStream.readBytes())
+                    println(jsonBlockConfiguration)
+                }
+
+                val mapper = jacksonObjectMapper()
+                val configuration = mapper.readValue<BlockInfo>(jsonBlockConfiguration)
+
+                val appPropertiesStream: InputStream? = classLoader.getResourceAsStream("application.properties")
+
+                val appProperties : String
+
+                if (appPropertiesStream == null) {
+                    throw IllegalArgumentException("Block configuration file not found: " + "application.properties")
+                } else {
+                    appProperties = String(appPropertiesStream.readBytes())
+                    println(appProperties)
+                }
 
                 var port: String = ""
-                for (line in appPropertiesStrings) {
-                    val sub = line.substring(0, 12)
-                    if (sub == "server.port=") {
-                        port = line.substring(12)
-                    }
+                val sub = appProperties.substring(0, 12)
+                if (sub == "server.port=") {
+                    port = appProperties.substring(12, 16)
                 }
+
 
                 if (port == "") {
                     throw Exception("Port does not specified.")
@@ -55,7 +80,7 @@ open class App {
                 )
 
             } catch (e: Exception) {
-                print("Configuration error")
+                println("Configuration error")
                 throw e
             }
 //            storageService.deleteAll()
