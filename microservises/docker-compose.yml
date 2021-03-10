@@ -1,0 +1,51 @@
+version: "3.5"
+
+services:
+  orchestrator:
+    image: orchestrator
+    environment:
+      - SERVER_PORT=5011
+    ports:
+      - "5011:5011"
+    networks:
+      - app_net
+
+  ecgreaderblock:
+    image: mirfblock
+    environment:
+      - SERVER_PORT=8056
+      - BLOCK_TYPE=ecgReaderAlg
+      - ORCHESTRATOR_HOST=orchestrator
+      - ORCHESTRATOR_PORT=5011
+    networks:
+      - app_net
+    depends_on:
+      - orchestrator
+
+  ecgbeatextractorblock:
+    image: mirfblock
+    environment:
+      - SERVER_PORT=8057
+      - BLOCK_TYPE=ecgBeatExtractorAlg
+      - ORCHESTRATOR_HOST=orchestrator
+      - ORCHESTRATOR_PORT=5011
+    networks:
+      - app_net
+    depends_on:
+      - orchestrator
+
+  mirfrepository:
+    image: mirfrepository
+    environment:
+      - SERVER_PORT=8050
+      - ORCHESTRATOR_HOST=orchestrator
+      - ORCHESTRATOR_PORT=5011
+    networks:
+      - app_net
+    depends_on:
+      - orchestrator
+    command: ["sh", "wait-for-orchestrator.sh", "java","-jar","repository-1.0-SNAPSHOT.jar"]
+
+networks:
+  app_net:
+    driver: bridge
