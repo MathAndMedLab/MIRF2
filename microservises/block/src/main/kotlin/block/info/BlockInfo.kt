@@ -6,6 +6,6 @@ class BlockInfo (
     val outputClassName: String,
     val algorithmClassName: String,
     val taskLimit: Int,
-    val orchestratorUri: String) {
+    var orchestratorUri: String) {
     var port: String = ""
 }

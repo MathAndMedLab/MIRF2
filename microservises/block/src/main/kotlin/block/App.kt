@@ -7,28 +7,39 @@ import block.storage.StorageProperties
 import block.storage.StorageService
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import java.io.InputStream
+import java.net.URI
 
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties::class)
 open class App {
+
+    @Value("\${server.port}")
+    private lateinit var serverPort: String
+
+    @Value("\${block.type}")
+    private lateinit var blockType: String
+
+    @Value("\${orchestrator.host}")
+    private lateinit var orchestratorHost: String
+
+    @Value("\${orchestrator.port}")
+    private lateinit var orchestratorPort: Integer
+
     @Bean
     open fun init(storageService: StorageService): CommandLineRunner? {
         return CommandLineRunner { args: Array<String?>? ->
             try {
-                var blockType = System.getProperty("block.type")
+                println(blockType)
 
-                println("System property = " + blockType)
-
-                if (blockType == null) {
-                    blockType = "ecgReaderAlg"
-                }
+                println(serverPort)
 
                 val classLoader = javaClass.classLoader
                 val blockConfigurationStream: InputStream? = classLoader.getResourceAsStream(blockType + ".json")
@@ -45,29 +56,35 @@ open class App {
                 val mapper = jacksonObjectMapper()
                 val configuration = mapper.readValue<BlockInfo>(jsonBlockConfiguration)
 
-                val appPropertiesStream: InputStream? = classLoader.getResourceAsStream("application.properties")
+                val orchestratorAddress = URI("http", null, orchestratorHost, orchestratorPort.toInt(), null, null, null)
 
-                val appProperties : String
+                configuration.orchestratorUri = orchestratorAddress.toString()
 
-                if (appPropertiesStream == null) {
-                    throw IllegalArgumentException("Block configuration file not found: " + "application.properties")
-                } else {
-                    appProperties = String(appPropertiesStream.readBytes())
-                    println(appProperties)
-                }
+                println("Orchestrator address: ${configuration.orchestratorUri}")
 
-                var port: String = ""
-                val sub = appProperties.substring(0, 12)
-                if (sub == "server.port=") {
-                    port = appProperties.substring(12, 16)
-                }
+//                val appPropertiesStream: InputStream? = classLoader.getResourceAsStream("application.properties")
+//
+//                val appProperties : String
+//
+//                if (appPropertiesStream == null) {
+//                    throw IllegalArgumentException("Block configuration file not found: " + "application.properties")
+//                } else {
+//                    appProperties = String(appPropertiesStream.readBytes())
+//                    println(appProperties)
+//                }
+//
+//                var port: String = ""
+//                val sub = appProperties.substring(0, 12)
+//                if (sub == "server.port=") {
+//                    port = appProperties.substring(12, 16)
+//                }
 
 
-                if (port == "") {
+                if (serverPort == "") {
                     throw Exception("Port does not specified.")
                 }
 
-                configuration.port = port
+                configuration.port = serverPort
 
                 Executor.init(
                         configuration,

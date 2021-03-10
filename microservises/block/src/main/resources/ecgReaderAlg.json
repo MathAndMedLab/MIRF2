@@ -4,5 +4,5 @@
   "outputClassName": "com.mirf.features.ecg.EcgData",
   "algorithmClassName": "com.mirf.features.ecg.util.EcgReaderAlg",
   "taskLimit": 8,
-  "orchestratorUri": "http://localhost:5010/"
+  "orchestratorUri": "http://localhost:5011/"
 }

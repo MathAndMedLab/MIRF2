@@ -22,8 +22,23 @@ apply plugin: "kotlin-spring" // See https://kotlinlang.org/docs/reference/compi
 apply plugin: 'org.springframework.boot'
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '1.0-SNAPSHOT'
 sourceCompatibility = '1.8'
+
+libsDirName = "$project.projectDir/out"
+
+bootJar {
+    mainClassName = 'reportService.ApplicationKt'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'repository',
+                'Implementation-Version': '1.0-SNAPSHOT',
+                'Main-Class': 'reportService.ApplicationKt'
+    }
+}
+
 
 repositories {
     mavenCentral()
