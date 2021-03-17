@@ -10,11 +10,11 @@ class IntracranialHemorrhageDetectionDiagnosis : Data {
     // IntracranialHemorrhageDetection
     lateinit var image : ImagingData<BufferedImage>
         private set
-    var modelName  = "/Users/alexander.savelyev/IdeaProjects/Medical-images-research-framework/src/test/resources/dicomDataTest/512_512_3.pb"
+    var modelName  = "src/test/resources/dicomDataTest/model_17_03_2021.pb"
         private set
-    var inputName = "input_2"
+    var inputName = "input_1"
         private set
-    var outputName = "dense_output_1/Sigmoid"
+    var outputName = "dense_output/Sigmoid"
         private set
     var dims : Long = 512
         private set
