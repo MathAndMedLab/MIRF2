@@ -51,34 +51,41 @@ object Zipper {
     }
 
     fun unzip(fileZip: String, destinationDir: String) {
-        val destDir = File(destinationDir)
-        val unzipPath = Paths.get(destinationDir)
-        if (unzipPath.toString() != "") {
-            Files.createDirectory(unzipPath)
-        }
+        try {
+            val destDir = File(destinationDir)
+            val unzipPath = Paths.get(destinationDir)
+            if (unzipPath.toString() != "") {
+                Files.createDirectory(unzipPath)
+            }
 
-        val buffer = ByteArray(1024)
-        val zis = ZipInputStream(FileInputStream(fileZip))
-        var zipEntry = zis.nextEntry
+            val buffer = ByteArray(1024)
+            val zis = ZipInputStream(FileInputStream(fileZip))
+            var zipEntry = zis.nextEntry
 
-        while (zipEntry != null) {
-            if(zipEntry.isDirectory){
-                Files.createDirectory(unzipPath.resolve(zipEntry.name))
+            while (zipEntry != null) {
+                if (zipEntry.isDirectory) {
+                    Files.createDirectory(unzipPath.resolve(zipEntry.name))
+                    zipEntry = zis.nextEntry
+                    continue
+                }
+
+                val newFile = newFile(destDir, zipEntry)
+                val fos = FileOutputStream(newFile)
+                var len: Int
+                while (zis.read(buffer).also { len = it } > 0) {
+                    fos.write(buffer, 0, len)
+                }
+                fos.close()
                 zipEntry = zis.nextEntry
-                continue
             }
-
-            val newFile = newFile(destDir, zipEntry)
-            val fos = FileOutputStream(newFile)
-            var len: Int
-            while (zis.read(buffer).also { len = it } > 0) {
-                fos.write(buffer, 0, len)
-            }
-            fos.close()
-            zipEntry = zis.nextEntry
+            zis.closeEntry()
+            zis.close()
+        } catch (ex: Exception) {
+            println(ex.message.toString())
+            ex.printStackTrace()
+            //println(ex.stackTrace.toString())
+            throw ex
         }
-        zis.closeEntry()
-        zis.close()
     }
 
     @Throws(IOException::class)
@@ -86,7 +93,9 @@ object Zipper {
         val destFile = File(destinationDir.canonicalPath, zipEntry.name)
         val destDirPath = destinationDir.canonicalPath
         val destFilePath = destFile.canonicalPath
-        if (!destFilePath.startsWith(destDirPath + File.separator)) {
+        println("destDirPath: $destDirPath")
+        println("destFilePath: $destFilePath")
+        if (!destFilePath.startsWith(destDirPath)) {
             throw IOException("Entry is outside of the target dir: " + zipEntry.name)
         }
         return destFile

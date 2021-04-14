@@ -83,17 +83,20 @@ class FileUploadController @Autowired constructor(private val storageService: St
     ): ResponseEntity<ByteArray> {
 //    ): ResponseEntity<InputStream> {
 //    ): ResponseEntity<Resource> {
+        println("BLOCK TRIES TO DOWNLOAD FILE $filename, sessionId $sessionId")
         try {
             val file: Resource = storageService.loadAsResource(sessionId, filename)
             val inputStream: InputStream = file.file.inputStream()// .inputStream
 //        val buffer = ByteArray(inputStream.available())
             val bytes = inputStream.readBytes()
 //        inputStream.read(buffer)
+            println("FILE EXTRACTED SUCCESSFULLY, SENDING TO BLOCK")
             return ResponseEntity.ok().header(
                 HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.filename + "\""
             ).body(bytes)
         } catch (e: Exception) {
+            println("FAILED TO SEND FILE $filename TO BLOCK, sessionId $sessionId")
             return ResponseEntity.ok().header(
                 HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + "ERROR" + "\""

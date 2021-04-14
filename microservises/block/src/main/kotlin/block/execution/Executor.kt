@@ -122,9 +122,12 @@ object Executor {
                 val collectionData = CollectionData(objects)
                 collectionData
             }
-        
+
+        println("DESERIALIZED INPUT OBJECTS")
         val res = executionMethod.invoke(algorithmObject, inputObject)
 
+        println("BLOCK METHOD EXECUTED")
+        // folder name - sessionId_blockId
         return dataCollector.storeResult(res, sessionId)
     }
 

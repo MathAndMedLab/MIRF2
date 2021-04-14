@@ -46,25 +46,6 @@ class Application {
         if (serverPort == "") {
             throw Exception("Server port is not specified.")
         }
-//        val file = File("configuration.json")
-//        val json = file.readText()
-//        val mapper = jacksonObjectMapper()
-//        val configuration = mapper.readValue<RepositoryInfo>(json)
-
-//        val appProperties = File("application.properties")
-//        val appPropertiesStrings = appProperties.readLines()
-//
-//        var port: String = ""
-//        for (line in appPropertiesStrings) {
-//            val sub = line.substring(0, 12)
-//            if (sub == "server.port=") {
-//                port = line.substring(12)
-//            }
-//        }
-//
-//        if (port == "") {
-//            throw Exception("Port does not specified.")
-//        }
 
         val orchestratorUri = URI("http", null, orchestratorHost, orchestratorPort.toInt(), null, null, null)
 

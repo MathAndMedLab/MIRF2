@@ -38,7 +38,7 @@ class DataCollector (private val blockId: String) {
             dir.deleteRecursively()
         }
         Files.createDirectory(Paths.get(folderName))
-
+        // sessionId_blockId/input
         val filename = folderPath.resolve(StorageProperties.inputFileName).toString()
 
         val fileOutputStream = FileOutputStream(filename)

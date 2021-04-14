@@ -10,11 +10,35 @@ services:
     networks:
       - app_net
 
-  ecgreaderblock:
+#  ecgreaderblock:
+#    image: mirfblock
+#    environment:
+#      - SERVER_PORT=8056
+#      - BLOCK_TYPE=ecgReaderAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+#
+#  ecgbeatextractorblock:
+#    image: mirfblock
+#    environment:
+#      - SERVER_PORT=8057
+#      - BLOCK_TYPE=ecgBeatExtractorAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+
+  dicomreaderblock:
     image: mirfblock
     environment:
-      - SERVER_PORT=8056
-      - BLOCK_TYPE=ecgReaderAlg
+      - SERVER_PORT=8058
+      - BLOCK_TYPE=dicomImageSeriesReaderAlg
       - ORCHESTRATOR_HOST=orchestrator
       - ORCHESTRATOR_PORT=5011
     networks:
@@ -22,17 +46,54 @@ services:
     depends_on:
       - orchestrator
 
-  ecgbeatextractorblock:
+  addmaskblock:
     image: mirfblock
     environment:
-      - SERVER_PORT=8057
-      - BLOCK_TYPE=ecgBeatExtractorAlg
+      - SERVER_PORT=8059
+      - BLOCK_TYPE=dicomAddCircleMaskAlg
       - ORCHESTRATOR_HOST=orchestrator
       - ORCHESTRATOR_PORT=5011
     networks:
       - app_net
     depends_on:
       - orchestrator
+
+  highlightedpdfalg:
+    image: mirfblock
+    environment:
+      - SERVER_PORT=8060
+      - BLOCK_TYPE=convertHighlightedDicomImagesToPdfAlg
+      - ORCHESTRATOR_HOST=orchestrator
+      - ORCHESTRATOR_PORT=5011
+    networks:
+      - app_net
+    depends_on:
+      - orchestrator
+
+  seriespdfalg:
+    image: mirfblock
+    environment:
+      - SERVER_PORT=8061
+      - BLOCK_TYPE=convertDicomImagesToPdfAlg
+      - ORCHESTRATOR_HOST=orchestrator
+      - ORCHESTRATOR_PORT=5011
+    networks:
+      - app_net
+    depends_on:
+      - orchestrator
+
+  pdfcreatoralg:
+    image: mirfblock
+    environment:
+      - SERVER_PORT=8062
+      - BLOCK_TYPE=pdfFileCreatorAlg
+      - ORCHESTRATOR_HOST=orchestrator
+      - ORCHESTRATOR_PORT=5011
+    networks:
+      - app_net
+    depends_on:
+      - orchestrator
+
 
   mirfrepository:
     image: mirfrepository
@@ -40,6 +101,8 @@ services:
       - SERVER_PORT=8050
       - ORCHESTRATOR_HOST=orchestrator
       - ORCHESTRATOR_PORT=5011
+    ports:
+      - "8050:8050"
     networks:
       - app_net
     depends_on:

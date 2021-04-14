@@ -9,10 +9,17 @@ import orchestrator.data.ProcessSession
 //import org.apache.catalina.servlet4preview.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URL
 import javax.servlet.http.HttpServletRequest
+import org.springframework.web.bind.annotation.RequestBody
+
+import org.springframework.web.bind.annotation.PostMapping
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 @RestController
 class OrchestratorController @Autowired constructor(
@@ -20,13 +27,19 @@ class OrchestratorController @Autowired constructor(
     private val repositoryClient: RepositoryClient,
     private val blockClient: BlockClient) {
 
+    //@GetMapping(path = ["/sessionId"], produces = [MediaType.TEXT_PLAIN_VALUE])
+    @GetMapping("/sessionId")
+    fun getSessionId(): String {
+        println("GOT REQUEST FOR SESSION ID")
+        return UUID.randomUUID().toString()
+    }
 
     @PostMapping("/process")
     fun process(
         @RequestParam("sessionId") sessionId: String,
         @RequestParam("pipeline") pipelineJson: String
     ) {
-        println("Received request from external service")
+        println("RECEIVED REQUEST TO PROCESS PIPELINE")
 
         val pipeline = Pipeline(pipelineJson)
 
@@ -178,9 +191,9 @@ class OrchestratorController @Autowired constructor(
 
         try {
             blockIdInt = blockId.toInt()
-            sessionId.toInt()
+            //sessionId.toInt()
         } catch (e: Exception) {
-            throw Exception("Invalid block or session id.")
+            throw Exception("Invalid block id. blockId=" + blockId)
         }
 
         val sessionRepositoryUri = NetworkInfo.getSessionRepositoryUri(sessionId)

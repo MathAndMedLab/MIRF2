@@ -8,7 +8,7 @@ import com.mirf.features.nifti.util.Nifti1Reader
 import org.junit.Test
 
 class BufferedImageExtKtTest {
-
+/*
     @Test
     fun imagePickerTest(){
         val path = javaClass.getResource("/msReport/mask.nii") ?: return
@@ -47,4 +47,6 @@ class BufferedImageExtKtTest {
         println(bl.map2d { if (it) 1 else 0 }.size)
         println("${bl.logSize()} ${image.logSize()}")
     }
+
+ */
 }

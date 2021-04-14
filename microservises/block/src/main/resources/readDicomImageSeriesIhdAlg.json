@@ -1,0 +1,8 @@
+{
+  "blockType": "ReadDicomImageSeriesAlg",
+  "inputClassName": "com.mirf.features.repositoryaccessors.data.RepoRequest",
+  "outputClassName": "com.mirf.features.dicomimage.data.IHDData",
+  "algorithmClassName": "com.mirf.features.dicomimage.util.DicomImageSeriesReaderAlg",
+  "taskLimit": 2,
+  "orchestratorUri": "http://localhost:5000/"
+}

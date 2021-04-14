@@ -28,6 +28,7 @@ class BlockClient {
 
         val post = HttpPost("$blockUri/process")
 
+        //здесь зипник с именем - номер сессии
         val filesToProcess = command.fileNamesToProcess
         val objectMapper = ObjectMapper()
         val filesToProcessJson = objectMapper.writeValueAsString(filesToProcess)

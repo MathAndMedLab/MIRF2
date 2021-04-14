@@ -5,9 +5,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import orchestrator.clients.BlockClient
 import orchestrator.clients.RepositoryClient
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 object NetworkInfo {
-    private val blocks: HashMap<String, ArrayList<BlockData>> = HashMap()
+    private val blocks: ConcurrentMap<String, ArrayList<BlockData>> = ConcurrentHashMap<String, ArrayList<BlockData>>()
     private var blockCounter: Int = 0
 
     private val repositories: ArrayList<String> = ArrayList()
@@ -31,7 +33,7 @@ object NetworkInfo {
                 updateState()
                 println("Network state updated ...")
                 printNetworkState()
-                delay(2000L)
+                delay(10000L)
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.mirf.features.dicomimage.data
 
-import com.mirf.playground.IHD.IntracranialHemorrhageDetectionWorkflow
 import com.pixelmed.dicom.TagFromName
+import java.io.Serializable
 
-class IHDData(private var dicomAttributeCollection: DicomAttributeCollection) : DicomData(dicomAttributeCollection) {
+class IHDData(private var dicomAttributeCollection: DicomAttributeCollection) : DicomData(dicomAttributeCollection), Serializable {
 
     override fun getImageDataAsIntArray(): IntArray {
         val slope : Int = Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.RescaleSlope))

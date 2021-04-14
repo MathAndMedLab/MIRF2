@@ -57,7 +57,7 @@ class CollectionDataAlg: Algorithm<CollectionData<Data>, FileData> {
         val ecgFiltered = it.next() as EcgData
         val ecgDiagnosis = it.next() as EcgDiagnosis
 
-        val patientInfo = PatientInfo("Leslie", 74, "W", LocalDateTime.now())
+        val patientInfo = com.mirf.features.ecg.util.PatientInfo("Leslie", 74, "W", LocalDateTime.now())
 
         val reportDetails = EcgPdfReportDetailsBuilder(patientInfo, ecgFiltered, ecgDiagnosis).build()
         val ecgReport = EcgPdfReportCreator(reportDetails).createReport()
@@ -115,7 +115,7 @@ class EcgClassificationWorkflow(val pipe: Pipeline) {
 
             pipe.rootBlock = ecgReader
 
-            return EcgClassificationWorkflow(pipe)
+            return com.mirf.features.ecg.util.EcgClassificationWorkflow(pipe)
         }
     }
 }

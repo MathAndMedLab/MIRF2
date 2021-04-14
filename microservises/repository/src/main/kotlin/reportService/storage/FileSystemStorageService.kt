@@ -14,6 +14,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import javax.annotation.PostConstruct
 
 
 @Service
@@ -22,10 +23,25 @@ class FileSystemStorageService @Autowired constructor(properties: StoragePropert
 
     private val rootLocation: Path = Paths.get(properties.location)
 
+    @PostConstruct
+    override fun init() {
+        try {
+            println("Created root directory.")
+            Files.createDirectories(rootLocation)
+        } catch (e: IOException) {
+            throw StorageException("Could not initialize storage", e)
+        }
+    }
+
     @Override
     override fun store(sessionId: String, file: MultipartFile) {
-        if (Files.exists(Paths.get(sessionId))) {
+        if (Files.exists(rootLocation.resolve(sessionId))) {
             throw StorageException("Session $sessionId already exist")
+        }
+
+        if (!Files.exists(rootLocation.resolve(sessionId))) {
+            println("Created dirs for session")
+            Files.createDirectories(Files.createDirectories(rootLocation.resolve(sessionId)))
         }
 
         val filename = Paths.get(sessionId).resolve(StringUtils.cleanPath(file.originalFilename)).toString()
@@ -59,13 +75,19 @@ class FileSystemStorageService @Autowired constructor(properties: StoragePropert
         return try {
             val file = load(sessionId, filename)
             val resource: Resource = UrlResource(file.toUri())
+            println("PATH: " + file.toString())
+            println("RES EXISTS: " + resource.exists())
+            println("RES READABLE: " + resource.isReadable)
             if (resource.exists() || resource.isReadable) {
                 resource
             } else {
+                println("res exists: " + resource.exists())
                 throw StorageFileNotFoundException(
                         "Could not read file: $filename")
             }
         } catch (e: MalformedURLException) {
+            println("Could not read file: $filename")
+            println(e.stackTrace)
             throw StorageFileNotFoundException(
                     "Could not read file: $filename", e)
         }
@@ -73,13 +95,5 @@ class FileSystemStorageService @Autowired constructor(properties: StoragePropert
 
     override fun deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile())
-    }
-
-    override fun init() {
-        try {
-            Files.createDirectories(rootLocation)
-        } catch (e: IOException) {
-            throw StorageException("Could not initialize storage", e)
-        }
     }
 }

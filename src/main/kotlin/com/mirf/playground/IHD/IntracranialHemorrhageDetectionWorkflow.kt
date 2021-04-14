@@ -4,6 +4,8 @@ import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.layout.element.Image
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.property.UnitValue
+import com.mirf.core.algorithm.Algorithm
+import com.mirf.core.data.AttributeCollection
 import com.mirf.core.data.Data
 import com.mirf.core.data.FileData
 import com.mirf.core.data.MirfData
@@ -17,6 +19,9 @@ import com.mirf.features.dicomimage.data.DicomAttributeCollection
 import com.mirf.features.dicomimage.data.DicomData
 import com.mirf.features.dicomimage.data.IHDData
 import com.mirf.features.dicomimage.util.DicomReader
+import com.mirf.features.ecg.EcgData
+import com.mirf.features.ecg.EcgLeadType
+import com.mirf.features.ecg.util.EcgCleaner
 import com.mirf.features.pdf.PdfElementsAccumulator
 import com.mirf.features.reports.PdfElementData
 import com.mirf.features.repository.LocalRepositoryCommander
@@ -28,9 +33,21 @@ import com.mirf.playground.IHD.pdf.IHDReportBuilderBlock
 import com.pixelmed.dicom.TagFromName
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
+import java.io.Serializable
 import java.nio.file.Path
 import java.time.LocalDateTime
 import javax.imageio.ImageIO
+
+
+//class DicomReadRequest(val links: List<String>) : MirfData(), Serializable
+
+class IhdDataReaderAlg: Algorithm<List<String>, IHDData> {
+    override fun execute(request: List<String>): IHDData {
+        val ihdData = IntracranialHemorrhageDetectionWorkflow.createIHDData(request.get(0))
+        return ihdData
+    }
+}
+
 
 class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
     fun exec() {
@@ -86,7 +103,7 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
             //ctReader.dataReady += imageReporter::inputReady
 
             ctReader.dataReady += CTImageExtractor::inputReady
-            CTImageExtractor.dataReady += classifier::inputReady
+            //CTImageExtractor.dataReady += classifier::inputReady
 
             //pdfBlock.dataReady += reportSaverBlock::inputReady
 
@@ -122,9 +139,19 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
         }
 
         fun createIHDData(dicomInputFile: String): IHDData {
+            println("START TO READ DICOM FILE " + dicomInputFile)
             val list = DicomReader.readDicomImageAttributesFromLocalFile(dicomInputFile)
             val dicomAttributeCollection = DicomAttributeCollection(list)
-            return IHDData(dicomAttributeCollection)
+            println("SUCCESSFULLY READ DICOM!!")
+            var ihdData : IHDData? = null
+            try {
+                ihdData = IHDData(dicomAttributeCollection)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                throw ex
+            }
+            println("SUCCESSFULLY CREATED IHD DATA!!")
+            return ihdData
         }
 
         fun createCTData(imgData: ImagingData<BufferedImage>, slope : Int, intercept : Int): ImagingData<BufferedImage> {

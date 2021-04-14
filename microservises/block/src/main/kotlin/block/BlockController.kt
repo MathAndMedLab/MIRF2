@@ -25,21 +25,37 @@ class BlockController @Autowired constructor(private val storageService: Storage
 //        coroutineScope {
 //            GlobalScope.launch {
         // async execution
+        println("BLOCK RECEIVED REQUEST")
+
         try {
             val inputObjectFileNames = ArrayList<String>()
-            // download and unarchive files
+            // download and unarchive files (zip archive with all necessary files)
             for (filename in filenames) {
+                println("START TO LOAD FILE $filename")
                 if (!repositoryClient.loadFile(sessionId, filename, repositoryUri)) {
                     // failed to store
                     Executor.notifyOrchestrator(ProcessingResult.FAILED_TO_STORE, sessionId)
                     return//@launch // TODO: check
                 }
-                Zipper.unzip(filename, "")
+
+                println("STARTED UNZIPPING IN ROOT FOLDER")
+                //will unzip in root directory in docker
+                //destdir was ""
+                Zipper.unzip(filename, sessionId)
+
+                //inside there should be serialized object in file named "input"
+                //if we have several input objects, we should have several zip files
+//                inputObjectFileNames.add(
+//                    Paths.get(filename.substring(0, filename.length - 4)).resolve("input").toString()
+//                )
 
                 inputObjectFileNames.add(
-                    Paths.get(filename.substring(0, filename.length - 4)).resolve("input").toString()
+                    Paths.get(sessionId).resolve("input").toString()
                 )
+
+
             }
+            println("INPUT OBJECT NAMES:" + inputObjectFileNames.toString())
 
             val resultFolder = Executor.run(sessionId, inputObjectFileNames)
             val resultFile = "$resultFolder.zip"
@@ -68,6 +84,7 @@ class BlockController @Autowired constructor(private val storageService: Storage
             val file = File("$resultFolderFile.zip")
             file.deleteRecursively()
         } catch (e: Exception) {
+            e.printStackTrace()
             Executor.notifyOrchestrator(ProcessingResult.FAILED_TO_PROCESS, sessionId)
             return
         }

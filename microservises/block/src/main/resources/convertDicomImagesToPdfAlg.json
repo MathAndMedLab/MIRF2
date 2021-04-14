@@ -1,0 +1,8 @@
+{
+  "blockType": "ConvertDicomImagesToPdfAlg",
+  "inputClassName": "com.mirf.core.data.medimage.ImageSeries",
+  "outputClassName": "com.mirf.features.reports.PdfElementData",
+  "algorithmClassName": "com.mirf.playground.ConvertDicomImagesToPdfAlg",
+  "taskLimit": 2,
+  "orchestratorUri": "http://localhost:5000/"
+}

@@ -1,0 +1,7 @@
+[
+  { "id": 0, "blockType" : "DicomImageSeriesReaderAlg", "children": [1, 3] },
+  { "id": 1, "blockType" : "DicomAddCircleMaskAlg", "children": [2] },
+  { "id": 2, "blockType" : "ConvertHighlightedDicomImagesToPdfAlg", "children": [4] },
+  { "id": 3, "blockType" : "ConvertDicomImagesToPdfAlg", "children": [4] },
+  { "id": 4, "blockType" : "PdfFileCreatorAlg", "children": [] }
+]

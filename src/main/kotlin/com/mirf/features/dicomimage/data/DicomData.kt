@@ -56,9 +56,12 @@ open class DicomData() : ImagingData<BufferedImage> {
      * Analise image and initialized byteArray, shortArray and IntArray
      */
     private fun analisePixelData() {
-        pixelDataWriteToFile()
-        val dirtyByteArrayPixelData: ByteArray = readPixelDataFileAndWriteToDirtyByteArray()
+        val tempFile = File.createTempFile("pixeldata-", ".txt")
+        pixelDataWriteToFile(tempFile.name)
+        val dirtyByteArrayPixelData: ByteArray = readPixelDataFileAndWriteToDirtyByteArray(tempFile.name)
         convertDirtyByteArrayToCleanByteArray(dirtyByteArrayPixelData)
+
+        tempFile.deleteOnExit()
 
         when (bitsAllocated) {
             8 -> {
@@ -204,8 +207,8 @@ open class DicomData() : ImagingData<BufferedImage> {
     /**
      * Read image and write to byte array image with preamble
      */
-    private fun readPixelDataFileAndWriteToDirtyByteArray(): ByteArray {
-        val file = File("src/main/resources/pixeldata.txt")
+    private fun readPixelDataFileAndWriteToDirtyByteArray(tempPixelDataFileName: String): ByteArray {
+        val file = File(tempPixelDataFileName)
         val imageInputStream = FileImageInputStream(file)
         val dirtyByteArrayPixelData = ByteArray(file.length().toInt())
         imageInputStream.read(dirtyByteArrayPixelData)
@@ -216,9 +219,9 @@ open class DicomData() : ImagingData<BufferedImage> {
     /**
      * PixelData write to support file
      */
-    private fun pixelDataWriteToFile() {
+    private fun pixelDataWriteToFile(tempPixelDataFileName: String) {
         val pixelData = dicomAttributeCollection.getAttributePixelData()
-        val outputStream = FileOutputStream(File("src/main/resources/pixeldata.txt"))
+        val outputStream = FileOutputStream(File(tempPixelDataFileName))
         val transferSyntaxUID = dicomAttributeCollection.getAttributeValue(TagFromName.TransactionUID)
         val dicomOutputStream = DicomOutputStream(outputStream, "", transferSyntaxUID)
         pixelData.write(dicomOutputStream)

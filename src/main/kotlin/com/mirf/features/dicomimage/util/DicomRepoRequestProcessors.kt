@@ -17,6 +17,10 @@ import java.util.Arrays
 import com.github.nocatch.NoCatch.noCatch
 import com.mirf.core.data.attribute.DataAttribute
 import com.mirf.core.data.medimage.MirfImageSeries
+import com.mirf.features.ecg.EcgData
+import com.mirf.features.ecg.EcgReader
+import com.mirf.features.repository.LocalRepositoryCommander
+import java.nio.file.Paths
 import kotlin.streams.toList
 
 /**
@@ -26,9 +30,12 @@ object DicomRepoRequestProcessors {
     var readDicomImageSeriesAlg: Algorithm<RepoRequest, ImageSeries> = SimpleAlg { request: RepoRequest -> readDicomImageSeries(request) }
 
     //TODO: (avlomakin) rewrite it!
-    private fun readDicomImageSeries(request: RepoRequest): ImageSeries {
+    fun readDicomImageSeries(request: RepoRequest): ImageSeries {
         try {
+
+            println("STARTED READING " + request.link)
             val files = request.repositoryCommander.getSeriesFileLinks(request.link)
+
 
             val images = Arrays.stream(files).parallel().map { file ->
                 val bytes = noCatch<ByteArray> { request.repositoryCommander.getFile(file) }
@@ -37,12 +44,15 @@ object DicomRepoRequestProcessors {
                 DicomReader.readDicomImage(stream)
             }.toList()
 
+            println("FILES WERE READ AS INPUT STREAMS")
             val result = MirfImageSeries(images)
+            println("FILES CONVERTED TO MIRF IMAGE SERIES")
             result.attributes.addRange(getMetadata(request))
 
             return result
 
         } catch (e: Exception) {
+            e.printStackTrace()
             throw AlgorithmExecutionException(e)
         }
 

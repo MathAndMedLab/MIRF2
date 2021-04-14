@@ -8,8 +8,9 @@ import com.mirf.features.dicomimage.copy
 import com.pixelmed.dicom.Attribute
 import com.pixelmed.dicom.AttributeTag
 import java.awt.image.BufferedImage
+import java.io.Serializable
 
-class DicomAttributeCollection : AttributeCollection {
+class DicomAttributeCollection : AttributeCollection, Serializable {
 
     private val dicomAttributes: AttributeList
 
