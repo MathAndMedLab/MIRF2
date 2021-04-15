@@ -1,24 +1,21 @@
 package orchestrator.controllers
 
+//import org.apache.catalina.servlet4preview.http.HttpServletRequest
+
 import orchestrator.clients.BlockClient
 import orchestrator.clients.RepositoryClient
 import orchestrator.data.Command
 import orchestrator.data.NetworkInfo
 import orchestrator.data.Pipeline
 import orchestrator.data.ProcessSession
-//import org.apache.catalina.servlet4preview.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URL
-import javax.servlet.http.HttpServletRequest
-import org.springframework.web.bind.annotation.RequestBody
-
-import org.springframework.web.bind.annotation.PostMapping
 import java.util.*
-import kotlin.collections.ArrayList
+import javax.servlet.http.HttpServletRequest
 
 
 @RestController
@@ -26,6 +23,9 @@ class OrchestratorController @Autowired constructor(
     private val environment: Environment,
     private val repositoryClient: RepositoryClient,
     private val blockClient: BlockClient) {
+
+    @Autowired
+    private lateinit var resultSenderHelper: ResultSenderHelper
 
     //@GetMapping(path = ["/sessionId"], produces = [MediaType.TEXT_PLAIN_VALUE])
     @GetMapping("/sessionId")
@@ -147,6 +147,14 @@ class OrchestratorController @Autowired constructor(
         val availableBlocks = NetworkInfo.getNextPipelineBlocks(sessionId)
 
         if (availableBlocks.isEmpty()) {
+            println("FINISHED PIPELINE")
+
+            // send result to Medical Web App
+            val repositoryUri = NetworkInfo.getSessionRepositoryUri(sessionId)
+            if (repositoryUri != null) {
+                resultSenderHelper.sendResultToClient(sessionId, "${sessionId}_${blockId}.zip", repositoryUri)
+            }
+
             NetworkInfo.removeSession(sessionId)
         }
 
@@ -157,7 +165,7 @@ class OrchestratorController @Autowired constructor(
                 NetworkInfo.removeSession(sessionId)
 
                 val report: String = "There is no block ${pipelineBlock.blockType} in our system"
-                // TODO: send this report
+                // TODO: send this error report
                 return
             }
             val inputFileNames = pipelineBlock.inputFiles
@@ -175,6 +183,9 @@ class OrchestratorController @Autowired constructor(
             val command = Command(inputFileNames, repositoryUri)
             blockClient.sendCommand(block.uri, sessionId, command, pipelineBlockId, nextBlockId)
         }
+
+
+
         // TODO: next task and add changes to pipeline
         // TODO: add address for sending results and error reports
 //        if (!NetworkInfo.removeSession(sessionId)) {

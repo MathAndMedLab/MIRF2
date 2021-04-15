@@ -35,9 +35,9 @@ class FileSystemStorageService @Autowired constructor(properties: StoragePropert
 
     @Override
     override fun store(sessionId: String, file: MultipartFile) {
-        if (Files.exists(rootLocation.resolve(sessionId))) {
-            throw StorageException("Session $sessionId already exist")
-        }
+//        if (Files.exists(rootLocation.resolve(sessionId))) {
+//            throw StorageException("Session $sessionId already exist")
+//        }
 
         if (!Files.exists(rootLocation.resolve(sessionId))) {
             println("Created dirs for session")

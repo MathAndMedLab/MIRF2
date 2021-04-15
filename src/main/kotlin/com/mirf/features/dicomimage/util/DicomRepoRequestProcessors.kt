@@ -47,7 +47,7 @@ object DicomRepoRequestProcessors {
             println("FILES WERE READ AS INPUT STREAMS")
             val result = MirfImageSeries(images)
             println("FILES CONVERTED TO MIRF IMAGE SERIES")
-            result.attributes.addRange(getMetadata(request))
+            //result.attributes.addRange(getMetadata(request))
 
             return result
 

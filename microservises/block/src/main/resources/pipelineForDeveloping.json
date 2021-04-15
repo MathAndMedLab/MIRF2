@@ -1,0 +1,8 @@
+{
+  "blockType": "PipelineForDeveloping",
+  "inputClassName": "java.util.List",
+  "outputClassName": "java.util.List",
+  "algorithmClassName": "com.mirf.playground.PipelineForDeveloping",
+  "taskLimit": 2,
+  "orchestratorUri": "http://localhost:5000/"
+}

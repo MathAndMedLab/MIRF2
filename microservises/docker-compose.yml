@@ -7,6 +7,7 @@ services:
       - SERVER_PORT=5011
     ports:
       - "5011:5011"
+#      - "7999:7999"
     networks:
       - app_net
 
@@ -34,66 +35,77 @@ services:
 #    depends_on:
 #      - orchestrator
 
-  dicomreaderblock:
+#  dicomreaderblock:
+#    image: mirfblock
+#    environment:
+#      - SERVER_PORT=8058
+#      - BLOCK_TYPE=dicomImageSeriesReaderAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+#
+#  addmaskblock:
+#    image: mirfblock
+#    environment:
+#      - SERVER_PORT=8059
+#      - BLOCK_TYPE=dicomAddCircleMaskAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+#
+#  highlightedpdfalg:
+#    image: mirfblock
+#    environment:
+#      - SERVER_PORT=8060
+#      - BLOCK_TYPE=convertHighlightedDicomImagesToPdfAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+#
+#  seriespdfalg:
+#    image: mirfblock
+#    environment:
+#      - SERVER_PORT=8061
+#      - BLOCK_TYPE=convertDicomImagesToPdfAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+#
+#  pdfcreatoralg:
+#    image: mirfblock
+#    environment:
+#      - SERVER_PORT=8062
+#      - BLOCK_TYPE=pdfFileCreatorAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+
+  pipelinealg:
     image: mirfblock
     environment:
-      - SERVER_PORT=8058
-      - BLOCK_TYPE=dicomImageSeriesReaderAlg
+      - SERVER_PORT=8063
+      - BLOCK_TYPE=pipelineForDeveloping
       - ORCHESTRATOR_HOST=orchestrator
       - ORCHESTRATOR_PORT=5011
     networks:
       - app_net
     depends_on:
       - orchestrator
-
-  addmaskblock:
-    image: mirfblock
-    environment:
-      - SERVER_PORT=8059
-      - BLOCK_TYPE=dicomAddCircleMaskAlg
-      - ORCHESTRATOR_HOST=orchestrator
-      - ORCHESTRATOR_PORT=5011
-    networks:
-      - app_net
-    depends_on:
-      - orchestrator
-
-  highlightedpdfalg:
-    image: mirfblock
-    environment:
-      - SERVER_PORT=8060
-      - BLOCK_TYPE=convertHighlightedDicomImagesToPdfAlg
-      - ORCHESTRATOR_HOST=orchestrator
-      - ORCHESTRATOR_PORT=5011
-    networks:
-      - app_net
-    depends_on:
-      - orchestrator
-
-  seriespdfalg:
-    image: mirfblock
-    environment:
-      - SERVER_PORT=8061
-      - BLOCK_TYPE=convertDicomImagesToPdfAlg
-      - ORCHESTRATOR_HOST=orchestrator
-      - ORCHESTRATOR_PORT=5011
-    networks:
-      - app_net
-    depends_on:
-      - orchestrator
-
-  pdfcreatoralg:
-    image: mirfblock
-    environment:
-      - SERVER_PORT=8062
-      - BLOCK_TYPE=pdfFileCreatorAlg
-      - ORCHESTRATOR_HOST=orchestrator
-      - ORCHESTRATOR_PORT=5011
-    networks:
-      - app_net
-    depends_on:
-      - orchestrator
-
 
   mirfrepository:
     image: mirfrepository
@@ -111,4 +123,4 @@ services:
 
 networks:
   app_net:
-    driver: bridge
+    driver: host

@@ -79,6 +79,29 @@ class PdfFileCreatorAlg: Algorithm<CollectionData<Data>, List<Byte>> {
 }
 
 
+class PipelineForDeveloping: Algorithm<List<String>, List<Byte>> {
+    override fun execute(fileLinks: List<String>): List<Byte> {
+        if (fileLinks.isEmpty()) {
+            throw IllegalArgumentException("Invalid input params. Link should be specified")
+        }
+        val repoRequest = RepoRequest(fileLinks.get(0), LocalRepositoryCommander())
+        val series = DicomRepoRequestProcessors.readDicomImageSeries(repoRequest)
+        val seriesWithMask = AddCircleMaskAlg().asImageSeriesAlg().execute(series)
+
+        val imagesWithMaskPdfElement = DicomImageCircleMaskApplier.createHighlightedImages(seriesWithMask)
+        val initialImagesPdfElemnt = series.asPdfElementData()
+
+        val collection : Collection<PdfElementData> = listOf(initialImagesPdfElemnt, imagesWithMaskPdfElement)
+
+        val pdfElementsCollection = CollectionData<PdfElementData>(collection)
+
+        val reportAsBytes : ByteArray = PdfElementsAccumulator.createPdfResultStream(pdfElementsCollection)
+
+        return reportAsBytes.toMutableList()
+    }
+}
+
+
 
 class DicomImageCircleMaskApplier {
 
