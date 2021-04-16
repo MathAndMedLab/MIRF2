@@ -19,6 +19,9 @@ class ResultSenderHelper {
 
     private val httpclient: CloseableHttpClient = HttpClients.createDefault()
 
+    @Value("\${medical.web.app.url}")
+    private val medicalWebApp: String? = null
+
     @Value("\${medical.web.app.url.error}")
     private val medicalWebAppError: String? = null
 
@@ -27,6 +30,8 @@ class ResultSenderHelper {
 
     fun sendResultToClient(sessionId: String, filename : String, repositoryUri: String) : Boolean{
         println("START SENDING RESULT TO CLIENT")
+        println("URL: " + medicalWebAppSuccess)
+
         val zipFromRepository = loadResultFromRepository(sessionId, filename, repositoryUri)
 
         println("LOADED RESULT FROM REPOSITORY")

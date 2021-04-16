@@ -5,6 +5,8 @@ services:
     image: orchestrator
     environment:
       - SERVER_PORT=5011
+      - MEDICAL_WEB_APP_URL=medwebapp
+#      - MEDICAL_WEB_APP=http://172.17.0.1
     ports:
       - "5011:5011"
 #      - "7999:7999"
@@ -106,6 +108,8 @@ services:
       - app_net
     depends_on:
       - orchestrator
+      - mirfrepository
+    command: ["sh", "wait-for-orchestrator.sh", "java","-jar","block-1.0-SNAPSHOT.jar"]
 
   mirfrepository:
     image: mirfrepository
@@ -121,6 +125,31 @@ services:
       - orchestrator
     command: ["sh", "wait-for-orchestrator.sh", "java","-jar","repository-1.0-SNAPSHOT.jar"]
 
+  medwebpostgres:
+    image: medwebpostgres
+    ports:
+      - "5555:5555"
+    networks:
+      - app_net
+
+  medwebapp:
+    image: medwebapp
+    environment:
+      - SERVER_PORT=7999
+      - MIRF_ORCHESTRATOR_URL=orchestrator
+      - MIRF_ORCHESTRATOR_PORT=5011
+      - MIRF_REPOSITORY_URL=mirfrepository
+      - MIRF_REPOSITORY_PORT=8050
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://medwebpostgres:5555/medwebappdb
+    ports:
+      - "7999:7999"
+    depends_on:
+      - pipelinealg
+      - mirfrepository
+      - medwebpostgres
+    networks:
+      - app_net
+
 networks:
   app_net:
-    driver: host
+    driver: bridge
