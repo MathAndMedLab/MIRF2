@@ -12,6 +12,7 @@ libsDirName = "$project.projectDir/out"
 sourceCompatibility = 1.8
 
 jar {
+    processResources.exclude('*')
     manifest {
         attributes 'Implementation-Title': 'med_sample',
                 'Implementation-Version': version,

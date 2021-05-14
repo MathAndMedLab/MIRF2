@@ -123,7 +123,6 @@ object Executor {
                 collectionData
             }
 
-        println("DESERIALIZED INPUT OBJECTS")
         val res = executionMethod.invoke(algorithmObject, inputObject)
 
         println("BLOCK METHOD EXECUTED")

@@ -33,7 +33,7 @@ object NetworkInfo {
                 updateState()
                 println("Network state updated ...")
                 printNetworkState()
-                delay(10000L)
+                delay(600000L)
             }
         }
     }

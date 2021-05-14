@@ -23,14 +23,13 @@ class ResultSenderHelper {
     private val medicalWebApp: String? = null
 
     @Value("\${medical.web.app.url.error}")
-    private val medicalWebAppError: String? = null
+    var medicalWebAppError: String? = null
 
     @Value("\${medical.web.app.url.success}")
-    private val medicalWebAppSuccess: String? = null
+    var medicalWebAppSuccess: String? = null
 
     fun sendResultToClient(sessionId: String, filename : String, repositoryUri: String) : Boolean{
         println("START SENDING RESULT TO CLIENT")
-        println("URL: " + medicalWebAppSuccess)
 
         val zipFromRepository = loadResultFromRepository(sessionId, filename, repositoryUri)
 
@@ -48,6 +47,20 @@ class ResultSenderHelper {
         println("SENT RESULT TO CLIENT: " +  response.statusLine.statusCode)
         return response.statusLine.statusCode == 200
     }
+
+    fun sendErrorToClient(sessionId: String, reason: String) : Boolean{
+        println("START SENDING ERROR TO CLIENT")
+        val post = HttpPost(medicalWebAppError)
+        val builder = MultipartEntityBuilder.create()
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+        builder.addTextBody("sessionId", sessionId, ContentType.DEFAULT_BINARY)
+        builder.addTextBody("reason", reason, ContentType.DEFAULT_BINARY)
+        val entity = builder.build()
+        post.entity = entity
+        val response: HttpResponse = httpclient.execute(post)
+        return response.statusLine.statusCode == 200
+    }
+
 
     private fun loadResultFromRepository(sessionId: String, filename : String, repositoryUri: String): ByteArray {
         val httpGet: HttpUriRequest =

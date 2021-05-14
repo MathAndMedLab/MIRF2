@@ -47,7 +47,7 @@ class OrchestratorController @Autowired constructor(
 
         if (repositoryUri == null) {
             val report: String = "There is no registered repository in the system"
-            // TODO: send this report
+            resultSenderHelper.sendErrorToClient(sessionId, report)
             return
         }
 
@@ -65,7 +65,7 @@ class OrchestratorController @Autowired constructor(
                 NetworkInfo.removeSession(sessionId)
 
                 val report: String = "There is no block ${pipelineBlock.blockType} in our system"
-                // TODO: send this report
+                resultSenderHelper.sendErrorToClient(sessionId, report)
                 return
             }
 
@@ -102,6 +102,20 @@ class OrchestratorController @Autowired constructor(
         val address = request.remoteAddr
         val url = URL("http://$address:$port")
         return ResponseEntity.ok(NetworkInfo.registerBlock(blockType, url.toString(), taskLimit))
+    }
+
+    @PostMapping("/registeredWebApp")
+    fun registerMedWebApp(
+//        @RequestParam("port") port: String,
+        request: HttpServletRequest
+    ): ResponseEntity<String> {
+        println("Try to register")
+        val address = request.remoteAddr
+        val urlSuccess = "http://$address:80/api/mirf/mirfSuccess"
+        val urlError = "http://$address:80/api/mirf/mirfError"
+        resultSenderHelper.medicalWebAppSuccess = urlSuccess
+        resultSenderHelper.medicalWebAppError = urlError
+        return ResponseEntity.ok("Saved address successfully")
     }
 
     @PostMapping("/registerRepository")
@@ -165,7 +179,7 @@ class OrchestratorController @Autowired constructor(
                 NetworkInfo.removeSession(sessionId)
 
                 val report: String = "There is no block ${pipelineBlock.blockType} in our system"
-                // TODO: send this error report
+                resultSenderHelper.sendErrorToClient(sessionId, report)
                 return
             }
             val inputFileNames = pipelineBlock.inputFiles
@@ -173,7 +187,7 @@ class OrchestratorController @Autowired constructor(
             val repositoryUri = NetworkInfo.getSessionRepositoryUri(sessionId)
             if (repositoryUri == null) {
                 // internal error
-                // TODO: send error to client
+                resultSenderHelper.sendErrorToClient(sessionId, "Internal error with repository")
                 NetworkInfo.removeSession(sessionId)
                 return
             }
@@ -213,6 +227,6 @@ class OrchestratorController @Autowired constructor(
 
         repositoryClient.removeSession(sessionId, sessionRepositoryUri!!)
 
-        // TODO: send error report to client
+        resultSenderHelper.sendErrorToClient(sessionId, "Error during block execution")
     }
 }

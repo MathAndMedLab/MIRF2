@@ -58,18 +58,14 @@ class RepositoryClient() {
 
             val bytes = EntityUtils.toByteArray(entity1)
 
-            println("GOT RESPONSE FROM REPO WITH FILE. Bytes size = " + bytes.size)
-
             if (bytes.isEmpty()) {
                 return false
             }
 
 
             val myFile = File(filename)
-            println("COPIED FILE LOCALLY IN BLOCK. filename = $filename")
             val outStream = FileOutputStream(myFile)
             outStream.write(bytes)
-            println("FINISHED COPYING FILE. filename = $filename")
         }
         // TODO: check response
         return true

@@ -37,9 +37,6 @@ open class App {
     open fun init(storageService: StorageService): CommandLineRunner? {
         return CommandLineRunner { args: Array<String?>? ->
             try {
-                println(blockType)
-
-                println(serverPort)
 
                 val classLoader = javaClass.classLoader
                 val blockConfigurationStream: InputStream? = classLoader.getResourceAsStream(blockType + ".json")
@@ -50,7 +47,6 @@ open class App {
                     throw IllegalArgumentException("Block configuration file not found: " + "blockType" + ".json")
                 } else {
                     jsonBlockConfiguration = String(blockConfigurationStream.readBytes())
-                    println(jsonBlockConfiguration)
                 }
 
                 val mapper = jacksonObjectMapper()
@@ -59,8 +55,6 @@ open class App {
                 val orchestratorAddress = URI("http", null, orchestratorHost, orchestratorPort.toInt(), null, null, null)
 
                 configuration.orchestratorUri = orchestratorAddress.toString()
-
-                println("Orchestrator address: ${configuration.orchestratorUri}")
 
 //                val appPropertiesStream: InputStream? = classLoader.getResourceAsStream("application.properties")
 //
@@ -97,7 +91,6 @@ open class App {
                 )
 
             } catch (e: Exception) {
-                println("Configuration error")
                 throw e
             }
 //            storageService.deleteAll()

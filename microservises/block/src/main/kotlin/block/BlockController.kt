@@ -31,14 +31,12 @@ class BlockController @Autowired constructor(private val storageService: Storage
             val inputObjectFileNames = ArrayList<String>()
             // download and unarchive files (zip archive with all necessary files)
             for (filename in filenames) {
-                println("START TO LOAD FILE $filename")
                 if (!repositoryClient.loadFile(sessionId, filename, repositoryUri)) {
                     // failed to store
                     Executor.notifyOrchestrator(ProcessingResult.FAILED_TO_STORE, sessionId)
                     return//@launch // TODO: check
                 }
 
-                println("STARTED UNZIPPING IN ROOT FOLDER")
                 //will unzip in root directory in docker
                 //destdir was ""
                 Zipper.unzip(filename, sessionId)
@@ -55,7 +53,6 @@ class BlockController @Autowired constructor(private val storageService: Storage
 
 
             }
-            println("INPUT OBJECT NAMES:" + inputObjectFileNames.toString())
 
             val resultFolder = Executor.run(sessionId, inputObjectFileNames)
             val resultFile = "$resultFolder.zip"
