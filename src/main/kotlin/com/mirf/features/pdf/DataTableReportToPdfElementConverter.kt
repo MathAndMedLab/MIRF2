@@ -118,3 +118,9 @@ fun List<BufferedImage>.asPdfElement(range: Iterable<Int> = 0 until this.size,
     return elementDecorator(result)
 }
 
+//----------------------------------------------------------------
+
+fun String.asPdfElementData(): PdfElementData {
+    return PdfElementData(Paragraph(this))
+}
+

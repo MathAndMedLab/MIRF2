@@ -5,10 +5,8 @@ import com.itextpdf.layout.element.Image
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.property.UnitValue
 import com.mirf.core.algorithm.Algorithm
-import com.mirf.core.data.AttributeCollection
-import com.mirf.core.data.Data
-import com.mirf.core.data.FileData
-import com.mirf.core.data.MirfData
+import com.mirf.core.algorithm.asImageSeriesAlg
+import com.mirf.core.data.*
 import com.mirf.core.data.medimage.ImagingData
 import com.mirf.core.pipeline.AccumulatorWithAlgBlock
 import com.mirf.core.pipeline.AlgorithmHostBlock
@@ -23,16 +21,21 @@ import com.mirf.features.ecg.EcgData
 import com.mirf.features.ecg.EcgLeadType
 import com.mirf.features.ecg.util.EcgCleaner
 import com.mirf.features.pdf.PdfElementsAccumulator
+import com.mirf.features.pdf.asPdfElementData
 import com.mirf.features.reports.PdfElementData
 import com.mirf.features.repository.LocalRepositoryCommander
 import com.mirf.features.repositoryaccessors.AlgorithmExecutionException
 import com.mirf.features.repositoryaccessors.RepoFileSaver
 import com.mirf.features.repositoryaccessors.RepositoryAccessorBlock
 import com.mirf.features.repositoryaccessors.data.RepoRequest
+import com.mirf.playground.AddCircleMaskAlg
+import com.mirf.playground.DicomImageCircleMaskApplier
 import com.mirf.playground.IHD.pdf.IHDReportBuilderBlock
 import com.pixelmed.dicom.TagFromName
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.Serializable
 import java.nio.file.Path
 import java.time.LocalDateTime
@@ -41,10 +44,33 @@ import javax.imageio.ImageIO
 
 //class DicomReadRequest(val links: List<String>) : MirfData(), Serializable
 
-class IhdDataReaderAlg: Algorithm<List<String>, IHDData> {
-    override fun execute(request: List<String>): IHDData {
+class IhdClassifierAlg: Algorithm<List<String>, List<Byte>> {
+    override fun execute(request: List<String>): List<Byte> {
         val ihdData = IntracranialHemorrhageDetectionWorkflow.createIHDData(request.get(0))
-        return ihdData
+        val ctData = IntracranialHemorrhageDetectionWorkflow.createCTData(
+            ihdData, ihdData.getImageDataAsIntArray()[0], ihdData.getImageDataAsIntArray()[1]
+        )
+        val ctDiagnosis = IntracranialHemorrhageDetectionDiagnosis(ctData)
+        val classification = ctDiagnosis.classify()
+        //val classification = listOf<Float>(1.14f, 0.005f)
+        val pdfTextParagraph = classification.joinToString().asPdfElementData();
+
+        //val initialImagesPdfElemnt = ctData.asPdfElementData()
+
+        val collection : Collection<PdfElementData> = listOf(pdfTextParagraph)
+
+        val pdfElementsCollection = CollectionData<PdfElementData>(collection)
+
+        val reportAsBytes : ByteArray = PdfElementsAccumulator.createPdfResultStream(pdfElementsCollection)
+
+//        println("Strated writing to temp file: " + classification.joinToString())
+//        val resultFile = File("result-file.pdf");
+//        var os = FileOutputStream(resultFile);
+//        os.write(reportAsBytes);
+//        os.close()
+
+
+        return reportAsBytes.toMutableList()
     }
 }
 

@@ -10,7 +10,7 @@ class IntracranialHemorrhageDetectionDiagnosis : Data {
     // IntracranialHemorrhageDetection
     lateinit var image : ImagingData<BufferedImage>
         private set
-    var modelName  = "src/test/resources/dicomDataTest/model_17_03_2021.pb"
+    var modelName  = "dicom_classifier/model_17_03_2021.pb"
         private set
     var inputName = "input_1"
         private set
@@ -24,14 +24,20 @@ class IntracranialHemorrhageDetectionDiagnosis : Data {
     }
 
     private fun forward_pass(): FloatArray {
+        println(modelName)
+        println(inputName)
+        println(outputName)
         val tfModel = TensorflowModelInterface(null, modelName, inputName, outputName, 6)
 
-        return tfModel.runModel(image.getImageDataAsFloatArray(), 1, dims, dims, 3)
+        println("TFmodel: " + tfModel)
+        val image1 = image.getImageDataAsFloatArray()
+        println("Input image: " + image1.size)
+        return tfModel.runModel(image1, 1, dims, dims, 3)
     }
 
-    fun classify() {
+    fun classify() : List<Float> {
         val answers : FloatArray = forward_pass()
-        println(answers.asList())
+        return answers.asList()
     }
 
     fun diagnose() : FloatArray {
