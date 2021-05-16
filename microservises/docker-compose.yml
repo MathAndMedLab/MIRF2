@@ -1,16 +1,16 @@
 version: "3.5"
 
 services:
-  orchestrator:
-    image: ashvyrkova/mirforchestrator
-    environment:
-      - SERVER_PORT=5011
-      - MEDICAL_WEB_APP_URL=medwebapp
-      - MEDICAL_WEB_APP_PORT=7999
-    ports:
-      - "5011:5011"
-    networks:
-      - app_net
+#  orchestrator:
+#    image: ashvyrkova/mirforchestrator
+#    environment:
+#      - SERVER_PORT=5011
+#      - MEDICAL_WEB_APP_URL=medwebapp
+#      - MEDICAL_WEB_APP_PORT=7999
+#    ports:
+#      - "5011:5011"
+#    networks:
+#      - app_net
 
 #  ecgreaderblock:
 #    image: mirfblock
@@ -109,38 +109,38 @@ services:
 #      - orchestrator
 #      - mirfrepository
 #    command: ["sh", "wait-for-orchestrator.sh", "java","-jar","block-1.0-SNAPSHOT.jar"]
-
-
-  ihdpipeline:
-    image: ashvyrkova/mirfblockml
-    environment:
-      - SERVER_PORT=8064
-      - BLOCK_TYPE=ihdClassifierAlg
-      - ORCHESTRATOR_HOST=orchestrator
-      - ORCHESTRATOR_PORT=5011
-    networks:
-      - app_net
-    depends_on:
-      - orchestrator
-      - mirfrepository
-    command: ["sh", "wait-for-orchestrator.sh", "java","-jar","block-1.0-SNAPSHOT.jar"]
-
-
-
-  mirfrepository:
-    image: ashvyrkova/mirfrepository
-    environment:
-      - SERVER_PORT=8050
-      - ORCHESTRATOR_HOST=orchestrator
-      - ORCHESTRATOR_PORT=5011
-    ports:
-      - "8050:8050"
-    networks:
-      - app_net
-    depends_on:
-      - orchestrator
-    command: ["sh", "wait-for-orchestrator.sh", "java","-jar","repository-1.0-SNAPSHOT.jar"]
-
+#
+#
+#  ihdpipeline:
+#    image: ashvyrkova/mirfblockml
+#    environment:
+#      - SERVER_PORT=8064
+#      - BLOCK_TYPE=ihdClassifierAlg
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+#      - mirfrepository
+#    command: ["sh", "wait-for-orchestrator.sh", "java","-jar","block-1.0-SNAPSHOT.jar"]
+#
+#
+#
+#  mirfrepository:
+#    image: ashvyrkova/mirfrepository
+#    environment:
+#      - SERVER_PORT=8050
+#      - ORCHESTRATOR_HOST=orchestrator
+#      - ORCHESTRATOR_PORT=5011
+#    ports:
+#      - "8050:8050"
+#    networks:
+#      - app_net
+#    depends_on:
+#      - orchestrator
+#    command: ["sh", "wait-for-orchestrator.sh", "java","-jar","repository-1.0-SNAPSHOT.jar"]
+#
 
 
   medwebpostgres:
@@ -175,27 +175,27 @@ services:
       - app_net
 
 
-  medwebapp:
-    image: ashvyrkova/medwebapp
-    environment:
-      - SERVER_PORT=7999
-      - MIRF_ORCHESTRATOR_URL=orchestrator
-      - MIRF_ORCHESTRATOR_PORT=5011
-      - MIRF_REPOSITORY_URL=mirfrepository
-      - MIRF_REPOSITORY_PORT=8050
-      - ORTHANC_URL=http://orthanc:8042
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://medwebpostgres:5555/medwebappdb
-      - SFTP_URL=sftp
-      - SFTP_PORT=22
-    ports:
-      - "7999:7999"
-    depends_on:
-#      - pipelinealg
-#      - mirfrepository
-      - medwebpostgres
-      - sftp
-    networks:
-      - app_net
+#  medwebapp:
+#    image: ashvyrkova/medwebapp
+#    environment:
+#      - SERVER_PORT=7999
+#      - MIRF_ORCHESTRATOR_URL=orchestrator
+#      - MIRF_ORCHESTRATOR_PORT=5011
+#      - MIRF_REPOSITORY_URL=mirfrepository
+#      - MIRF_REPOSITORY_PORT=8050
+#      - ORTHANC_URL=http://orthanc:8042
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://medwebpostgres:5555/medwebappdb
+#      - SFTP_URL=sftp
+#      - SFTP_PORT=22
+#    ports:
+#      - "7999:7999"
+#    depends_on:
+##      - pipelinealg
+##      - mirfrepository
+#      - medwebpostgres
+#      - sftp
+#    networks:
+#      - app_net
 
 networks:
   app_net:

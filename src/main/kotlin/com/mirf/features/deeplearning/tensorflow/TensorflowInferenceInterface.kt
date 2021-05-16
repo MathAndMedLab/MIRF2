@@ -1,21 +1,11 @@
 package com.mirf.features.deeplearning.tensorflow
 
-import java.io.ByteArrayOutputStream
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStream
-import java.nio.ByteBuffer
-import java.nio.DoubleBuffer
-import java.nio.FloatBuffer
-import java.nio.IntBuffer
-import java.nio.LongBuffer
-import java.util.ArrayList
-import org.tensorflow.Graph
-import org.tensorflow.Operation
-import org.tensorflow.Session
-import org.tensorflow.Tensor
-import org.tensorflow.Tensors
+import org.apache.commons.compress.utils.IOUtils
+import org.tensorflow.*
 import org.tensorflow.types.UInt8
+import java.io.*
+import java.nio.*
+
 
 // TODO(musatian): uncomment standart logs and replace them with custom MIRF logs
 /**
@@ -44,6 +34,8 @@ class TensorflowInferenceInterface {
      */
     constructor(input: InputStream?, model: String) {
 
+        println("MODEL: " + model);
+
         this.modelName = model
         this.g = Graph()
         this.sess = Session(g)
@@ -53,22 +45,29 @@ class TensorflowInferenceInterface {
         `is` = input
         if (`is` == null) {
             try {
-                `is` = FileInputStream(model)
+                `is` = javaClass.classLoader.getResourceAsStream(model)
+                println("MODEL: " + model)
+                println("INPUT STREAM: " + (`is` == null))
+                if (`is` == null) {
+                    throw Exception();
+                }
+//                `is` = FileInputStream(model)
             } catch (e: IOException) {
                 throw RuntimeException("Failed to load model from '$model'", e)
             }
         }
 
         try {
-            val graphDef = ByteArray(`is`.available())
-            val numBytesRead = `is`.read(graphDef)
-            if (numBytesRead != graphDef.size) {
-                throw IOException(
-                        "read error: read only "
-                                + numBytesRead
-                                + " of the graph, expected to read "
-                                + graphDef.size)
-            }
+            val graphDef  = IOUtils.toByteArray(`is`)
+//            val graphDef = ByteArray(`is`.available())
+//            val numBytesRead = `is`.read(graphDef)
+//            if (numBytesRead != graphDef.size) {
+//                throw IOException(
+//                        "read error: read only "
+//                                + numBytesRead
+//                                + " of the graph, expected to read "
+//                                + graphDef.size)
+//            }
 
 
             loadGraph(graphDef, g)

@@ -31,6 +31,8 @@ import com.mirf.features.repositoryaccessors.data.RepoRequest
 import com.mirf.playground.AddCircleMaskAlg
 import com.mirf.playground.DicomImageCircleMaskApplier
 import com.mirf.playground.IHD.pdf.IHDReportBuilderBlock
+import com.mirf.playground.IHD.pdf.IhdPdfReportCreator
+import com.mirf.playground.IHD.pdf.IhdPdfReportDetails
 import com.pixelmed.dicom.TagFromName
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
@@ -52,16 +54,23 @@ class IhdClassifierAlg: Algorithm<List<String>, List<Byte>> {
         )
         val ctDiagnosis = IntracranialHemorrhageDetectionDiagnosis(ctData)
         val classification = ctDiagnosis.classify()
-        //val classification = listOf<Float>(1.14f, 0.005f)
-        val pdfTextParagraph = classification.joinToString().asPdfElementData();
+        val readableDiagnosis = ctDiagnosis.createHumanReadableConclusion(classification.toFloatArray())
+//        val classification = listOf<Float>(0.032059982f, 0.003871989f, 0.0058109034f, 0.0042512226f, 0.0046861684f, 0.00847459f)
+//        val pdfTextParagraph = classification.joinToString().asPdfElementData();
 
+
+
+        val pdfDetails = IhdPdfReportDetails.createDefaultIhdReportDetails(ihdData.getImage(), readableDiagnosis)
+        val reportCreator = IhdPdfReportCreator(pdfDetails)
+        val result = reportCreator.createReport()
+        val reportAsBytes : ByteArray = result.stream.toByteArray()
         //val initialImagesPdfElemnt = ctData.asPdfElementData()
 
-        val collection : Collection<PdfElementData> = listOf(pdfTextParagraph)
+//        val collection : Collection<PdfElementData> = listOf(pdfTextParagraph)
+//
+//        val pdfElementsCollection = CollectionData<PdfElementData>(collection)
 
-        val pdfElementsCollection = CollectionData<PdfElementData>(collection)
-
-        val reportAsBytes : ByteArray = PdfElementsAccumulator.createPdfResultStream(pdfElementsCollection)
+//        val reportAsBytes : ByteArray = PdfElementsAccumulator.createPdfResultStream(pdfElementsCollection)
 
 //        println("Strated writing to temp file: " + classification.joinToString())
 //        val resultFile = File("result-file.pdf");

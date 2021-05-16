@@ -19,19 +19,20 @@ class IntracranialHemorrhageDetectionDiagnosis : Data {
     var dims : Long = 512
         private set
 
+    val diagnosisNames = listOf<String>("Epidural hemorrhage",
+        "Intraparenchymal hemorrhage",
+        "Intraventricular hemorrhage",
+        "Subarachnoid hemorrhage",
+        "Subdural hemorrhage")
+
     constructor(image: ImagingData<BufferedImage>) {
         this.image = image
     }
 
     private fun forward_pass(): FloatArray {
-        println(modelName)
-        println(inputName)
-        println(outputName)
         val tfModel = TensorflowModelInterface(null, modelName, inputName, outputName, 6)
 
-        println("TFmodel: " + tfModel)
         val image1 = image.getImageDataAsFloatArray()
-        println("Input image: " + image1.size)
         return tfModel.runModel(image1, 1, dims, dims, 3)
     }
 
@@ -44,6 +45,26 @@ class IntracranialHemorrhageDetectionDiagnosis : Data {
         return forward_pass()
     }
 
+    fun createHumanReadableConclusion(cnnOutput: FloatArray) : String {
+        var conclusion = "";
+
+        var maxIndex = 0
+        var maxVal = cnnOutput.get(0)
+        cnnOutput.forEachIndexed{ ind, value ->
+            if (value.compareTo(maxVal) > 0) {
+                maxIndex = ind
+                maxVal = value
+            }
+        }
+
+        if (maxIndex.equals(5)) {
+            conclusion = "Most likely this image does not contain any hemorrhage\n" + cnnOutput.joinToString()
+        } else {
+            conclusion = "The most likely diagnosis is ${diagnosisNames.get(maxIndex)} \n" + cnnOutput.joinToString()
+        }
+
+        return conclusion
+    }
 
     override val attributes: AttributeCollection
         get() = image.attributes

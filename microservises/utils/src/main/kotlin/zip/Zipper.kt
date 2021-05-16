@@ -93,8 +93,6 @@ object Zipper {
         val destFile = File(destinationDir.canonicalPath, zipEntry.name)
         val destDirPath = destinationDir.canonicalPath
         val destFilePath = destFile.canonicalPath
-        println("destDirPath: $destDirPath")
-        println("destFilePath: $destFilePath")
         if (!destFilePath.startsWith(destDirPath)) {
             throw IOException("Entry is outside of the target dir: " + zipEntry.name)
         }

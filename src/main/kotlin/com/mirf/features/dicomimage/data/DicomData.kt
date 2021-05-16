@@ -60,8 +60,7 @@ open class DicomData() : ImagingData<BufferedImage> {
         pixelDataWriteToFile(tempFile.name)
         val dirtyByteArrayPixelData: ByteArray = readPixelDataFileAndWriteToDirtyByteArray(tempFile.name)
         convertDirtyByteArrayToCleanByteArray(dirtyByteArrayPixelData)
-
-        tempFile.deleteOnExit()
+        println("Deleted temp pixel file: " + tempFile.delete())
 
         when (bitsAllocated) {
             8 -> {

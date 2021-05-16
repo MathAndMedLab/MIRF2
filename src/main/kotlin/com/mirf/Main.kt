@@ -5,6 +5,8 @@ import com.mirf.features.ecg.EcgLeadType
 import com.mirf.features.ecg.EcgReader
 import com.mirf.features.ecg.util.*
 import com.mirf.playground.DicomImageCircleMaskApplier
+import com.mirf.playground.IHD.IhdClassifierAlg
+import com.mirf.playground.IHD.IntracranialHemorrhageDetectionWorkflow
 import com.mirf.playground.NiftiTest
 import java.awt.Color
 import java.time.LocalDateTime
@@ -14,7 +16,8 @@ object Main {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        //runEcgPipeline()
+        val ihdAlg = IhdClassifierAlg();
+        ihdAlg.execute(listOf("ihd-kaggle.dcm"))
     }
 
     /**
