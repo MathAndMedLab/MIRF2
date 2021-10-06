@@ -9,7 +9,7 @@ class TensorflowModelTest {
 
     @Test
     fun TensorflowModelInterface_loadModel_readsModelWithoutErrors() {
-        val modelName = "src/test/resources/xor_model.pb"
+        val modelName = "xor_model.pb"
         val tfModel = TensorflowModelInterface(null, modelName, "my_input/X", "my_output/Sigmoid", 1)
         // check that input and output are set correctly
         Assert.assertEquals("my_input/X", tfModel.inputName)
@@ -18,7 +18,7 @@ class TensorflowModelTest {
 
     @Test
     fun TensorflowModelInterface_runXORmodel_outputsResult() {
-        val modelName = "src/test/resources/xor_model.pb"
+        val modelName = "xor_model.pb"
         val tfModel = TensorflowModelInterface(null, modelName, "my_input/X", "my_output/Sigmoid", 1)
 
         // check that input and output are set correctly
@@ -42,7 +42,7 @@ class TensorflowModelTest {
     @Test
     fun TensorflowModelInterface_runClassificationOnImagemodel_outputsResult() {
         val img_size = 128
-        val modelName = "src/test/resources/tf_model.pb"
+        val modelName = "tf_model.pb"
         val tfModel = TensorflowModelInterface(null, modelName, "conv2d_1_input_1", "activation_5_1/Sigmoid", 1, 1)
 
         val bigArr = FloatArray(img_size * img_size * 3)
@@ -55,12 +55,13 @@ class TensorflowModelTest {
     @Ignore
     fun Tensorflow_runEcgClassification() {
         val img_size = 128
-        val modelName = "src/test/resources/ecg_tf_cnn.pb"
+        val modelName = "ecg_tf_cnn.pb"
         //val modelName = "src/test/resources/tf_model.pb"
 
         val tfModel = TensorflowModelInterface(null, modelName, "conv2d_1_input", "dense_2/Softmax", 8)
 
         val bigArr = FloatArray(img_size * img_size * 1)
+        
         // check that input and output are set correctly
         var res = tfModel.runModel(bigArr, 1, 128, 128, 1)
         for (i in res)

@@ -11,16 +11,15 @@ libsDirName = "$project.projectDir/out"
 
 sourceCompatibility = 1.8
 
-jar {
-//    processResources.exclude('*')
-    manifest {
-        attributes 'Implementation-Title': 'med_sample',
-                'Implementation-Version': version,
-                'Main-Class': 'com.mirf.Main'
-    }
+// jar {
+//     manifest {
+//         attributes 'Implementation-Title': 'med_sample',
+//                 'Implementation-Version': version,
+//                 'Main-Class': 'com.mirf.Main'
+//     }
 
-    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-}
+//     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+// }
 
 repositories {
     mavenCentral()
@@ -44,9 +43,7 @@ dependencies {
     compile group: 'org.tensorflow', name: 'libtensorflow', version: '1.15.0'
     compile group: 'org.jfree', name: 'jfreechart', version: '1.0.19'
     implementation group: 'commons-io', name: 'commons-io', version: '2.5'
-
 }
-
 
 distributions {
 
@@ -56,11 +53,13 @@ task showMeCache {
     configurations.compile.each { println it }
     println libsDirName
 }
+
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
+
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
