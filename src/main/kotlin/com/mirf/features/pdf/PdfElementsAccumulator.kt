@@ -18,23 +18,30 @@ class PdfElementsAccumulator(private val reportName: String) : Algorithm<Collect
 
     override fun execute(input: CollectionData<PdfElementData>): FileData {
 
-        val resultStream = ByteArrayOutputStream()
-        val writer = PdfWriter(resultStream)
+        val pdfByteArray = createPdfResultStream(input)
 
-        val pdf = PdfDocument(writer)
-
-        val document = Document(pdf, PageSize.A4)
-
-        document.setMargins(10f, 10f, 10f, 10f)
-
-        for (element in input.collection)
-            document.add(element.pdfElement)
-
-        document.close()
-        return FileData(resultStream.toByteArray(), reportName, EXTENSION)
+        return FileData(pdfByteArray, reportName, EXTENSION)
     }
 
     companion object {
+
+        fun createPdfResultStream(input: CollectionData<PdfElementData>): ByteArray {
+            val resultStream = ByteArrayOutputStream()
+            val writer = PdfWriter(resultStream)
+
+            val pdf = PdfDocument(writer)
+
+            val document = Document(pdf, PageSize.A4)
+
+            document.setMargins(10f, 10f, 10f, 10f)
+
+            for (element in input.collection)
+                document.add(element.pdfElement)
+
+            document.close()
+
+            return resultStream.toByteArray()
+        }
 
         private const val EXTENSION = ".pdf"
     }

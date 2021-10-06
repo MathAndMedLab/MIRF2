@@ -21,6 +21,7 @@ class TensorflowModelInterface (input: InputStream?, modelFile: String, inputNam
 
     init {
         try {
+            println("MODEL: " + modelFile);
             val inferenceInterface = TensorflowInferenceInterface(input, modelFile)
             this.inferenceInterface = inferenceInterface
             this.modelFile = modelFile
@@ -33,14 +34,18 @@ class TensorflowModelInterface (input: InputStream?, modelFile: String, inputNam
             }
             this.numOfOutputValues = numOfOutputs
         } catch (e: Throwable) {
+            e.printStackTrace()
         }
 
     }
 
     fun runModel(src: FloatArray, vararg dims: Long): FloatArray {
         try {
+            println("INPUT NAME in runmodel" + inputName)
+            println("SRC: " + src.size)
             inferenceInterface!!.feed(inputName!!, src, *dims)
         } catch (e: Error) {
+            e.printStackTrace()
         }
 
         val outputNames = this!!.outputName?.let { arrayOf<String>(it) }
@@ -50,13 +55,14 @@ class TensorflowModelInterface (input: InputStream?, modelFile: String, inputNam
                 inferenceInterface!!.run(outputNames)
             }
         } catch (e: Error) {
+            e.printStackTrace()
         }
 
         try {
             // Copy the output Tensor back into the output array.
             inferenceInterface!!.fetch(outputName!!, outputValues)
         } catch (e: Error) {
-
+            e.printStackTrace()
         }
         return outputValues
     }

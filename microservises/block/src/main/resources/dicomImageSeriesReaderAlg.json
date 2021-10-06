@@ -1,0 +1,8 @@
+{
+  "blockType": "DicomImageSeriesReaderAlg",
+  "inputClassName": "java.util.List",
+  "outputClassName": "com.mirf.core.data.medimage.ImageSeries",
+  "algorithmClassName": "com.mirf.playground.DicomImageSeriesReaderAlg",
+  "taskLimit": 2,
+  "orchestratorUri": "http://localhost:5000/"
+}

@@ -2,11 +2,12 @@ package com.mirf.core.data.medimage
 
 import com.mirf.core.array.BooleanArray2D
 import com.mirf.core.array.ShortArray2D
+import com.mirf.core.data.AttributeCollection
 import java.awt.image.BufferedImage
 
-class ShortImagingData(
-        val rawPixels: ShortArray2D,
-        val rawPixelTransformer: RawPixelToRgbTransformer) : ImagingData<BufferedImage> {
+class ShortImagingData(val rawPixels: ShortArray2D,
+                       val rawPixelTransformer: RawPixelToRgbTransformer) : ImagingData<BufferedImage> {
+
 
     override fun applyMask(mask: BooleanArray2D) {
         for (i in 0 until rawPixels.rows)
@@ -37,5 +38,13 @@ class ShortImagingData(
     override fun getImageDataAsIntArray(): IntArray {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override val attributes: AttributeCollection
+        get() = TODO("Not yet implemented")
+
+    override fun getImageDataAsFloatArray(): FloatArray {
+        TODO("Not yet implemented")
+    }
+
 
 }

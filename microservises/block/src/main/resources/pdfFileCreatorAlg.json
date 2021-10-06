@@ -1,0 +1,8 @@
+{
+  "blockType": "PdfFileCreatorAlg",
+  "inputClassName": "com.mirf.core.data.CollectionData",
+  "outputClassName": "java.util.List",
+  "algorithmClassName": "com.mirf.playground.PdfFileCreatorAlg",
+  "taskLimit": 2,
+  "orchestratorUri": "http://localhost:5000/"
+}

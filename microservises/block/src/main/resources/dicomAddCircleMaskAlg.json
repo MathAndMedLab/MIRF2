@@ -1,0 +1,8 @@
+{
+  "blockType": "DicomAddCircleMaskAlg",
+  "inputClassName": "com.mirf.core.data.medimage.ImageSeries",
+  "outputClassName": "com.mirf.core.data.medimage.ImageSeries",
+  "algorithmClassName": "com.mirf.playground.DicomAddCircleMaskAlg",
+  "taskLimit": 2,
+  "orchestratorUri": "http://localhost:5000/"
+}

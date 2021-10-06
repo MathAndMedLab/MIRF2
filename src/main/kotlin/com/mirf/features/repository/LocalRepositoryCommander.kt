@@ -44,10 +44,13 @@ class LocalRepositoryCommander constructor(val workingDir: Path = Paths.get(""))
 
     @Throws(RepositoryCommanderException::class)
     override fun getFile(link: String): ByteArray {
+        println("TRYING TO READ FILE FROM: " + link)
         val filePath = workingDir.resolve(link)
         try {
+            println("ALMOST STARTED")
             return Files.readAllBytes(filePath)
         } catch (e: IOException) {
+            e.printStackTrace()
             throw RepositoryCommanderException("Failed to read file bytes", e)
         }
     }
@@ -57,8 +60,14 @@ class LocalRepositoryCommander constructor(val workingDir: Path = Paths.get(""))
     }
 
     override fun getSeriesFileLinks(link: String): Array<String> {
-        val pathUri = workingDir.resolve(link).toUri()
-        return File(pathUri).listFiles().filter { it.isFile }.map { it.path }.toTypedArray()
+        println("CHECK path for file: " + workingDir.resolve(link).toString())
+        val path = workingDir.resolve(link)
+
+        if (File(path.toUri()).isFile) {
+            println("CHECKED path for file: " + path.toString())
+            return arrayOf(path.toString())
+        }
+        return File(path.toUri()).listFiles().filter { it.isFile && !it.path.toString().contains("input")}.map { it.path }.toTypedArray()
     }
 
     @Throws(RepositoryCommanderException::class)

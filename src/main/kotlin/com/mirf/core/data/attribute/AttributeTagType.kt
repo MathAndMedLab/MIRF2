@@ -7,5 +7,6 @@ import com.mirf.core.data.medimage.MedImage
  */
 enum class AttributeTagType {
     Dicom,
+    ECG,
     UUID
 }

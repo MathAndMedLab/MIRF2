@@ -1,0 +1,8 @@
+{
+  "blockType": "EcgBeatExtractorAlg",
+  "inputClassName": "com.mirf.features.ecg.EcgData",
+  "outputClassName": "com.mirf.core.data.medimage.BufferedImageSeries",
+  "algorithmClassName": "com.mirf.features.ecg.util.EcgBeatExtractorAlg",
+  "taskLimit": 8,
+  "orchestratorUri": "http://localhost:5011/"
+}

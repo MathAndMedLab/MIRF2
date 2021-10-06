@@ -1,0 +1,8 @@
+{
+  "blockType": "IhdDataReaderAlg",
+  "inputClassName": "java.util.List",
+  "outputClassName": "com.mirf.core.data.medimage.ImageSeries",
+  "algorithmClassName": "com.mirf.playground.IHD.IhdDataReaderAlg",
+  "taskLimit": 2,
+  "orchestratorUri": "http://localhost:5000/"
+}
