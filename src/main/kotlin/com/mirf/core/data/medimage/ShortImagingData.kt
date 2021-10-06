@@ -6,7 +6,7 @@ import com.mirf.core.data.AttributeCollection
 import java.awt.image.BufferedImage
 
 class ShortImagingData(val rawPixels: ShortArray2D,
-                       val rawPixelTransformer: RawPixelToRgbTransformer) : ImagingData<BufferedImage> {
+        val rawPixelTransformer: RawPixelToRgbTransformer) : ImagingData<BufferedImage> {
 
 
     override fun applyMask(mask: BooleanArray2D) {
@@ -45,6 +45,5 @@ class ShortImagingData(val rawPixels: ShortArray2D,
     override fun getImageDataAsFloatArray(): FloatArray {
         TODO("Not yet implemented")
     }
-
 
 }
