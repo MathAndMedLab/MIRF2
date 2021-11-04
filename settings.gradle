@@ -1,5 +1,6 @@
 rootProject.name = 'MIRF'
 include (':mirfBrainTumor', ':mirf-ms-service', ':mirfMs', ':block', ':orchestrator', ':repository')
+
 project(':mirfBrainTumor').projectDir = new File('demos/mirfBrainTumor')
 project(':mirf-ms-service').projectDir = new File('demos/MultipleSclerosis/mirf-ms-service')
 project(':mirfMs').projectDir = new File('demos/MultipleSclerosis/mirfMs')
