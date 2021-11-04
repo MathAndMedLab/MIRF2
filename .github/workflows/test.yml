@@ -26,7 +26,14 @@ jobs:
             ${{ runner.os }}-gradle
       - name: Run test
         run: |
-          ./gradlew :projects :clean :test
+          ./gradlew :clean :test
+          ./gradlew :mirfBrainTumor:clean :mirfBrainTumor:test
+          ./gradlew :mirf-ms-service:clean :mirf-ms-service:test
+          ./gradlew :mirfMs:clean :mirfMs:test
+          ./gradlew :utils:clean :utils:build
+          ./gradlew :block:clean :block:test
+#          ./gradlew :orchestrator:clean :orchestrator:test
+          ./gradlew :repository:clean :repository:test
       - uses: actions/upload-artifact@v2
         with:
           name: test-reports

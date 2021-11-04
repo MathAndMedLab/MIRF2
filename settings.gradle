@@ -7,5 +7,5 @@ project(':mirfMs').projectDir = new File('demos/MultipleSclerosis/mirfMs')
 
 project(":_utils").projectDir = new File('microservises/utils')
 project(':block').projectDir = new File('microservises/block')
-//project(':orchestrator').projectDir = new File('microservises/    orchestrator')
+//project(':orchestrator').projectDir = new File('microservises/orchestrator')
 project(':repository').projectDir = new File('microservises/repository')
