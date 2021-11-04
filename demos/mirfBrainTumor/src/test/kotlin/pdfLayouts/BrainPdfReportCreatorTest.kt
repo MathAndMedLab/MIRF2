@@ -3,7 +3,6 @@ package pdfLayouts
 import com.mirf.core.data.medimage.getImageWithHighlightedSegmentation
 import com.mirf.features.ij.asImageSeries
 import com.mirf.features.nifti.util.Nifti1Reader
-import org.junit.Assert
 import org.junit.Test
 import java.awt.image.BufferedImage
 import java.io.File
@@ -17,7 +16,6 @@ class BrainPdfReportCreatorTest {
 
     @Test
     fun checkLayout() {
-        Assert.assertEquals(1, 2)
         javaClass.getResource("/mask.nii") ?: return
 
         val spec = generateLayoutTestSpec()
