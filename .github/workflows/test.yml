@@ -32,7 +32,7 @@ jobs:
           ./gradlew :mirfMs:clean :mirfMs:test
           ./gradlew :utils:clean :utils:build
           ./gradlew :block:clean :block:test
-#          ./gradlew :orchestrator:clean :orchestrator:test
+          
           ./gradlew :repository:clean :repository:test
       - uses: actions/upload-artifact@v2
         with:
