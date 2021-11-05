@@ -23,7 +23,14 @@ jobs:
             ${{ runner.os }}-gradle
       - name: Build
         run: |
-          ./gradlew :projects :clean :assemble
+          ./gradlew :clean :assemble
+          ./gradlew :mirfBrainTumor:clean :mirfBrainTumor:assemble
+          ./gradlew :mirf-ms-service:clean :mirf-ms-service:assemble
+          ./gradlew :mirfMs:clean :mirfMs:assemble
+          ./gradlew :_utils:clean :_utils:assemble
+          ./gradlew :block:clean :block:assemble
+          ./gradlew :repository:clean :repository:assemble
+          ./gradlew :orchestrator:clean :orchestrator:assemble
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
