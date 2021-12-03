@@ -48,6 +48,7 @@ object MirfPixelmedAttributeMapper {
     /**
      * Updates all [Attribute] related to [mirfAttribute] in [attributes]
      */
+    @Suppress("UNCHECKED_CAST")
     fun syncPixelmedAttributes(attributes: AttributeList, mirfAttribute: DataAttribute<*>) {
         when (mirfAttribute.tag) {
             MirfAttributes.IMAGING_DATA.tag -> syncImagingData(attributes,

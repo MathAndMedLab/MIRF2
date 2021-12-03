@@ -75,7 +75,7 @@ object EcgReader {
         val firstLine = infoLines[0].split(" ")
 
         attributes.add(DataAttributeCreator.createFromMock(EcgAttributes.FILE_ID, firstLine[0]))
-        val numOfLeads = firstLine[1].toInt()
+        firstLine[1].toInt()
         attributes.add(DataAttributeCreator.createFromMock(EcgAttributes.SAMPLING_FREQUENCY, firstLine[2].toInt()))
         attributes.add(DataAttributeCreator.createFromMock(EcgAttributes.NUMBER_OF_SAMPLES, firstLine[3].toInt()))
         //fill some attributes with empty collections
@@ -134,12 +134,12 @@ object EcgReader {
         val leadSecond = leadsPresent.elementAt(1)
 
         val readSimultaneousSignals = {
-                startOfLine: Int, rawSamples: ByteArray,
-                checksumsReal: HashMap<EcgLeadType, Short>, leads: HashMap<EcgLeadType, ArrayList<Short>>,
+                startOfLine: Int, rrawSamples: ByteArray,
+                cchecksumsReal: HashMap<EcgLeadType, Short>, lleads: HashMap<EcgLeadType, ArrayList<Short>>,
             ->
-            val firstByte = rawSamples[startOfLine].toInt()
-            val secondByte = rawSamples[startOfLine + 1].toInt()
-            val thirdByte = rawSamples[startOfLine + 2].toInt()
+            val firstByte = rrawSamples[startOfLine].toInt()
+            val secondByte = rrawSamples[startOfLine + 1].toInt()
+            val thirdByte = rrawSamples[startOfLine + 2].toInt()
 
             val lowBits = (secondByte shr 4) and 0x0f
             val highBits = (secondByte and 0x0f)
@@ -147,22 +147,22 @@ object EcgReader {
             val firstElem = ((highBits shl 8) or (firstByte and 0xff)).toShort()
             val secondElem = ((lowBits shl 8) or (thirdByte and 0xff)).toShort()
 
-            leads.compute(leadFirst) { _: EcgLeadType, v: ArrayList<Short>? ->
+            lleads.compute(leadFirst) { _: EcgLeadType, v: ArrayList<Short>? ->
                 val res = v ?: ArrayList()
                 res.add(firstElem)
                 res
             }
-            leads.compute(leadSecond) { _: EcgLeadType, v: ArrayList<Short>? ->
+            lleads.compute(leadSecond) { _: EcgLeadType, v: ArrayList<Short>? ->
                 val res = v ?: ArrayList()
                 res.add(secondElem)
                 res
             }
 
-            checksumsReal.compute(leadFirst) { _: EcgLeadType, v: Short? ->
+            cchecksumsReal.compute(leadFirst) { _: EcgLeadType, v: Short? ->
                 val res = v ?: 0
                 (res + firstElem).toShort()
             }
-            checksumsReal.compute(leadSecond) { _: EcgLeadType, v: Short? ->
+            cchecksumsReal.compute(leadSecond) { _: EcgLeadType, v: Short? ->
                 val res = v ?: 0
                 (res + secondElem).toShort()
             }
@@ -197,31 +197,31 @@ object EcgReader {
         val leads = HashMap<EcgLeadType, ArrayList<Short>>()
         val checksumsReal = HashMap<EcgLeadType, Short>()
 
-        var index = 0
+        var index: Int
 
         if (rawSamples.size != leadsPresent.size * 2 * numOfSamples)
             throw EcgFormatException("Ecg data is broken")
 
         val readSimultaneousSignals = {
-                startOfLine: Int, rawSamples: ByteArray,
-                checksumsReal: HashMap<EcgLeadType, Short>, leads: HashMap<EcgLeadType, ArrayList<Short>>,
+                startOfLine: Int, rrawSamples: ByteArray,
+                cchecksumsReal: HashMap<EcgLeadType, Short>, lleads: HashMap<EcgLeadType, ArrayList<Short>>,
             ->
-            var index = 0
+            var iindex = 0
             for (leadType in leadsPresent) {
                 val bb: ByteBuffer = ByteBuffer.allocate(2);
                 bb.order(ByteOrder.LITTLE_ENDIAN)
-                bb.put(rawSamples[startOfLine + index])
-                bb.put(rawSamples[startOfLine + index + 1])
-                leads.compute(leadType) { _: EcgLeadType, v: ArrayList<Short>? ->
+                bb.put(rrawSamples[startOfLine + iindex])
+                bb.put(rrawSamples[startOfLine + iindex + 1])
+                lleads.compute(leadType) { _: EcgLeadType, v: ArrayList<Short>? ->
                     val res = v ?: ArrayList<Short>()
                     res.add(bb.getShort(0))
                     res
                 }
-                checksumsReal.compute(leadType) { _: EcgLeadType, v: Short? ->
+                cchecksumsReal.compute(leadType) { _: EcgLeadType, v: Short? ->
                     val res = v ?: 0
                     (res + bb.getShort(0)).toShort()
                 }
-                index += 2
+                iindex += 2
             }
         }
 

@@ -35,7 +35,7 @@ class BufferedImageRawImage(image: BufferedImage) : RawImageData(), Serializable
         _image = ImageIO.read(ByteArrayInputStream(buffer))
 
         `in`.defaultReadObject()
-        val imageCount = `in`.readInt()
+        `in`.readInt()
         _image = ImageIO.read(`in`)
     }
 
@@ -57,25 +57,25 @@ class BufferedImageRawImage(image: BufferedImage) : RawImageData(), Serializable
     fun grayscaleAsFloatArray(): FloatArray {
         val res = FloatArray(getWidth() * getHeight())
 
-        var gray = 0.0F
+        var gray: Float
         for (i in 0 until getWidth()) {
-            var flag = false
+//            var flag = false
             for (j in 0 until this._image.height) {
                 val pixel = this._image.getRGB(i, j) and 0xffffff
                 gray =
                     ((pixel and 0x0000ff) + ((pixel and 0x00ff00) shr 8) + ((pixel and 0xff0000) shr 16)) / 3.toFloat()
                 res[i * getWidth() + j] = gray / 255.toFloat()
-                if (!flag) {
-
-                    if (((pixel and 0x0000ff) + (pixel and 0x00ff00) shr 8 + (pixel and 0xff0000) shr 16) != 255 * 3) {
-                        flag = true
-                        println("$i $j")
-                        println((pixel and 0x0000ff) + ((pixel and 0x00ff00) shr 8) + ((pixel and 0xff0000) shr 16))
-                        println(pixel and 0x0000ff)
-                        println((pixel and 0x00ff00) shr 8)
-                        println((pixel and 0xff0000) shr 16)
-                    }
-                }
+//                if (!flag) {
+//
+//                    if (((pixel and 0x0000ff) + (pixel and 0x00ff00) shr 8 + (pixel and 0xff0000) shr 16) != 255 * 3) {
+//                        flag = true
+//                        println("$i $j")
+//                        println((pixel and 0x0000ff) + ((pixel and 0x00ff00) shr 8) + ((pixel and 0xff0000) shr 16))
+//                        println(pixel and 0x0000ff)
+//                        println((pixel and 0x00ff00) shr 8)
+//                        println((pixel and 0xff0000) shr 16)
+//                    }
+//                }
             }
         }
         return res

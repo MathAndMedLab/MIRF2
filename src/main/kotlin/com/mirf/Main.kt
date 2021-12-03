@@ -15,7 +15,7 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         val ihdAlg = IhdClassifierAlg()
-        runEcgFromMitBih()
+//        runEcgFromMitBih()
         ihdAlg.execute(listOf("ihd-kaggle.dcm"))
     }
 

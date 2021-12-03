@@ -1,7 +1,6 @@
 package com.mirf.features.dicomimage.alg
 
 import com.mirf.core.algorithm.Algorithm
-import com.mirf.core.algorithm.AlgorithmException
 import com.mirf.core.data.MirfException
 import com.mirf.core.data.attribute.MirfAttributes
 import com.mirf.core.data.medimage.MedImage
@@ -28,7 +27,6 @@ class SegmentationMaskApplicator(
 
                 return result
             }
-            else -> throw AlgorithmException("unknown image transform mode: $applicationMode")
         }
     }
 }

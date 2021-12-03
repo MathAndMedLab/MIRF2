@@ -63,10 +63,9 @@ class ConvertDicomImagesToPdfAlg : Algorithm<ImageSeries, PdfElementData> {
 
 class PdfFileCreatorAlg : Algorithm<CollectionData<Data>, List<Byte>> {
     override fun execute(input: CollectionData<Data>): List<Byte> {
-        val it = input.collection.iterator()
-        val beforeMask = it.next() as PdfElementData
-        val afterMask = it.next() as PdfElementData
+        input.collection.iterator()
 
+        @Suppress("UNCHECKED_CAST")
         val pdfElementsCollection = input as CollectionData<PdfElementData>
 
         val reportAsBytes: ByteArray = PdfElementsAccumulator.createPdfResultStream(pdfElementsCollection)

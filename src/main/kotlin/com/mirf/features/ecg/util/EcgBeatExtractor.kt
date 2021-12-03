@@ -42,7 +42,7 @@ object EcgBeatExtractor {
 
     fun detectRPeaks(ecgData: EcgData, leadType: EcgLeadType): List<Int> {
 
-        val leadRaw = ecgData.attributes.getAttributeValue(EcgAttributes.LEADS)[leadType]
+        ecgData.attributes.getAttributeValue(EcgAttributes.LEADS)[leadType]
 
         val lead = ecgData.getAnalogSignal(leadType)
 
@@ -53,13 +53,13 @@ object EcgBeatExtractor {
                 32.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0)
         val denominatorCoeffsHighPass = doubleArrayOf(1.0, 1.0)
 
-        val filter = { numeratorCoeffs: DoubleArray, denominatorCoeffs: DoubleArray, lead: DoubleArray ->
-            val filtered = DoubleArray(lead.size)
-            for (i in lead.indices) {
+        val filter = { numeratorCoeffs: DoubleArray, denominatorCoeffs: DoubleArray, llead: DoubleArray ->
+            val filtered = DoubleArray(llead.size)
+            for (i in llead.indices) {
                 var curr = 0.0
                 for (j in numeratorCoeffs.indices) {
                     if (i - j >= 0)
-                        curr += numeratorCoeffs[j] * lead[i - j]
+                        curr += numeratorCoeffs[j] * llead[i - j]
                 }
                 for (j in 1 until denominatorCoeffs.size) {
                     if (i - j >= 0)
@@ -108,8 +108,8 @@ object EcgBeatExtractor {
         //val peakValues = LinkedList<Double>()
         peakIndices.add(0)
 
-        var threshold1i = 0.0
-        var threshold2i = 0.0
+        var threshold1i: Double
+        var threshold2i: Double
 
         for (i in 1 until windowAverage.size) {
             if (windowAverage[i] > peaki)
@@ -135,11 +135,11 @@ object EcgBeatExtractor {
         peakIndicesf.addAll(peakIndices)
         //val peakValuesf = LinkedList<Double>()
 
-        var threshold1f = 0.0
-        var threshold2f = 0.0
+        var threshold1f: Double
+        var threshold2f: Double
         var peakf = windowAverage[0]
-        var spkf = 0.0
-        var npkf = 0.0
+        var spkf: Double
+        var npkf: Double
 
         var average = 0.0
         for (i in 1 until peakIndices.size)

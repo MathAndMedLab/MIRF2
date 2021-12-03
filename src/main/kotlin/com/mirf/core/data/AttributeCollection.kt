@@ -49,6 +49,7 @@ open class AttributeCollection constructor(list: Collection<DataAttribute<*>> = 
         val attribute = find(attributeTag) ?: return null
 
 
+        @Suppress("UNCHECKED_CAST")
 //TODO: (avlomakin) make safe cast or provide method with meaningful exception
         return attribute.value as T
     }
@@ -68,6 +69,7 @@ open class AttributeCollection constructor(list: Collection<DataAttribute<*>> = 
     open operator fun <R> get(mockup: DataAttributeMockup<R>): R {
         val resultGen = find(mockup.tag)
             ?: throw AttributeException("attribute ${mockup.name} doesn't presented in the attribute collection")
+        @Suppress("UNCHECKED_CAST")
         return (resultGen as DataAttribute<R>).value
     }
 }

@@ -47,7 +47,7 @@ class TensorflowInferenceInterface {
         this.sess = Session(g)
         this.runner = sess.runner()
 
-        var `is`: InputStream? = null
+        var `is`: InputStream?
         `is` = input
         if (`is` == null) {
             try {

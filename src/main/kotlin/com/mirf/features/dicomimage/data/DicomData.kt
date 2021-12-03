@@ -120,7 +120,7 @@ open class DicomData() : ImagingData<BufferedImage> {
      * Convert short array to byte array use "grayscale standard display function"
      */
     private fun shortArrayToByteArray(shortArray: ShortArray): ByteArray {
-        val byteArray = ByteArray(shortArray.size)
+        var byteArray = ByteArray(shortArray.size)
         try {
             val m: Double =
                 255.0 / Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.WindowWidth))
@@ -141,7 +141,7 @@ open class DicomData() : ImagingData<BufferedImage> {
                 lut[j.toShort()] = temp.toByte()
                 j++
             }
-            val byteArray = ByteArray(shortArray.size)
+            byteArray = ByteArray(shortArray.size)
             for (i in shortArray.indices) {
                 byteArray[i] = lut[shortArray[i]] as Byte
             }

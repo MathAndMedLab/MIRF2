@@ -6,17 +6,16 @@ object ActionResolver {
 
     fun getAction(action: CommandAction): Consumer<ConsoleContext> {
         return when (action) {
-            CommandAction.PrintHelp -> Consumer { printHelp(it) }
-            CommandAction.AddBlockToPipeline -> Consumer { addBlock(it) }
-            else -> throw ConsoleException(String.format("Action: %s not supported", action))
+            CommandAction.PrintHelp -> Consumer { printHelp() }
+            CommandAction.AddBlockToPipeline -> Consumer { addBlock() }
         }
     }
 
-    private fun addBlock(consoleContext: ConsoleContext) {
+    private fun addBlock() {
 
     }
 
-    fun printHelp(ctx: ConsoleContext) {
+    fun printHelp() {
         val result = CommandParser.commands.map { x -> x.name + " - " + x.description + System.lineSeparator() }
             .joinToString { x -> x }
         print(result)

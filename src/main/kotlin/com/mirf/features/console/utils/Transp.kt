@@ -13,7 +13,7 @@ class Transp {
             val size: Int = sqrt(img1.size.toDouble()).toInt()
             val s = Array(3) { Array(size) { FloatArray(size) } }
             s[0] = img1
-            s[1] = img1
+            s[1] = img2 // Mishavint: Fix s[1] = img1 ---> s[1] = img2
             s[2] = img3
             return transp(s)
         }

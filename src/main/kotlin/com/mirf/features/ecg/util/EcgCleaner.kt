@@ -22,7 +22,7 @@ object EcgCleaner {
 
         val filteredSignal = executeFilteringScriptAndGetFilteredSignal(sb.toString())
         val attributes = AttributeCollection()
-        val filteredEcg = hashMapOf<EcgLeadType, DoubleArray>(EcgLeadType.II to filteredSignal)
+        val filteredEcg = hashMapOf(EcgLeadType.II to filteredSignal)
         attributes.add(DataAttributeCreator.createFromMock(EcgAttributes.LEADS_FILTERED, filteredEcg))
         return EcgData(attributes)
     }
@@ -34,11 +34,10 @@ object EcgCleaner {
         val p = pb.start()
         p.waitFor()
         val bfr = BufferedReader(InputStreamReader(p.inputStream))
-        var line: String? = ""
+        var line: String?
         var filteredValues = DoubleArray(0)
         while (bfr.readLine().also { line = it } != null) {
-            val lineValues: List<Double>
-            lineValues = line?.split(' ')?.stream()?.filter { it.length != 0 }?.map { it.toDouble() }
+            val lineValues: List<Double> = line?.split(' ')?.stream()?.filter { it.isNotEmpty() }?.map { it.toDouble() }
                 ?.collect(Collectors.toList()) as List<Double>
             filteredValues = filteredValues.plus(lineValues)
         }

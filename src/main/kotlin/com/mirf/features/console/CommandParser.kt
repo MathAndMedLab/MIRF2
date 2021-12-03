@@ -1,6 +1,5 @@
 package com.mirf.features.console
 
-import com.mirf.core.pipeline.PipelineBlock
 import com.mirf.features.console.utils.asList
 import org.xml.sax.SAXException
 import java.io.File
@@ -40,11 +39,11 @@ object CommandParser {
         return result
     }
 
-    fun tryExecute(commandString: String, pipeline: PipelineBlock<*, *>?) {
+    fun tryExecute(commandString: String) {
         val args = commandString.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val command = commands.first { x -> x.name == args[0] }
 
-        val ctx = ConsoleContext(args, pipeline)
+        val ctx = ConsoleContext()
         command.execute(ctx)
     }
 }

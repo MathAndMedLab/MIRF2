@@ -16,7 +16,7 @@ object Main {
             if (input == "q")
                 exit = true
             else
-                CommandParser.tryExecute(input, null)
+                CommandParser.tryExecute(input)
 
         }
         keyboard.close()
