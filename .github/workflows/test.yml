@@ -12,7 +12,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
+          java-version: '16'
           java-package: jdk
           architecture: x64
       - name: Cache Gradle packages
@@ -34,7 +34,3 @@ jobs:
         with:
           name: test-reports
           path: build/reports
-      - name: Cleanup Gradle Cache
-        run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
