@@ -2,15 +2,16 @@ package com.mirf.core.pipeline
 
 import com.mirf.core.data.Data
 import com.mirf.core.log.MirfLogFactory
-import com.mirf.core.repository.RepositoryCommander
 import com.mirf.features.repository.LocalRepositoryCommander
 import org.slf4j.Logger
 import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentHashMap
 
-class Pipeline(val name: String,
-               val creationTime: LocalDateTime = LocalDateTime.now(),
-               val repositoryCommander: LocalRepositoryCommander = LocalRepositoryCommander()) : PipelineKeeper {
+class Pipeline(
+    val name: String,
+    val creationTime: LocalDateTime = LocalDateTime.now(),
+    val repositoryCommander: LocalRepositoryCommander = LocalRepositoryCommander(),
+) : PipelineKeeper {
 
     private val subCommanders: ConcurrentHashMap<PipelineBlock<*, *>, LocalRepositoryCommander> = ConcurrentHashMap()
     private val log: Logger = MirfLogFactory.currentLogger

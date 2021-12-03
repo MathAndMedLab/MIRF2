@@ -1,26 +1,24 @@
 package com.mirf.playground.IHD.pdf
 
 import com.itextpdf.io.font.constants.StandardFonts
-import com.itextpdf.kernel.colors.ColorConstants
 import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
-import com.itextpdf.layout.borders.Border
-import com.itextpdf.layout.element.*
-import com.itextpdf.layout.property.HorizontalAlignment
+import com.itextpdf.layout.element.Image
+import com.itextpdf.layout.element.Paragraph
+import com.itextpdf.layout.element.Text
 import com.itextpdf.layout.property.TextAlignment
 import com.itextpdf.layout.property.UnitValue
 import com.itextpdf.layout.property.VerticalAlignment
-import com.mirf.features.ecg.reportpdf.EcgPdfReportDetails
 import com.mirf.features.pdf.PdfDocumentInfo
 import com.mirf.features.pdf.asPdfImage
 import java.io.ByteArrayOutputStream
 
 class IhdPdfReportCreator(private val details: IhdPdfReportDetails) {
 
-    private val TITLE = "Intracranial hemorrhage detection \n AI-supported report"
+    private val title = "Intracranial hemorrhage detection \n AI-supported report"
 
     private val marginBlock = Paragraph().setMarginBottom(10f)
 
@@ -54,7 +52,7 @@ class IhdPdfReportCreator(private val details: IhdPdfReportDetails) {
         val logo: Image = details.companyLogo.asPdfImage()
         logo.setRelativePosition(70f, 0f, 0f, 5f)
 
-        val titleText = Text(TITLE).setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD)).setFontSize(18f)
+        val titleText = Text(title).setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD)).setFontSize(18f)
         val title = Paragraph(titleText).setRelativePosition(logo.width.value / 2, 0f, 0f, 0f)
         header.add(title)
         header.add(logo)
@@ -62,7 +60,7 @@ class IhdPdfReportCreator(private val details: IhdPdfReportDetails) {
         return header
     }
 
-    private fun createIhdImage() : Paragraph {
+    private fun createIhdImage(): Paragraph {
         val result = Paragraph()
 
         result.width = UnitValue.createPercentValue(100f)
@@ -76,11 +74,10 @@ class IhdPdfReportCreator(private val details: IhdPdfReportDetails) {
         return result
     }
 
-    private fun createConclusion() : Paragraph {
-        val result = Paragraph("Conclusion: " + details.reportConclusion).setFontSize(16f)
+    private fun createConclusion(): Paragraph {
+        return Paragraph("Conclusion: " + details.reportConclusion).setFontSize(16f)
             .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
             .setWidth(UnitValue.createPercentValue(100f))
             .setMargins(0f, 5f, 0f, 5f)
-        return result
     }
 }

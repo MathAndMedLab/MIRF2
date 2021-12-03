@@ -7,7 +7,8 @@ import com.mirf.core.repository.RepositoryCommander
 /**
  * ImageSeries stores a list of [MedImage]
  */
-class MirfImageSeries(override val images: List<MedImage>, attributes: AttributeCollection = AttributeCollection()) : MirfData(attributes), ImageSeries {
+class MirfImageSeries(override val images: List<MedImage>, attributes: AttributeCollection = AttributeCollection()) :
+    MirfData(attributes), ImageSeries {
     override fun clone(): MirfImageSeries {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -20,7 +21,7 @@ class MirfImageSeries(override val images: List<MedImage>, attributes: Attribute
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun dumpToRepository(repository: RepositoryCommander, name: String) : String {
+    override fun dumpToRepository(repository: RepositoryCommander, name: String): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

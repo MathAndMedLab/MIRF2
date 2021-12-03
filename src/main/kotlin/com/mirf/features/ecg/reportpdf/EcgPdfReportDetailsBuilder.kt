@@ -1,24 +1,21 @@
 package com.mirf.features.ecg.reportpdf
 
-import com.mirf.core.data.medimage.BufferedImageRawImage
-import com.mirf.features.ecg.EcgAttributes
-import com.mirf.features.ecg.EcgData
-import com.mirf.features.ecg.EcgLeadType
 import com.mirf.features.ecg.data.EcgArrhythmiaType
+import com.mirf.features.ecg.data.EcgAttributes
+import com.mirf.features.ecg.data.EcgData
+import com.mirf.features.ecg.data.EcgLeadType
 import com.mirf.features.ecg.util.EcgDiagnosis
 import com.mirf.features.ecg.util.PatientInfo
 import com.mirf.features.ecg.util.SignalPlot
 import java.awt.Color
 import java.awt.image.BufferedImage
-import java.lang.Exception
-import java.lang.Integer.max
-import java.util.ArrayList
 import java.util.stream.IntStream
 
 class EcgPdfReportDetailsBuilder constructor(
-        private val patientInfo: PatientInfo,
-        private val ecgData: EcgData,
-        private val ecgDiagnosis: EcgDiagnosis) {
+    private val patientInfo: PatientInfo,
+    private val ecgData: EcgData,
+    private val ecgDiagnosis: EcgDiagnosis,
+) {
 
     fun build(): EcgPdfReportDetails {
         val ecgImage = getEcgVisualization()
@@ -27,7 +24,7 @@ class EcgPdfReportDetailsBuilder constructor(
         return EcgPdfReportDetails.createDefaultEcgReport(patientInfo, ecgImage, EcgLeadType.II, ecgConclusion)
     }
 
-    private fun getEcgConclusion() : String{
+    private fun getEcgConclusion(): String {
         var mostLikelyArrhythmiaType = EcgArrhythmiaType.NOR
         var mostLikelyArrhythmiaNumber = -1
         for (arrhythmia in ecgDiagnosis.diagnosis) {
@@ -39,14 +36,12 @@ class EcgPdfReportDetailsBuilder constructor(
         return String.format("Your ECG contains mostly %s beats", mostLikelyArrhythmiaType.fullName)
     }
 
-    private fun getEcgVisualization() :BufferedImage {
+    private fun getEcgVisualization(): BufferedImage {
 
-        val ecgSignal = ecgData.attributes.getAttributeValue(EcgAttributes.LEADS_FILTERED).get(EcgLeadType.II)
+        val ecgSignal = ecgData.attributes.getAttributeValue(EcgAttributes.LEADS_FILTERED)[EcgLeadType.II]
+            ?: throw Exception("Filtered ECG signal is not provided for report")
 
-        if (ecgSignal == null)
-            throw Exception("Filtered ECG signal is not provided for report")
-
-        val x: DoubleArray = DoubleArray(ecgSignal.size)
+        val x = DoubleArray(ecgSignal.size)
         IntStream.range(0, ecgSignal.size).forEach { x[it] = it.toDouble() + 1 }
 
         val plot = SignalPlot()

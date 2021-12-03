@@ -7,7 +7,6 @@ import com.mirf.features.ij.asImageSeries
 import com.mirf.features.mhdraw.MhdFile
 import com.mirf.features.repository.LocalRepositoryCommander
 import com.mirf.features.terminal.TerminalCommandManager
-import java.lang.Exception
 import java.nio.file.Paths
 
 class ElastixAlg : Algorithm<RegistrationInfo, ImageSeries> {
@@ -28,7 +27,12 @@ class ElastixAlg : Algorithm<RegistrationInfo, ImageSeries> {
             val paramFile = outCommander.saveFile(input.params.toByteArray(), "", "param.txt")
             log.info("$logPrefix params file generated. Path - \'$paramFile\', \n ${input.params}")
 
-            val command = "\"${Paths.get(elastixDir, "elastix")}\" -f \"$fixedPath\" -m \"$movingPath\" -out \"${outCommander.workingDir}\" -p \"${outCommander.getAbsolutePath(paramFile)}\""
+            val command = "\"${
+                Paths.get(elastixDir,
+                    "elastix")
+            }\" -f \"$fixedPath\" -m \"$movingPath\" -out \"${outCommander.workingDir}\" -p \"${
+                outCommander.getAbsolutePath(paramFile)
+            }\""
             log.info("$logPrefix generated command - \'$command\'")
             log.info("$ logPrefix running command")
             val terminalManager = TerminalCommandManager(command)

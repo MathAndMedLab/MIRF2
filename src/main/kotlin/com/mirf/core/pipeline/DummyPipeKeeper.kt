@@ -1,7 +1,6 @@
 package com.mirf.core.pipeline
 
 import com.mirf.core.common.Event
-import com.mirf.core.repository.RepositoryCommander
 import com.mirf.features.repository.LocalRepositoryCommander
 
 class DummyPipeKeeper : PipelineKeeper {
@@ -26,6 +25,7 @@ class DummyPipeKeeper : PipelineKeeper {
 
         override fun addError(message: String) {}
 
-        override fun addNew(message: String): PipelineSessionRecord = PipelineSessionRecord(PipelineSessionRecord.RecordLevel.InProgress, message)
+        override fun addNew(message: String): PipelineSessionRecord =
+            PipelineSessionRecord(PipelineSessionRecord.RecordLevel.InProgress, message)
     }
 }

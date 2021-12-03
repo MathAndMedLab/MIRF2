@@ -1,33 +1,27 @@
 package com.mirf.features.dicomimage.util
 
+import com.github.nocatch.NoCatch.noCatch
 import com.mirf.core.algorithm.Algorithm
 import com.mirf.core.algorithm.SimpleAlg
+import com.mirf.core.data.attribute.DataAttribute
 import com.mirf.core.data.attribute.MirfAttributes
 import com.mirf.core.data.medimage.ImageSeries
+import com.mirf.core.data.medimage.MirfImageSeries
 import com.mirf.core.repository.RepositoryInfo
 import com.mirf.features.repositoryaccessors.AlgorithmExecutionException
 import com.mirf.features.repositoryaccessors.RepoAccessorsAttributes
 import com.mirf.features.repositoryaccessors.RepositoryRequestInfo
 import com.mirf.features.repositoryaccessors.RepositoryRequestType
 import com.mirf.features.repositoryaccessors.data.RepoRequest
-
 import java.io.ByteArrayInputStream
-import java.util.Arrays
-
-import com.github.nocatch.NoCatch.noCatch
-import com.mirf.core.data.attribute.DataAttribute
-import com.mirf.core.data.medimage.MirfImageSeries
-import com.mirf.features.ecg.EcgData
-import com.mirf.features.ecg.EcgReader
-import com.mirf.features.repository.LocalRepositoryCommander
-import java.nio.file.Paths
-import kotlin.streams.toList
+import java.util.*
 
 /**
  * Class that stores all algorithms to interact with [core.repository.RepositoryCommander]
  */
 object DicomRepoRequestProcessors {
-    var readDicomImageSeriesAlg: Algorithm<RepoRequest, ImageSeries> = SimpleAlg { request: RepoRequest -> readDicomImageSeries(request) }
+    var readDicomImageSeriesAlg: Algorithm<RepoRequest, ImageSeries> =
+        SimpleAlg { request: RepoRequest -> readDicomImageSeries(request) }
 
     //TODO: (avlomakin) rewrite it!
     fun readDicomImageSeries(request: RepoRequest): ImageSeries {
@@ -67,6 +61,6 @@ object DicomRepoRequestProcessors {
         val requestInfo = RepositoryRequestInfo(request.link, RepositoryRequestType.GET)
         result.add(RepoAccessorsAttributes.REPOSITORY_REQUEST_INFO.new(requestInfo))
 
-        return result;
+        return result
     }
 }

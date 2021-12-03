@@ -5,8 +5,10 @@ import com.itextpdf.layout.element.Image
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.property.UnitValue
 import com.mirf.core.algorithm.Algorithm
-import com.mirf.core.algorithm.asImageSeriesAlg
-import com.mirf.core.data.*
+import com.mirf.core.data.CollectionData
+import com.mirf.core.data.Data
+import com.mirf.core.data.FileData
+import com.mirf.core.data.MirfData
 import com.mirf.core.data.medimage.ImagingData
 import com.mirf.core.pipeline.AccumulatorWithAlgBlock
 import com.mirf.core.pipeline.AlgorithmHostBlock
@@ -17,9 +19,6 @@ import com.mirf.features.dicomimage.data.DicomAttributeCollection
 import com.mirf.features.dicomimage.data.DicomData
 import com.mirf.features.dicomimage.data.IHDData
 import com.mirf.features.dicomimage.util.DicomReader
-import com.mirf.features.ecg.EcgData
-import com.mirf.features.ecg.EcgLeadType
-import com.mirf.features.ecg.util.EcgCleaner
 import com.mirf.features.pdf.PdfElementsAccumulator
 import com.mirf.features.pdf.asPdfElementData
 import com.mirf.features.reports.PdfElementData
@@ -28,55 +27,49 @@ import com.mirf.features.repositoryaccessors.AlgorithmExecutionException
 import com.mirf.features.repositoryaccessors.RepoFileSaver
 import com.mirf.features.repositoryaccessors.RepositoryAccessorBlock
 import com.mirf.features.repositoryaccessors.data.RepoRequest
-import com.mirf.playground.AddCircleMaskAlg
-import com.mirf.playground.DicomImageCircleMaskApplier
-import com.mirf.playground.IHD.pdf.IHDReportBuilderBlock
 import com.mirf.playground.IHD.pdf.IhdPdfReportCreator
 import com.mirf.playground.IHD.pdf.IhdPdfReportDetails
-import com.pixelmed.dicom.TagFromName
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.Serializable
 import java.nio.file.Path
 import java.time.LocalDateTime
 import javax.imageio.ImageIO
 
 
-//class DicomReadRequest(val links: List<String>) : MirfData(), Serializable
-
-class IhdClassifierAlg: Algorithm<List<String>, List<Byte>> {
-    override fun execute(request: List<String>): List<Byte> {
-        val ihdData = IntracranialHemorrhageDetectionWorkflow.createIHDData(request.get(0))
+class IhdClassifierAlg : Algorithm<List<String>, List<Byte>> {
+    override fun execute(input: List<String>): List<Byte> {
+        val ihdData = IntracranialHemorrhageDetectionWorkflow.createIHDData(input[0])
         val ctData = IntracranialHemorrhageDetectionWorkflow.createCTData(
             ihdData, ihdData.getImageDataAsIntArray()[0], ihdData.getImageDataAsIntArray()[1]
         )
         val ctDiagnosis = IntracranialHemorrhageDetectionDiagnosis(ctData)
-        val classification = ctDiagnosis.classify()
-        val readableDiagnosis = ctDiagnosis.createHumanReadableConclusion(classification.toFloatArray())
-//        val classification = listOf<Float>(0.032059982f, 0.003871989f, 0.0058109034f, 0.0042512226f, 0.0046861684f, 0.00847459f)
-//        val pdfTextParagraph = classification.joinToString().asPdfElementData();
 
+        val classification = ctDiagnosis.classify()
+//        val classification = listOf<Float>(0.032059982f, 0.003871989f, 0.0058109034f, 0.0042512226f, 0.0046861684f, 0.00847459f)
+
+        val readableDiagnosis = ctDiagnosis.createHumanReadableConclusion(classification.toFloatArray())
+        val pdfTextParagraph = classification.joinToString().asPdfElementData()
 
 
         val pdfDetails = IhdPdfReportDetails.createDefaultIhdReportDetails(ihdData.getImage(), readableDiagnosis)
         val reportCreator = IhdPdfReportCreator(pdfDetails)
         val result = reportCreator.createReport()
-        val reportAsBytes : ByteArray = result.stream.toByteArray()
-        //val initialImagesPdfElemnt = ctData.asPdfElementData()
 
-//        val collection : Collection<PdfElementData> = listOf(pdfTextParagraph)
-//
-//        val pdfElementsCollection = CollectionData<PdfElementData>(collection)
-
+        val reportAsBytes: ByteArray = result.stream.toByteArray()
 //        val reportAsBytes : ByteArray = PdfElementsAccumulator.createPdfResultStream(pdfElementsCollection)
 
-//        println("Strated writing to temp file: " + classification.joinToString())
-//        val resultFile = File("result-file.pdf");
-//        var os = FileOutputStream(resultFile);
-//        os.write(reportAsBytes);
-//        os.close()
+        val collection: Collection<PdfElementData> = listOf(pdfTextParagraph)
+//
+        val pdfElementsCollection = CollectionData(collection)
+
+
+        println("Strated writing to temp file: ${classification.joinToString()}")
+        val resultFile = File("result-file.pdf")
+        val os = FileOutputStream(resultFile)
+        os.write(reportAsBytes)
+        os.close()
 
 
         return reportAsBytes.toMutableList()
@@ -84,66 +77,55 @@ class IhdClassifierAlg: Algorithm<List<String>, List<Byte>> {
 }
 
 
-class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
+class IntracranialHemorrhageDetectionWorkflow(private val pipe: Pipeline) {
     fun exec() {
         pipe.run(RepoRequest("", LocalRepositoryCommander()))
     }
+
     companion object {
-        fun createFull(dicomInputFile: String, workingDirPath: Path) : IntracranialHemorrhageDetectionWorkflow {
+        fun createFull(dicomInputFile: String, workingDirPath: Path): IntracranialHemorrhageDetectionWorkflow {
 
             val pipe = Pipeline("pipe", LocalDateTime.now(), LocalRepositoryCommander(workingDirPath))
-            //val slope : Int = Integer.parseInt(dicomData.getAttributeValue(TagFromName.RescaleSlope))
-            //val intercept : Int = Integer.parseInt(dicomData.getAttributeValue(TagFromName.RescaleIntercept))
-
 
             val ctReader = AlgorithmHostBlock<MirfData, ImagingData<BufferedImage>>(
-                    {x -> createIHDData(dicomInputFile)},
-                    name = "DICOM reading",
-                    pipelineKeeper = pipe
+                { createIHDData(dicomInputFile) },
+                name = "DICOM reading",
+                pipelineKeeper = pipe
             )
 
-            val CTImageExtractor = AlgorithmHostBlock<ImagingData<BufferedImage>, ImagingData<BufferedImage>>(
-                    {x ->
-                        createCTData(x, x.getImageDataAsIntArray()[0],
-                                x.getImageDataAsIntArray()[1])
-                    },
-                    pipelineKeeper = pipe,
-                    name = "CTImage extractor")
+            val cTImageExtractor = AlgorithmHostBlock<ImagingData<BufferedImage>, ImagingData<BufferedImage>>(
+                { x ->
+                    createCTData(x, x.getImageDataAsIntArray()[0],
+                        x.getImageDataAsIntArray()[1])
+                },
+                pipelineKeeper = pipe,
+                name = "CTImage extractor")
 
             val classifier = AlgorithmHostBlock<ImagingData<BufferedImage>, IntracranialHemorrhageDetectionDiagnosis>(
-                    {x -> val ctDiagnosis = IntracranialHemorrhageDetectionDiagnosis(x)
-                        ctDiagnosis.classify();
-                        ctDiagnosis
-                    },
-                    pipelineKeeper = pipe,
-                    name = "Classifier"
+                { x ->
+                    val ctDiagnosis = IntracranialHemorrhageDetectionDiagnosis(x)
+                    ctDiagnosis.classify();
+                    ctDiagnosis
+                },
+                pipelineKeeper = pipe,
+                name = "Classifier"
             )
 
-/*
+
             val imageReporter = AlgorithmHostBlock<ImagingData<BufferedImage>, PdfElementData>(
-                    { x -> createHighlightedImages(x) },
-                    "image before", pipe)
+                { x -> createHighlightedImages(x) },
+                "image before", pipe)
 
             val pdfBlock = AccumulatorWithAlgBlock(PdfElementsAccumulator(
-                    "report"),
-                    1,
-                    "Accumulator",
-                    pipe)
+                "report"),
+                1,
+                "Accumulator",
+                pipe)
 
             val reportSaverBlock = RepositoryAccessorBlock<FileData, Data>(LocalRepositoryCommander(),
-                    RepoFileSaver(), "")*/
+                RepoFileSaver(), "")
 
-
-
-            //ctReader.dataReady += imageReporter::inputReady
-
-            ctReader.dataReady += CTImageExtractor::inputReady
-            //CTImageExtractor.dataReady += classifier::inputReady
-
-            //pdfBlock.dataReady += reportSaverBlock::inputReady
-
-            //imageReporter.dataReady += pdfBlock::inputReady
-            //pdfBlock.dataReady += reportSaverBlock::inputReady
+            ctReader.dataReady += cTImageExtractor::inputReady
 
             pipe.session.newRecord += { _, b -> println(b) }
 
@@ -152,7 +134,7 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
             return IntracranialHemorrhageDetectionWorkflow(pipe)
         }
 
-        fun createHighlightedImages(imageData: ImagingData<BufferedImage>) : PdfElementData {
+        fun createHighlightedImages(imageData: ImagingData<BufferedImage>): PdfElementData {
             val result = Paragraph()
             val image = imageData.getImage()
             try {
@@ -165,8 +147,7 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
                 pdfImage.setHeight(UnitValue.createPercentValue(50f))
 
                 result.add(pdfImage)
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 throw AlgorithmExecutionException(e)
             }
 
@@ -174,11 +155,11 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
         }
 
         fun createIHDData(dicomInputFile: String): IHDData {
-            println("START TO READ DICOM FILE " + dicomInputFile)
+            println("START TO READ DICOM FILE $dicomInputFile")
             val list = DicomReader.readDicomImageAttributesFromLocalFile(dicomInputFile)
             val dicomAttributeCollection = DicomAttributeCollection(list)
             println("SUCCESSFULLY READ DICOM!!")
-            var ihdData : IHDData? = null
+            var ihdData: IHDData? = null
             try {
                 ihdData = IHDData(dicomAttributeCollection)
             } catch (ex: Exception) {
@@ -189,11 +170,11 @@ class IntracranialHemorrhageDetectionWorkflow(val pipe: Pipeline) {
             return ihdData
         }
 
-        fun createCTData(imgData: ImagingData<BufferedImage>, slope : Int, intercept : Int): ImagingData<BufferedImage> {
+        fun createCTData(imgData: ImagingData<BufferedImage>, slope: Int, intercept: Int): ImagingData<BufferedImage> {
             val brain = Windowing(slope, intercept).brainWindow(imgData.getImageDataAsFloatArray())
             val subdural = Windowing(slope, intercept).subduralWindow(imgData.getImageDataAsFloatArray())
             val soft = Windowing(slope, intercept).boneWindow(imgData.getImageDataAsFloatArray())
-            val mix = Transp.flatten(Transp.transp_image(brain, subdural, soft))
+            val mix = Transp.flatten(Transp.transpImage(brain, subdural, soft))
             return DicomData(mix)
         }
     }

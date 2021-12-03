@@ -14,7 +14,6 @@ import java.awt.Stroke
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
-import java.util.*
 
 class SignalPlot {
     var font: Font
@@ -41,7 +40,8 @@ class SignalPlot {
 
         var chart: JFreeChart? = null
         if (dataset != null && dataset!!.seriesCount > 0)
-            chart = ChartFactory.createXYLineChart(null, null, null, dataset, PlotOrientation.VERTICAL, false, false, false)
+            chart =
+                ChartFactory.createXYLineChart(null, null, null, dataset, PlotOrientation.VERTICAL, false, false, false)
         else
             println("Plot is empty")
 
@@ -54,15 +54,15 @@ class SignalPlot {
         (plot.rangeAxis as NumberAxis).autoRangeIncludesZero = false
 
         plot.backgroundPaint = Color.WHITE
-        plot.setOutlinePaint(null);
+        plot.outlinePaint = null
         chart.removeLegend()
         this.chart = chart
     }
 
 
     fun displayAxis(xAxis: Boolean, yAxis: Boolean) {
-        (chart!!.xyPlot.domainAxis as NumberAxis).setVisible(xAxis);
-        (chart!!.xyPlot.rangeAxis as NumberAxis).setVisible(yAxis);
+        (chart!!.xyPlot.domainAxis as NumberAxis).isVisible = xAxis
+        (chart!!.xyPlot.rangeAxis as NumberAxis).isVisible = yAxis
     }
 
     fun setIntervalX(l: Double, u: Double) {
@@ -87,8 +87,7 @@ class SignalPlot {
             chart!!.xyPlot.isDomainGridlinesVisible = true
             chart!!.xyPlot.isDomainMinorGridlinesVisible = true
             chart!!.xyPlot.domainGridlinePaint = Color.GRAY
-        }
-        else {
+        } else {
             chart!!.xyPlot.isDomainGridlinesVisible = false
             chart!!.xyPlot.isDomainMinorGridlinesVisible = false
         }
@@ -97,15 +96,14 @@ class SignalPlot {
             chart!!.xyPlot.isRangeGridlinesVisible = true
             chart!!.xyPlot.isRangeMinorGridlinesVisible = true
             chart!!.xyPlot.rangeGridlinePaint = Color.GRAY
-        }
-        else {
+        } else {
             chart!!.xyPlot.isRangeGridlinesVisible = false
             chart!!.xyPlot.isRangeMinorGridlinesVisible = false
         }
     }
 
     fun saveAsJpeg(fileName: String?, width: Int, height: Int) {
-        val file = File(fileName)
+        val file = File(fileName!!)
         try {
             ChartUtilities.saveChartAsJPEG(file, chart, width, height)
         } catch (e: IOException) {
@@ -113,26 +111,25 @@ class SignalPlot {
         }
     }
 
-    fun getBufferedImage(width: Int, height: Int) : BufferedImage {
+    fun getBufferedImage(width: Int, height: Int): BufferedImage {
         return chart!!.createBufferedImage(width, height, BufferedImage.TYPE_INT_RGB, null)
     }
 
-    private fun getStroke(strokeType: String, lineWidth: Float) : Stroke{
+    private fun getStroke(strokeType: String, lineWidth: Float): Stroke {
         //default is "-"
-        var stroke: Stroke
 
-        when (strokeType) {
-            "." ->  {
+        val stroke: Stroke = when (strokeType) {
+            "." -> {
                 val dot = floatArrayOf(lineWidth)
-                stroke = BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dot, 0.0f)
+                BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dot, 0.0f)
             }
-            ":" ->  {
+            ":" -> {
                 val dash = floatArrayOf(5.0f)
-                stroke = BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f)
+                BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f)
             }
-            else ->  stroke = BasicStroke(lineWidth)
+            else -> BasicStroke(lineWidth)
         }
 
-        return stroke;
+        return stroke
     }
 }

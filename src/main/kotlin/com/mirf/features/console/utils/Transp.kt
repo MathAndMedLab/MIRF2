@@ -6,11 +6,11 @@ import kotlin.math.sqrt
 class Transp {
     companion object {
         @JvmStatic
-        fun transp_image(image1: FloatArray, image2: FloatArray, image3: FloatArray): Array<Array<FloatArray>> {
-            val img1 = flatten_to_square_image(image1)
-            val img2 = flatten_to_square_image(image2)
-            val img3 = flatten_to_square_image(image3)
-            val size : Int = sqrt(img1.size.toDouble()).toInt()
+        fun transpImage(image1: FloatArray, image2: FloatArray, image3: FloatArray): Array<Array<FloatArray>> {
+            val img1 = flattenToSquareImage(image1)
+            val img2 = flattenToSquareImage(image2)
+            val img3 = flattenToSquareImage(image3)
+            val size: Int = sqrt(img1.size.toDouble()).toInt()
             val s = Array(3) { Array(size) { FloatArray(size) } }
             s[0] = img1
             s[1] = img1
@@ -18,8 +18,8 @@ class Transp {
             return transp(s)
         }
 
-        fun flatten_to_square_image(image: FloatArray): Array<FloatArray> {
-            val size : Int = sqrt(image.size.toDouble()).toInt()
+        fun flattenToSquareImage(image: FloatArray): Array<FloatArray> {
+            val size: Int = sqrt(image.size.toDouble()).toInt()
             val img = Array(size) { FloatArray(size) }
             for (i in 0 until size) {
                 for (j in 0 until size) {
@@ -50,18 +50,15 @@ class Transp {
             val f = array.size
             val s: Int = array[0].size
             val t: Int = array[0][0].size
-            val new_arr = Array(s) { Array(t) { FloatArray(f) } }
-            //println(f)
-            //println(s)
-            //println(t)
+            val newArr = Array(s) { Array(t) { FloatArray(f) } }
             for (i in 0 until f) {
                 for (j in 0 until s) {
                     for (k in 0 until t) {
-                        new_arr[j][k][i] = array[i][j][k]
+                        newArr[j][k][i] = array[i][j][k]
                     }
                 }
             }
-            return new_arr
+            return newArr
         }
     }
 }

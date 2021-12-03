@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 
 object MirfLogFactory {
 
-    val currentLogger : Logger
+    val currentLogger: Logger
         get() {
             return LoggerFactory.getLogger("FILE")
         }

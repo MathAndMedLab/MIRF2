@@ -2,7 +2,6 @@ package com.mirf.core.data.medimage
 
 import com.mirf.core.array.logSize
 import com.mirf.core.common.convertColorspace
-import com.mirf.core.common.debugDisplayInWindow
 import com.mirf.core.common.logSize
 import com.mirf.core.data.MirfException
 import com.mirf.core.data.attribute.MirfAttributes

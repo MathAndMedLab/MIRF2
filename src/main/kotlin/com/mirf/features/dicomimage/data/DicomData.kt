@@ -13,6 +13,7 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.imageio.stream.FileImageInputStream
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 /**
@@ -42,13 +43,13 @@ open class DicomData() : ImagingData<BufferedImage> {
 
         for (i in array.indices) {
             floatArray[i] = array[i]
-            byteArray[i] = array[i].toByte()
+            byteArray[i] = array[i].toInt().toByte()
             intArray[i] = array[i].toInt()
-            shortArray[i] = array[i].toShort()
+            shortArray[i] = array[i].toInt().toShort()
         }
     }
 
-    fun getAtrib() : DicomAttributeCollection {
+    fun getAtrib(): DicomAttributeCollection {
         return dicomAttributeCollection
     }
 
@@ -114,20 +115,24 @@ open class DicomData() : ImagingData<BufferedImage> {
         }
         return intArray
     }
+
     /**
      * Convert short array to byte array use "grayscale standard display function"
      */
     private fun shortArrayToByteArray(shortArray: ShortArray): ByteArray {
         val byteArray = ByteArray(shortArray.size)
         try {
-            val m: Double = 255.0 / Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.WindowWidth))
+            val m: Double =
+                255.0 / Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.WindowWidth))
             val x1: Int = Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.WindowCenter)) -
                     Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.WindowCenter)) / 2
             val b: Int = (-(m * x1)).toInt()
 
             val lut: HashMap<Short, Byte> = HashMap()
-            val min: Int = Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.SmallestImagePixelValue))
-            val max: Int = Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.LargestImagePixelValue))
+            val min: Int =
+                Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.SmallestImagePixelValue))
+            val max: Int =
+                Integer.parseInt(dicomAttributeCollection.getAttributeValue(TagFromName.LargestImagePixelValue))
             var j: Int = min
             while (j <= max) {
                 var temp = ((m * j) + b).toInt()
@@ -149,7 +154,7 @@ open class DicomData() : ImagingData<BufferedImage> {
     /**
      * Convert image data from file to int array
      */
-    private fun cleanByteArrayPixelDataToShortArray(cleanByteArray : ByteArray): ShortArray {
+    private fun cleanByteArrayPixelDataToShortArray(cleanByteArray: ByteArray): ShortArray {
         val shortArray = ShortArray(cleanByteArray.size / 2)
         var j = 0
         var i = 0
@@ -174,7 +179,7 @@ open class DicomData() : ImagingData<BufferedImage> {
     /**
      * Convert byte array to int array
      */
-    private fun byteArrayToIntArray(byteArray: ByteArray) : IntArray {
+    private fun byteArrayToIntArray(byteArray: ByteArray): IntArray {
         val intArray = IntArray(byteArray.size)
         for (i in intArray.indices) {
             intArray[i] = byteArray[i].toInt()
@@ -185,7 +190,7 @@ open class DicomData() : ImagingData<BufferedImage> {
     /**
      * Convert byte array to short array
      */
-    private fun byteArrayToShortArray(byteArray: ByteArray) : ShortArray {
+    private fun byteArrayToShortArray(byteArray: ByteArray): ShortArray {
         val shortArray = ShortArray(byteArray.size)
         for (i in shortArray.indices) {
             shortArray[i] = byteArray[i].toShort()
@@ -230,21 +235,21 @@ open class DicomData() : ImagingData<BufferedImage> {
      * Get dicom image in the view BufferedImage
      */
     override fun getImage(): BufferedImage {
-        var no_window = FloatArray(shortArray.size)
+        val noWindow = FloatArray(shortArray.size)
         var maxi = -999999f
         var mini = 999999f
 
         for (i in shortArray.indices) {
-            no_window[i] = shortArray.get(i).toFloat()
-            if (no_window[i] > maxi) maxi = no_window[i]
-            if (no_window[i] < mini) mini = no_window[i]
+            noWindow[i] = shortArray[i].toFloat()
+            if (noWindow[i] > maxi) maxi = noWindow[i]
+            if (noWindow[i] < mini) mini = noWindow[i]
         }
-        val rezult = normalizer(no_window, mini, maxi)
+        val rezult = normalizer(noWindow, mini, maxi)
         return toGrayscale(rezult, sqrt(shortArray.size.toFloat()).toInt(), sqrt(shortArray.size.toFloat()).toInt())
     }
 
     private fun toRGB(value: Float): Int {
-        val part = Math.round(value * 255)
+        val part = (value * 255).roundToInt()
         return part * 0x10101
     }
 
@@ -271,7 +276,7 @@ open class DicomData() : ImagingData<BufferedImage> {
      * Get dicom image in the view ShortArray
      */
     override fun getImageDataAsShortArray(): ShortArray {
-        if(bitsAllocated == 32)
+        if (bitsAllocated == 32)
             throw DicomDataException("Can't get shortArray because bits allocated = 32")
         return shortArray
     }
@@ -284,7 +289,7 @@ open class DicomData() : ImagingData<BufferedImage> {
      * Get dicom image in the view ByteArray
      */
     override fun getImageDataAsByteArray(): ByteArray {
-        if(bitsAllocated == 32)
+        if (bitsAllocated == 32)
             throw DicomDataException("Can't get byteArray because bits allocated = 32")
         return byteArray
     }

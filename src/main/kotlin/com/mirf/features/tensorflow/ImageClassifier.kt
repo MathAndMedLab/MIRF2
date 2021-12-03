@@ -3,11 +3,11 @@ package com.mirf.features.tensorflow
 import java.awt.image.BufferedImage
 
 //TODO:(avlomakin) add another classification result types
-class ImageClassifier(val model: Model, val imageProcessor: ImageProcessor? = null) {
+class ImageClassifier(val model: Model, private val imageProcessor: ImageProcessor? = null) {
 
-    fun run(input : List<BufferedImage>) : BinaryClassificationResult {
+    fun run(input: List<BufferedImage>): BinaryClassificationResult {
 
-        val  images = input.map{x -> imageProcessor?.process(x) ?: x }
+        val images = input.map { x -> imageProcessor?.process(x) ?: x }
         //if image processor is set, process images
         //get ByteArray from images
         //pass to model

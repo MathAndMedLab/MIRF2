@@ -7,7 +7,7 @@ import org.tensorflow.Tensor
  */
 open class Model(val graph: ByteArray) {
 
-    fun run(tensor: Tensor<in Any>){
+    fun run(tensor: Tensor<in Any>) {
 
     }
 }

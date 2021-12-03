@@ -6,8 +6,9 @@ import com.mirf.core.data.MirfException
  * Represents 2 dimensional fixed size array of [Int]
  */
 class IntArray2D private constructor(
-        array: Array<IntArray>,
-        val rows: Int, val columns: Int) {
+    array: Array<IntArray>,
+    val rows: Int, val columns: Int,
+) {
 
     private val _array: Array<IntArray>
 

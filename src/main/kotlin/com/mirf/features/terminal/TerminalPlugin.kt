@@ -38,16 +38,18 @@ open class TerminalPlugin(val pluginDir: String, val commandMockup: String) {
         return result
     }
 
-    protected fun String.runCommand(workingDir: String = ".",
-                                    timeoutAmount: Long = 60,
-                                    timeoutUnit: TimeUnit = TimeUnit.SECONDS): String? {
+    protected fun String.runCommand(
+        workingDir: String = ".",
+        timeoutAmount: Long = 60,
+        timeoutUnit: TimeUnit = TimeUnit.SECONDS,
+    ): String {
         val directory = File(workingDir)
         return ProcessBuilder(*this.split(" ".toRegex()).toTypedArray())
-                .directory(directory)
-                .redirectOutput(ProcessBuilder.Redirect.PIPE)
-                .redirectError(ProcessBuilder.Redirect.PIPE)
-                .start().apply {
-                    waitFor(timeoutAmount, timeoutUnit)
-                }.inputStream.bufferedReader().readText()
+            .directory(directory)
+            .redirectOutput(ProcessBuilder.Redirect.PIPE)
+            .redirectError(ProcessBuilder.Redirect.PIPE)
+            .start().apply {
+                waitFor(timeoutAmount, timeoutUnit)
+            }.inputStream.bufferedReader().readText()
     }
 }

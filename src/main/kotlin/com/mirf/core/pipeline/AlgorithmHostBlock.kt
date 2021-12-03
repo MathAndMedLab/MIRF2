@@ -16,18 +16,22 @@ import com.mirf.core.data.Data
  * @param <O> is an output type of the [Algorithm], hosted by this Block.
 </O></I> */
 open class AlgorithmHostBlock<I : Data, O : Data>(
-        private var algorithm: Algorithm<I, O>,
-        name: String = algorithm.toString(),
-        pipelineKeeper: PipelineKeeper = DummyPipeKeeper()) : PipelineBlock<I, O>(name, pipelineKeeper) {
+    private var algorithm: Algorithm<I, O>,
+    name: String = algorithm.toString(),
+    pipelineKeeper: PipelineKeeper = DummyPipeKeeper(),
+) : PipelineBlock<I, O>(name, pipelineKeeper) {
 
     override fun flush() {
         cachedInput = null
         cachedOutput = null
     }
 
-    constructor(algorithm: (I) -> O, name: String = "", pipelineKeeper: PipelineKeeper = DummyPipeKeeper()) : this(algorithm.asAlg(), name, pipelineKeeper)
+    constructor(algorithm: (I) -> O, name: String = "", pipelineKeeper: PipelineKeeper = DummyPipeKeeper()) : this(
+        algorithm.asAlg(),
+        name,
+        pipelineKeeper)
 
-    var enabled: Boolean = true
+    private var enabled: Boolean = true
     private var cachedInput: I? = null
     private var cachedOutput: O? = null
 

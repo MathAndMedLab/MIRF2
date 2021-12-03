@@ -5,12 +5,12 @@ import com.mirf.core.data.FileData
 import com.mirf.core.data.medimage.ImageSeries
 import com.mirf.core.pipeline.AccumulatorWithAlgBlock
 import com.mirf.core.pipeline.AlgorithmHostBlock
-import com.mirf.features.dicomimage.util.DicomRepoRequestProcessors
 import com.mirf.core.pipeline.Pipeline
-import com.mirf.features.reports.PdfElementData
-import com.mirf.features.reports.creators.RepoAccessorReportCreator
+import com.mirf.features.dicomimage.util.DicomRepoRequestProcessors
 import com.mirf.features.pdf.PdfElementsAccumulator
 import com.mirf.features.pdf.asPdfElementData
+import com.mirf.features.reports.PdfElementData
+import com.mirf.features.reports.creators.RepoAccessorReportCreator
 import com.mirf.features.repository.LocalRepositoryCommander
 import com.mirf.features.repositoryaccessors.RepoFileSaver
 import com.mirf.features.repositoryaccessors.RepositoryAccessorBlock
@@ -25,25 +25,25 @@ object PdfImageCustomPipeline {
 
         //initializing blocks
         val seriesReaderBlock = AlgorithmHostBlock(
-                DicomRepoRequestProcessors.readDicomImageSeriesAlg,
-                pipelineKeeper = pipe)
+            DicomRepoRequestProcessors.readDicomImageSeriesAlg,
+            pipelineKeeper = pipe)
 
         val tableReportBlock = AlgorithmHostBlock<ImageSeries, PdfElementData>(
-                { x -> RepoAccessorReportCreator().execute(x).asPdfElementData() },
-                "Table reporter", pipe)
+            { x -> RepoAccessorReportCreator().execute(x).asPdfElementData() },
+            "Table reporter", pipe)
 
         val imageReporter = AlgorithmHostBlock<ImageSeries, PdfElementData>(
-                { x -> x.asPdfElementData() },
-                "image reporter", pipe)
+            { x -> x.asPdfElementData() },
+            "image reporter", pipe)
 
         val pdfBlock = AccumulatorWithAlgBlock(PdfElementsAccumulator(
-                "report"),
-                2,
-                "Accumulator",
-                pipe)
+            "report"),
+            2,
+            "Accumulator",
+            pipe)
 
         val reportSaverBlock = RepositoryAccessorBlock<FileData, Data>(LocalRepositoryCommander(),
-                RepoFileSaver(), "c:\\src\\reports")
+            RepoFileSaver(), "c:\\src\\reports")
 
         //making connections
         seriesReaderBlock.dataReady += tableReportBlock::inputReady

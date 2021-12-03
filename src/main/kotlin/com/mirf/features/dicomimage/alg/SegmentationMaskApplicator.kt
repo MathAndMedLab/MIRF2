@@ -7,8 +7,8 @@ import com.mirf.core.data.attribute.MirfAttributes
 import com.mirf.core.data.medimage.MedImage
 
 class SegmentationMaskApplicator(
-        private val applicationMode: ImageTransformMode)
-    : Algorithm<MedImage, MedImage> {
+    private val applicationMode: ImageTransformMode,
+) : Algorithm<MedImage, MedImage> {
 
     override fun execute(input: MedImage): MedImage {
 

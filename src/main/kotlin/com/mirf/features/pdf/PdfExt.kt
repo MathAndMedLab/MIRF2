@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
 
-fun BufferedImage.asPdfImage(saveOriginalSize: Boolean = true) : Image {
+fun BufferedImage.asPdfImage(saveOriginalSize: Boolean = true): Image {
 
     val stream = ByteArrayOutputStream()
     ImageIO.write(this, "png", stream)
@@ -15,7 +15,7 @@ fun BufferedImage.asPdfImage(saveOriginalSize: Boolean = true) : Image {
     val pdfImage = Image(ImageDataFactory.create(stream.toByteArray()))
 
     if (saveOriginalSize) {
-        pdfImage.setWidth(this.width.toFloat() )
+        pdfImage.setWidth(this.width.toFloat())
         pdfImage.setHeight(this.height.toFloat())
     }
 

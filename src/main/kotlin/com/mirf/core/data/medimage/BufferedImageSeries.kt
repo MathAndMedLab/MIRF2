@@ -4,7 +4,9 @@ import com.mirf.core.data.AttributeCollection
 import com.mirf.core.data.MirfData
 import java.io.Serializable
 
-class BufferedImageSeries(val images: List<BufferedImageRawImage>,
-                          attributes: AttributeCollection = AttributeCollection()): MirfData(), Serializable {
+class BufferedImageSeries(
+    val images: List<BufferedImageRawImage>,
+    attributes: AttributeCollection = AttributeCollection(),
+) : MirfData(), Serializable {
 
 }

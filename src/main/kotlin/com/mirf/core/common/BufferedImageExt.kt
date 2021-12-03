@@ -13,9 +13,9 @@ fun BufferedImage.logSize(): String = "${this.height} x ${this.width}"
 
 fun BufferedImage.convertColorspace(newType: Int): BufferedImage {
     val result = BufferedImage(
-            this.width,
-            this.height,
-            newType)
+        this.width,
+        this.height,
+        newType)
     result.graphics.drawImage(this, 0, 0, null)
     return result
 }
@@ -35,7 +35,7 @@ fun BufferedImage.toBicolor(threshold: Int = 384): BooleanArray2D {
     return result
 }
 
-fun BufferedImage.debugDisplayInWindow(){
+fun BufferedImage.debugDisplayInWindow() {
     val panel = JPanel()
 
     val label = JLabel(ImageIcon(this))
@@ -52,8 +52,8 @@ fun BufferedImage.debugDisplayInWindow(){
 }
 
 ////
-fun List<BufferedImage>.pickImages() : List<BufferedImage>{
-    if(this.isEmpty())
+fun List<BufferedImage>.pickImages(): List<BufferedImage> {
+    if (this.isEmpty())
         return this
 
     return ImagePicker(this).getPickedImages()

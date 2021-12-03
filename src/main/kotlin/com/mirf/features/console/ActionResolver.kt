@@ -17,7 +17,8 @@ object ActionResolver {
     }
 
     fun printHelp(ctx: ConsoleContext) {
-        val result = CommandParser.commands.map { x -> x.name + " - " + x.description + System.lineSeparator() }.joinToString { x -> x }
+        val result = CommandParser.commands.map { x -> x.name + " - " + x.description + System.lineSeparator() }
+            .joinToString { x -> x }
         print(result)
     }
 }

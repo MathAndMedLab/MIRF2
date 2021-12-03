@@ -1,21 +1,14 @@
 package com.mirf.features.machinelearning.tensorflow
 
+import com.mirf.core.log.MirfLogFactory
+import org.slf4j.Logger
+import org.tensorflow.*
+import org.tensorflow.types.UInt8
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
-import java.nio.ByteBuffer
-import java.nio.DoubleBuffer
-import java.nio.FloatBuffer
-import java.nio.IntBuffer
-import java.nio.LongBuffer
-import java.util.ArrayList
-import org.tensorflow.Graph
-import org.tensorflow.Operation
-import org.tensorflow.Session
-import org.tensorflow.Tensor
-import org.tensorflow.Tensors
-import org.tensorflow.types.UInt8
+import java.nio.*
 
 // TODO(musatian): uncomment standart logs and replace them with custom MIRF logs
 /**
@@ -36,6 +29,8 @@ class TensorFlowInferenceInterface {
     private val fetchNames = ArrayList<String>()
     private var fetchTensors: MutableList<Tensor<*>> = ArrayList()
 
+    private val log: Logger = MirfLogFactory.currentLogger
+
     /*
      * Load a TensorFlow model from the InputStream.
      *
@@ -49,7 +44,7 @@ class TensorFlowInferenceInterface {
         this.sess = Session(g)
         this.runner = sess.runner()
 
-        var `is`: InputStream? = null
+        var `is`: InputStream?
         `is` = input
         if (`is` == null) {
             try {
@@ -65,16 +60,16 @@ class TensorFlowInferenceInterface {
             val numBytesRead = `is`.read(graphDef)
             if (numBytesRead != graphDef.size) {
                 throw IOException(
-                        "read error: read only "
-                                + numBytesRead
-                                + " of the graph, expected to read "
-                                + graphDef.size)
+                    "read error: read only "
+                            + numBytesRead
+                            + " of the graph, expected to read "
+                            + graphDef.size)
             }
 
 
             loadGraph(graphDef, g)
             `is`.close()
-            //            Log.i(TAG, "Successfully loaded model from '" + model + "'");
+            log.info(TAG, "Successfully loaded model from '$model'")
 
         } catch (e: IOException) {
             throw RuntimeException("Failed to load model from '$model'", e)
@@ -153,12 +148,12 @@ class TensorFlowInferenceInterface {
 
         // Run the session.
         try {
-            if (enableStats) {
+            fetchTensors = if (enableStats) {
                 val r = runner!!.setOptions(byteArrayOf(0x08, 0x03)).runAndFetchMetadata()
-                fetchTensors = r.outputs
+                r.outputs
 
             } else {
-                fetchTensors = runner!!.run()
+                runner!!.run()
             }
         } catch (e: RuntimeException) {
             throw e
@@ -176,9 +171,8 @@ class TensorFlowInferenceInterface {
     }
 
     fun graphOperation(operationName: String): Operation {
-        val operation = g.operation(operationName) ?: throw RuntimeException(
-                "Node '$operationName' does not exist in model '$modelName'")
-        return operation
+        return g.operation(operationName) ?: throw RuntimeException(
+            "Node '$operationName' does not exist in model '$modelName'")
     }
 
     /**
@@ -443,9 +437,7 @@ class TensorFlowInferenceInterface {
 
 
         val endMs = System.currentTimeMillis()
-        //        Log.i(
-        //                TAG,
-        //                "Model load took " + (endMs - startMs) + "ms, TensorFlow version: " + TensorFlow.version());
+        log.info(TAG, "Model load took ${endMs - startMs} ms, TensorFlow version: ${TensorFlow.version()}")
     }
 
     private fun addFeed(inputName: String, t: Tensor<*>) {
@@ -457,8 +449,8 @@ class TensorFlowInferenceInterface {
     }
 
     private class TensorId {
-        lateinit internal var name: String
-        internal var outputIndex: Int = 0
+        lateinit var name: String
+        var outputIndex: Int = 0
 
         companion object {
 
@@ -487,15 +479,13 @@ class TensorFlowInferenceInterface {
     }
 
     private fun getTensor(outputName: String): Tensor<*> {
-        var i = 0
-        for (n in fetchNames) {
+        for ((i, n) in fetchNames.withIndex()) {
             if (n == outputName) {
                 return fetchTensors[i]
             }
-            ++i
         }
         throw RuntimeException(
-                "Node '$outputName' was not provided to run(), so it cannot be read")
+            "Node '$outputName' was not provided to run(), so it cannot be read")
     }
 
     private fun closeFeeds() {

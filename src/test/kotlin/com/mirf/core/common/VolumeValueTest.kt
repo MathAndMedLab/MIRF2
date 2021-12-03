@@ -1,9 +1,7 @@
 package com.mirf.core.common
 
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class VolumeValueTest{
 
@@ -15,10 +13,10 @@ class VolumeValueTest{
 
         for (i in 1..999)
             volume += oneMM
-        Assert.assertEquals(volume.toString(), "999.0 mm³")
+        assertEquals(volume.toString(), "999.0 mm³")
 
         volume += oneMM
-        Assert.assertEquals(volume.toString(), "1.0 cm³")
+        assertEquals(volume.toString(), "1.0 cm³")
 
     }
 
@@ -28,9 +26,9 @@ class VolumeValueTest{
         val cm = VolumeValue.createFromCM3(1.0)
 
         var sum = mm + cm
-        Assert.assertEquals(sum.toString(), "2.0 cm³")
+        assertEquals(sum.toString(), "2.0 cm³")
 
         sum = cm + mm
-        Assert.assertEquals(sum.toString(), "2.0 cm³")
+        assertEquals(sum.toString(), "2.0 cm³")
     }
 }

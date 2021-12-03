@@ -1,6 +1,6 @@
 package com.mirf.features.console
 
-import java.util.Scanner
+import java.util.*
 
 object Main {
 

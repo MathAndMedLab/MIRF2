@@ -12,6 +12,6 @@ object DicomAttributes {
      * todo: (avlomakin) add link to doc
      */
     val ONE_PIXEL_VOLUME_MM3 = DataAttributeMockup<Double>("onepixelvolume", "(1234, 1234)",
-            AttributeTagType.Dicom)
+        AttributeTagType.Dicom)
 }
 

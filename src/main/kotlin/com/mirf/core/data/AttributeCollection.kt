@@ -6,7 +6,7 @@ import com.mirf.core.log.MirfLogFactory
 import java.io.Serializable
 
 //TODO: (avlomakin) implements Collection<DataAttribute>
-open class AttributeCollection constructor(list : Collection<DataAttribute<*>> = ArrayList()) : Cloneable, Serializable {
+open class AttributeCollection constructor(list: Collection<DataAttribute<*>> = ArrayList()) : Cloneable, Serializable {
 
     protected open val log = MirfLogFactory.currentLogger
 
@@ -22,17 +22,17 @@ open class AttributeCollection constructor(list : Collection<DataAttribute<*>> =
     fun add(attribute: DataAttribute<*>) = this.internalAdd(attribute)
 
     fun <T> add(attributeMockup: DataAttributeMockup<T>, value: T) {
-        val attribute =attributeMockup.new(value)
+        val attribute = attributeMockup.new(value)
         internalAdd(attribute)
     }
 
-    private fun internalAdd(attribute: DataAttribute<*>){
+    private fun internalAdd(attribute: DataAttribute<*>) {
         _version++
         attributes.add(attribute)
     }
 
     public override fun clone(): AttributeCollection {
-        val clonedAttributes = attributes.map { it.copy()}
+        val clonedAttributes = attributes.map { it.copy() }
         return AttributeCollection(clonedAttributes)
     }
 
@@ -66,7 +66,8 @@ open class AttributeCollection constructor(list : Collection<DataAttribute<*>> =
     }
 
     open operator fun <R> get(mockup: DataAttributeMockup<R>): R {
-        val resultGen = find(mockup.tag) ?: throw AttributeException("attribute ${mockup.name} doesn't presented in the attribute collection")
+        val resultGen = find(mockup.tag)
+            ?: throw AttributeException("attribute ${mockup.name} doesn't presented in the attribute collection")
         return (resultGen as DataAttribute<R>).value
     }
 }

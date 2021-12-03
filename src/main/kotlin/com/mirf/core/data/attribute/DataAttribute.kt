@@ -6,15 +6,20 @@ import java.io.Serializable
 /**
  * Stores a single tag that is part of metadata of medical images.
  */
-open class DataAttribute<T>(val name: String, val tag: String, val value: T, private val cloneMethod: ((T) -> T)? = null): Serializable {
+open class DataAttribute<T>(
+    val name: String,
+    val tag: String,
+    val value: T,
+    private val cloneMethod: ((T) -> T)? = null,
+) : Serializable {
 
-    var description: String? = null
+    private var description: String? = null
 
     protected open val log = MirfLogFactory.currentLogger
 
     fun copy(): DataAttribute<T> {
 
-        if(cloneMethod == null) {
+        if (cloneMethod == null) {
             log.warn("No clone method provided for $name, new attribute will share the same value object")
             val result = DataAttribute(name, tag, value)
             result.description = this.description

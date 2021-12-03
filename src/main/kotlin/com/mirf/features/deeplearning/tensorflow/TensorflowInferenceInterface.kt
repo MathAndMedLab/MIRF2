@@ -1,9 +1,13 @@
 package com.mirf.features.deeplearning.tensorflow
 
+import com.mirf.core.log.MirfLogFactory
 import org.apache.commons.compress.utils.IOUtils
+import org.slf4j.Logger
 import org.tensorflow.*
 import org.tensorflow.types.UInt8
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
 import java.nio.*
 
 
@@ -26,6 +30,8 @@ class TensorflowInferenceInterface {
     private val fetchNames = ArrayList<String>()
     private var fetchTensors: MutableList<Tensor<*>> = ArrayList()
 
+    private val log: Logger = MirfLogFactory.currentLogger
+
     /*
      * Load a TensorFlow model from the InputStream.
      *
@@ -34,7 +40,7 @@ class TensorflowInferenceInterface {
      */
     constructor(input: InputStream?, model: String) {
 
-        println("MODEL: " + model);
+        println("MODEL: $model")
 
         this.modelName = model
         this.g = Graph()
@@ -46,33 +52,22 @@ class TensorflowInferenceInterface {
         if (`is` == null) {
             try {
                 `is` = javaClass.classLoader.getResourceAsStream(model)
-                println("MODEL: " + model)
+                println("MODEL: $model")
                 println("INPUT STREAM: " + (`is` == null))
                 if (`is` == null) {
-                    throw Exception();
+                    throw Exception()
                 }
-//                `is` = FileInputStream(model)
             } catch (e: IOException) {
                 throw RuntimeException("Failed to load model from '$model'", e)
             }
         }
 
         try {
-            val graphDef  = IOUtils.toByteArray(`is`)
-//            val graphDef = ByteArray(`is`.available())
-//            val numBytesRead = `is`.read(graphDef)
-//            if (numBytesRead != graphDef.size) {
-//                throw IOException(
-//                        "read error: read only "
-//                                + numBytesRead
-//                                + " of the graph, expected to read "
-//                                + graphDef.size)
-//            }
-
+            val graphDef = IOUtils.toByteArray(`is`)
 
             loadGraph(graphDef, g)
             `is`.close()
-            //            Log.i(TAG, "Successfully loaded model from '" + model + "'");
+            log.info("Successfully loaded model from '$model'")
 
         } catch (e: IOException) {
             throw RuntimeException("Failed to load model from '$model'", e)
@@ -109,7 +104,7 @@ class TensorflowInferenceInterface {
             val graphDef = baos.toByteArray()
 
             loadGraph(graphDef, g)
-            //            Log.i(TAG, "Successfully loaded model from the input stream");
+            log.info("Successfully loaded model from the input stream")
         } catch (e: IOException) {
             throw RuntimeException("Failed to load model from the input stream", e)
         }
@@ -151,12 +146,12 @@ class TensorflowInferenceInterface {
 
         // Run the session.
         try {
-            if (enableStats) {
+            fetchTensors = if (enableStats) {
                 val r = runner!!.setOptions(byteArrayOf(0x08, 0x03)).runAndFetchMetadata()
-                fetchTensors = r.outputs
+                r.outputs
 
             } else {
-                fetchTensors = runner!!.run()
+                runner!!.run()
             }
         } catch (e: RuntimeException) {
             throw e
@@ -174,9 +169,8 @@ class TensorflowInferenceInterface {
     }
 
     fun graphOperation(operationName: String): Operation {
-        val operation = g.operation(operationName) ?: throw RuntimeException(
-                "Node '$operationName' does not exist in model '$modelName'")
-        return operation
+        return g.operation(operationName) ?: throw RuntimeException(
+            "Node '$operationName' does not exist in model '$modelName'")
     }
 
     /**
@@ -441,9 +435,7 @@ class TensorflowInferenceInterface {
 
 
         val endMs = System.currentTimeMillis()
-        //        Log.i(
-        //                TAG,
-        //                "Model load took " + (endMs - startMs) + "ms, TensorFlow version: " + TensorFlow.version());
+        log.info("Model load took ${endMs - startMs} ms, TensorFlow version: ${TensorFlow.version()}")
     }
 
     private fun addFeed(inputName: String, t: Tensor<*>) {
@@ -455,8 +447,8 @@ class TensorflowInferenceInterface {
     }
 
     private class TensorId {
-        lateinit internal var name: String
-        internal var outputIndex: Int = 0
+        lateinit var name: String
+        var outputIndex: Int = 0
 
         companion object {
 
@@ -485,15 +477,13 @@ class TensorflowInferenceInterface {
     }
 
     private fun getTensor(outputName: String): Tensor<*> {
-        var i = 0
-        for (n in fetchNames) {
+        for ((i, n) in fetchNames.withIndex()) {
             if (n == outputName) {
                 return fetchTensors[i]
             }
-            ++i
         }
         throw RuntimeException(
-                "Node '$outputName' was not provided to run(), so it cannot be read")
+            "Node '$outputName' was not provided to run(), so it cannot be read")
     }
 
     private fun closeFeeds() {

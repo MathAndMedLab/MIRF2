@@ -4,12 +4,12 @@ import com.mirf.core.data.Data
 import com.mirf.core.data.FileData
 import com.mirf.core.pipeline.PipelineBlock
 import com.mirf.core.pipeline.PipelineKeeper
-import com.mirf.features.ecg.EcgData
+import com.mirf.features.ecg.data.EcgData
 import com.mirf.features.ecg.util.EcgDiagnosis
 import com.mirf.features.ecg.util.PatientInfo
-import java.lang.Exception
 
-class EcgReportBuilderBlock(val patientInfo: PatientInfo, pipelineKeeper: PipelineKeeper) : PipelineBlock<Data, FileData>("ecgPdfCreator", pipelineKeeper) {
+class EcgReportBuilderBlock(val patientInfo: PatientInfo, pipelineKeeper: PipelineKeeper) :
+    PipelineBlock<Data, FileData>("ecgPdfCreator", pipelineKeeper) {
 
     private var ecgFilteredSender: Any? = null
     private var ecgDiagnosisSender: Any? = null
