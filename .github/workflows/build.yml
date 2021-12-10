@@ -21,6 +21,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle
+      - name: Project Structure
+        run: |
+          ./gradlew projects
       - name: Build
         run: |
           ./gradlew :clean :assemble
