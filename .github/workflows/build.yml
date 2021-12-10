@@ -24,10 +24,3 @@ jobs:
       - name: Build
         run: |
           ./gradlew :clean :assemble
-          ./gradlew :mirfBrainTumor:clean :mirfBrainTumor:assemble
-          ./gradlew :mirf-ms-service:clean :mirf-ms-service:assemble
-          ./gradlew :mirfMs:clean :mirfMs:assemble
-          ./gradlew :_utils:clean :_utils:assemble
-          ./gradlew :block:clean :block:assemble
-          ./gradlew :repository:clean :repository:assemble
-          ./gradlew :orchestrator:clean :orchestrator:assemble

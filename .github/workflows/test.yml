@@ -27,9 +27,6 @@ jobs:
       - name: Run test
         run: |
           ./gradlew :clean :test
-          ./gradlew :mirfBrainTumor:clean :mirfBrainTumor:test
-          ./gradlew :mirf-ms-service:clean :mirf-ms-service:test
-          ./gradlew :mirfMs:clean :mirfMs:test
       - uses: actions/upload-artifact@v2
         with:
           name: test-reports
