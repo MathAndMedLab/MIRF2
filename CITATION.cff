@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+version: 2.0.0
+url: "https://github.com/MathAndMedLab/MIRF2"
+preferred-citation:
+  type: conference-paper
+  authors:
+  - family-names: "Shvyrkova"
+    given-names: "Alexandra"
+  - family-names: "Litvinov"
+    given-names: "Yurii"
+  - family-names: "Fefelov"
+    given-names: "Alexey"
+  - family-names: "Chizhova"
+    given-names: "Angelina"
+  - family-names: "Ponomarev"
+    given-names: "Egor"
+  - family-names: "Lomakin"
+    given-names: "Alexander"
+  - family-names: "Savelev"
+    given-names: "Alexander"
+  url: "http://ceur-ws.org/Vol-2691/paper61.pdf"
+  title: "MIRF 2.0 - A framework for distributed medical images analysis"
+  language: English
+  volume: 2691
+  year: 2020
+  collection-title: "CEUR Workshop Proceedings"
