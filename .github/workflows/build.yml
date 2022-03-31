@@ -1,6 +1,5 @@
 name: Build without test
-on:
-  push:
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
