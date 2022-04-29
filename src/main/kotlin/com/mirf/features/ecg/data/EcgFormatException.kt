@@ -1,4 +1,3 @@
-package com.mirf.features.ecg
+package com.mirf.features.ecg.data
 
-class EcgFormatException(message: String) : Exception(message) {
-}
+class EcgFormatException(message: String) : Exception(message)

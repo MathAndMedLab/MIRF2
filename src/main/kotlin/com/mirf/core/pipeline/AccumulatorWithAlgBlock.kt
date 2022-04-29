@@ -1,8 +1,8 @@
 package com.mirf.core.pipeline
 
 import com.mirf.core.algorithm.Algorithm
-import com.mirf.core.data.Data
 import com.mirf.core.data.CollectionData
+import com.mirf.core.data.Data
 
 /**
  * [PipelineBlock] that accumulates inputs of the same type
@@ -10,12 +10,13 @@ import com.mirf.core.data.CollectionData
  * @param <O> output type
 </O></I> */
 class AccumulatorWithAlgBlock<I : Data, O : Data>(
-        private var algorithm: Algorithm<CollectionData<I>, O>,
-        private val connections: Int,
-        name: String = "accumulator for $algorithm",
-        pipelineKeeper: PipelineKeeper = DummyPipeKeeper()) : PipelineBlock<I, O>(name, pipelineKeeper) {
+    private var algorithm: Algorithm<CollectionData<I>, O>,
+    private val connections: Int,
+    name: String = "accumulator for $algorithm",
+    pipelineKeeper: PipelineKeeper = DummyPipeKeeper(),
+) : PipelineBlock<I, O>(name, pipelineKeeper) {
 
-    var enabled = true
+    private var enabled = true
     private var inputs = ArrayList<I>()
 
     override fun inputReady(sender: Any, input: I) {

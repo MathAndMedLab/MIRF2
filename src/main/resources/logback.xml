@@ -8,7 +8,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file> MIRF.log </file>
+        <file>MIRF.log</file>
         <append>true</append>
         <encoder>
             <pattern>[%d{HH:mm:ss.SSS}] %-5level - %msg%n</pattern>
@@ -16,7 +16,7 @@
     </appender>
 
     <root level="debug">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="FILE"/>
         <!--<appender-ref ref="STDOUT" />-->
     </root>
 

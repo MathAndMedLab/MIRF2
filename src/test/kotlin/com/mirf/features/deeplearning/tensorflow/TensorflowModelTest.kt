@@ -8,7 +8,7 @@ import kotlin.math.roundToInt
 class TensorflowModelTest {
 
     @Test
-    fun TensorflowModelInterface_loadModel_readsModelWithoutErrors() {
+    fun tensorflowModelInterface_loadModel_readsModelWithoutErrors() {
         val modelName = "xor_model.pb"
         val tfModel = TensorflowModelInterface(null, modelName, "my_input/X", "my_output/Sigmoid", 1)
         // check that input and output are set correctly
@@ -17,7 +17,7 @@ class TensorflowModelTest {
     }
 
     @Test
-    fun TensorflowModelInterface_runXORmodel_outputsResult() {
+    fun tensorflowModelInterface_runXORmodel_outputsResult() {
         val modelName = "xor_model.pb"
         val tfModel = TensorflowModelInterface(null, modelName, "my_input/X", "my_output/Sigmoid", 1)
 
@@ -40,32 +40,32 @@ class TensorflowModelTest {
     }
 
     @Test
-    fun TensorflowModelInterface_runClassificationOnImagemodel_outputsResult() {
-        val img_size = 128
+    fun tensorflowModelInterface_runClassificationOnImagemodel_outputsResult() {
+        val imgSize = 128
         val modelName = "tf_model.pb"
         val tfModel = TensorflowModelInterface(null, modelName, "conv2d_1_input_1", "activation_5_1/Sigmoid", 1, 1)
 
-        val bigArr = FloatArray(img_size * img_size * 3)
+        val bigArr = FloatArray(imgSize * imgSize * 3)
         // check that input and output are set correctly
-        var res = tfModel.runModel(bigArr, 1, 128, 128, 3)[0].roundToInt()
+        val res = tfModel.runModel(bigArr, 1, 128, 128, 3)[0].roundToInt()
         Assert.assertEquals(1, res)
     }
 
     @Test
     @Ignore
-    fun Tensorflow_runEcgClassification() {
-        val img_size = 128
+    fun tensorflow_runEcgClassification() {
+        val imgSize = 128
         val modelName = "ecg_tf_cnn.pb"
         //val modelName = "src/test/resources/tf_model.pb"
 
         val tfModel = TensorflowModelInterface(null, modelName, "conv2d_1_input", "dense_2/Softmax", 8)
 
-        val bigArr = FloatArray(img_size * img_size * 1)
+        val bigArr = FloatArray(imgSize * imgSize * 1)
         
         // check that input and output are set correctly
-        var res = tfModel.runModel(bigArr, 1, 128, 128, 1)
+        val res = tfModel.runModel(bigArr, 1, 128, 128, 1)
         for (i in res)
-            print(i.toString() + " ")
+            print("$i ")
         Assert.assertEquals(1, 1)
     }
 

@@ -35,7 +35,7 @@ class AddCircleMaskAlg : Algorithm<MedImage, MedImage> {
             result[centerY + y.toInt() - 1].fill(true, from, to)
         }
 
-        //log.info("\n${result.flatMap { x -> listOf(*x.map{ "$it" }.toTypedArray(), "\n" )}}")
+//        log.info("\n${result.flatMap { x -> listOf(*x.map{ "$it" }.toTypedArray(), "\n" )}}")
 
         return result
     }

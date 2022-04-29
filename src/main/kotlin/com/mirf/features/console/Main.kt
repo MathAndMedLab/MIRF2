@@ -1,6 +1,6 @@
 package com.mirf.features.console
 
-import java.util.Scanner
+import java.util.*
 
 object Main {
 
@@ -16,7 +16,7 @@ object Main {
             if (input == "q")
                 exit = true
             else
-                CommandParser.tryExecute(input, null)
+                CommandParser.tryExecute(input)
 
         }
         keyboard.close()

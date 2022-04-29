@@ -1,15 +1,12 @@
 package com.mirf.features.dicomimage.util
 
+import com.mirf.features.dicomimage.data.DicomAttributeCollection
+import com.mirf.features.dicomimage.data.DicomImage
 import com.pixelmed.dicom.AttributeList
 import com.pixelmed.dicom.DicomInputStream
 import com.pixelmed.display.ConsumerFormatImageMaker
-import com.mirf.features.dicomimage.data.DicomAttributeCollection
-import com.mirf.features.dicomimage.data.DicomImage
-
 import java.awt.image.BufferedImage
 import java.io.InputStream
-import java.util.ArrayList
-import java.util.Arrays
 
 /**
  * Holds different methods for reading Dicom images.
@@ -54,7 +51,7 @@ object DicomReader {
         var pixelData = ArrayList<BufferedImage>()
         try {
             val imgs = ConsumerFormatImageMaker.makeEightBitImages(attributeList)
-            pixelData = ArrayList(Arrays.asList(*imgs))
+            pixelData = ArrayList(listOf(*imgs))
         } catch (e: Exception) {
             e.printStackTrace()
         }

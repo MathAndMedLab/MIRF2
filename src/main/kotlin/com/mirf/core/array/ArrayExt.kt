@@ -79,6 +79,7 @@ fun <R> BooleanArray2D.map2d(transform: (Boolean) -> R): List<R> {
     }
     return result
 }
+
 fun <R> ByteArray2D.map2d(transform: (Byte) -> R): List<R> {
     val result = mutableListOf<R>()
     for (i in 0 until this.rows) {
@@ -86,6 +87,7 @@ fun <R> ByteArray2D.map2d(transform: (Byte) -> R): List<R> {
     }
     return result
 }
+
 fun <R> ShortArray2D.map2d(transform: (Short) -> R): List<R> {
     val result = mutableListOf<R>()
     for (i in 0 until this.rows) {
@@ -93,6 +95,7 @@ fun <R> ShortArray2D.map2d(transform: (Short) -> R): List<R> {
     }
     return result
 }
+
 fun <R> IntArray2D.map2d(transform: (Int) -> R): List<R> {
     val result = mutableListOf<R>()
     for (i in 0 until this.rows) {

@@ -11,13 +11,13 @@ class ExternalResourceLoader {
     fun loadExternalResources(rootDir: File) {
 
         val resourceDirs = rootDir.listFiles { a -> a.isDirectory }
-        log.info("found ${resourceDirs.size} resource directories, enumerating through")
+        log.info("found ${resourceDirs!!.size} resource directories, enumerating through")
 
         for (resourceDir in resourceDirs) {
             log.info("searching for $RESOURCE_DESC_FILE_EXT file in ${resourceDir.name}")
             val descFiles = resourceDir.listFiles { file -> file.isFile && file.extension == RESOURCE_DESC_FILE_EXT }
 
-            if (descFiles.size > 1) {
+            if (descFiles!!.size > 1) {
                 log.warn("More than 1 config file found in ${resourceDir.name}, skipping loading")
                 continue
             }

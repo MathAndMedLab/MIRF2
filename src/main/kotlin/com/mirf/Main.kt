@@ -1,22 +1,21 @@
 package com.mirf
 
-import com.mirf.features.ecg.EcgAttributes
-import com.mirf.features.ecg.EcgLeadType
-import com.mirf.features.ecg.EcgReader
+import com.mirf.features.ecg.data.EcgAttributes
+import com.mirf.features.ecg.data.EcgLeadType
 import com.mirf.features.ecg.util.*
 import com.mirf.playground.DicomImageCircleMaskApplier
 import com.mirf.playground.IHD.IhdClassifierAlg
-import com.mirf.playground.IHD.IntracranialHemorrhageDetectionWorkflow
 import com.mirf.playground.NiftiTest
-import java.awt.Color
 import java.time.LocalDateTime
+import java.util.*
 
 
 object Main {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val ihdAlg = IhdClassifierAlg();
+        val ihdAlg = IhdClassifierAlg()
+//        runEcgFromMitBih()
         ihdAlg.execute(listOf("ihd-kaggle.dcm"))
     }
 
@@ -25,18 +24,15 @@ object Main {
      */
     fun runEcgPipeline() {
         val workflow: EcgClassificationWorkflow = EcgClassificationWorkflow.createFull(
-                "src/main/resources/ecg/231.dat",
-                "src/main/resources/ecg/231.hea",
-                "",
-                PatientInfo("Leslie", 74, "W", LocalDateTime.now()))
+            "src/main/resources/ecg/231.dat",
+            "src/main/resources/ecg/231.hea",
+            "",
+            PatientInfo("Leslie", 74, "W", LocalDateTime.now()))
 
-        workflow.pipe.session.newRecord.plusAssign({ x, a -> println(a) })
+        workflow.pipe.session.newRecord.plusAssign { _, a -> println(a) }
 
         workflow.exec()
     }
-
-
-
 
 
     /**
@@ -53,10 +49,11 @@ object Main {
      * ECG from PTB reader test
      */
     fun runEcgFromPtb() {
-        val ecgData = EcgReader.readEcg("src/main/resources/ecg/s0010_re.hea", "src/main/resources/ecg/s0010_re.dat", 16)
+        val ecgData =
+            EcgReader.readEcg("src/main/resources/ecg/s0010_re.hea", "src/main/resources/ecg/s0010_re.dat", 16)
 
-        for (i in ecgData.attributes.getAttributeValue(EcgAttributes.LEADS).get(EcgLeadType.II)!!) {
-            System.out.print(i.toString() + " ")
+        for (i in ecgData.attributes.getAttributeValue(EcgAttributes.LEADS)[EcgLeadType.II]!!) {
+            print("$i ")
         }
     }
 
@@ -65,8 +62,8 @@ object Main {
      * Pipeline for DICOM reader module test
      */
     fun runDicom() {
-        val dicomFolder = javaClass.getResource("/dicoms").path.fixForCurrentPlatform()
-        val resultFolder = javaClass.getResource("/reports").path.fixForCurrentPlatform()
+        val dicomFolder = javaClass.getResource("/dicoms")!!.path.fixForCurrentPlatform()
+        val resultFolder = javaClass.getResource("/reports")!!.path.fixForCurrentPlatform()
         DicomImageCircleMaskApplier().exec(dicomFolder, resultFolder)
     }
 
@@ -74,9 +71,9 @@ object Main {
      * Pipeline for NIFTI reader module test
      */
     fun runNifti() {
-        val niftiFile = javaClass.getResource("/nifti/brain.nii").path
-        val mhd = javaClass.getResource("/raw/brain.mhd").path
-        val resultFolder = javaClass.getResource("/reports").path
+        val niftiFile = javaClass.getResource("/nifti/brain.nii")!!.path
+        val mhd = javaClass.getResource("/raw/brain.mhd")!!.path
+        val resultFolder = javaClass.getResource("/reports")!!.path
         NiftiTest().exec(niftiFile, mhd, resultFolder)
     }
 }
@@ -90,7 +87,7 @@ private fun String.fixForCurrentPlatform(): String {
 
 object OSValidator {
 
-    private val OS = System.getProperty("os.name").toLowerCase()
+    private val OS = System.getProperty("os.name").lowercase(Locale.getDefault())
 
     val isWindows: Boolean
         get() = OS.indexOf("win") >= 0

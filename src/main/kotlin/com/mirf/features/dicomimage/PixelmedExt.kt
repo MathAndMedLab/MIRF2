@@ -1,6 +1,9 @@
 package com.mirf.features.dicomimage
 
-import com.pixelmed.dicom.*
+import com.pixelmed.dicom.AttributeList
+import com.pixelmed.dicom.BinaryOutputStream
+import com.pixelmed.dicom.DicomInputStream
+import com.pixelmed.dicom.DicomOutputStream
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
@@ -8,7 +11,7 @@ import java.io.ByteArrayOutputStream
 /**
  * Creates deep copy of the given [AttributeList]
  */
-fun AttributeList.copy() : AttributeList{
+fun AttributeList.copy(): AttributeList {
 
     val coreStream = ByteArrayOutputStream()
     val outputStream = DicomOutputStream(BinaryOutputStream(coreStream, false), null, "1.2.840.10008.1.2")

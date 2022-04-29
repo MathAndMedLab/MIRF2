@@ -6,9 +6,10 @@ import com.mirf.core.data.attribute.MirfAttributes
 import com.mirf.features.ij.asImageSeries
 import com.mirf.features.nifti.util.Nifti1Reader
 import org.junit.Test
+import java.awt.Color
 
 class BufferedImageExtKtTest {
-/*
+
     @Test
     fun imagePickerTest(){
         val path = javaClass.getResource("/msReport/mask.nii") ?: return
@@ -36,17 +37,17 @@ class BufferedImageExtKtTest {
             println()
         }
 
-//        for(w in 0 until image.width) {
-//            for (h in 0 until image.height) {
-//                val color = Color(image.getRGB(w, h))
-//                print("${color.red + color.green + color.blue} ")
-//            }
-//            println()
-//        }
+        for(w in 0 until image.width) {
+            for (h in 0 until image.height) {
+                val color = Color(image.getRGB(w, h))
+                print("${color.red + color.green + color.blue} ")
+            }
+            println()
+        }
 
         println(bl.map2d { if (it) 1 else 0 }.size)
         println("${bl.logSize()} ${image.logSize()}")
     }
 
- */
+
 }

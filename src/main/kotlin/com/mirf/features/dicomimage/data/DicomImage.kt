@@ -1,17 +1,15 @@
 package com.mirf.features.dicomimage.data
 
-import com.pixelmed.dicom.AttributeList
 import com.mirf.core.data.medimage.MedImage
 import com.mirf.core.data.medimage.RawImageData
+import com.pixelmed.dicom.AttributeList
 import java.awt.image.BufferedImage
 
 /**
  * Dummy implementation of dicom image
  */
 //TODO: (avlomakin) move to com.mirf.core.data
-class DicomImage : MedImage {
-
-    override val attributes: DicomAttributeCollection
+class DicomImage(override val attributes: DicomAttributeCollection) : MedImage() {
 
     private var _image: BufferedImage? = null
     private var _imageAttributesVersion = -1
@@ -40,10 +38,6 @@ class DicomImage : MedImage {
 
     override val extension: String
         get() = "DICOM"
-
-    constructor(attributes: DicomAttributeCollection) : super() {
-        this.attributes = attributes
-    }
 
     override fun clone(): DicomImage {
         return DicomImage(attributes.clone())

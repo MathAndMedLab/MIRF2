@@ -5,5 +5,5 @@ import java.io.File
 object EnvironmentHelper {
 
     fun getCurrentJarDirectory(): File =
-            File(ClassLoader.getSystemClassLoader().getResource(".").path)
+        File(ClassLoader.getSystemClassLoader().getResource(".")!!.path)
 }

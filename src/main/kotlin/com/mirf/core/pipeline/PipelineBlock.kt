@@ -1,7 +1,7 @@
 package com.mirf.core.pipeline
 
-import com.mirf.core.data.Data
 import com.mirf.core.common.EventManager
+import com.mirf.core.data.Data
 import com.mirf.core.log.MirfLogFactory
 import org.slf4j.Logger
 
@@ -15,12 +15,13 @@ import org.slf4j.Logger
  * @param <O> output that is produced by PipelineBlock and propagated to listening blocks in pipeline.
 </O></I> */
 abstract class PipelineBlock<I : Data, O : Data>(
-        val name: String,
-        val pipelineKeeper: PipelineKeeper) {
+    val name: String,
+    val pipelineKeeper: PipelineKeeper,
+) {
 
     protected open val log: Logger = MirfLogFactory.currentLogger
 
-    protected open val onDataReady : EventManager<O> = EventManager()
+    protected open val onDataReady: EventManager<O> = EventManager()
 
     open val dataReady
         get() = onDataReady.event

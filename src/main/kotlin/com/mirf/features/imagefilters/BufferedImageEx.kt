@@ -18,12 +18,12 @@ fun BufferedImage.resize(newWidth: Int, newHeight: Int): BufferedImage {
 
 fun BufferedImage.applyMask(mask: BufferedImage) {
 
-    if(this.width != mask.width || this.height != mask.height)
+    if (this.width != mask.width || this.height != mask.height)
         throw MirfException("failed to apply mask: inconsistent size (${this.width}, ${this.height}) vs (${mask.width}, ${mask.height})")
 
-    for (i in 0..this.height){
-        for(j in 0..this.width)
-            if(mask.getRGB(i, j) == 0)
+    for (i in 0..this.height) {
+        for (j in 0..this.width)
+            if (mask.getRGB(i, j) == 0)
                 this.setRGB(i, j, 0)
     }
 }

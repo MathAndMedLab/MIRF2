@@ -42,7 +42,7 @@ class IjImageSeries(private val image: ImagePlus) : MirfData(), ImageSeries {
         if (images.size != masks.images.size)
             throw IllegalArgumentException("number of masks doesn't match number of images")
 
-        for (i in 0 until images.size) {
+        for (i in images.indices) {
             val binaryMask = masks.images[i].image!!.toBicolor()
             images[i].attributes.add(MirfAttributes.IMAGE_SEGMENTATION_MASK.new(binaryMask))
         }
@@ -63,7 +63,7 @@ class IjImageSeries(private val image: ImagePlus) : MirfData(), ImageSeries {
     override val images: List<MedImage>
         get() = _images.value
 
-    override public fun clone(): IjImageSeries {
+    override fun clone(): IjImageSeries {
         return IjImageSeries(image.clone() as ImagePlus)
     }
 

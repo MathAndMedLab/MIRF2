@@ -6,8 +6,9 @@ import com.mirf.core.data.MirfException
  * Represents 2 dimensional fixed size array of [Boolean]
  */
 class BooleanArray2D private constructor(
-        array: Array<BooleanArray>,
-        val rows: Int, val columns: Int) {
+    array: Array<BooleanArray>,
+    val rows: Int, val columns: Int,
+) {
 
     private val _array: Array<BooleanArray>
 

@@ -1,18 +1,19 @@
 package com.mirf.features.dicomimage.data
 
-import com.pixelmed.dicom.AttributeList
-import com.pixelmed.display.ConsumerFormatImageMaker
 import com.mirf.core.data.AttributeCollection
 import com.mirf.core.data.attribute.DataAttribute
 import com.mirf.features.dicomimage.copy
 import com.pixelmed.dicom.Attribute
+import com.pixelmed.dicom.AttributeList
 import com.pixelmed.dicom.AttributeTag
+import com.pixelmed.display.ConsumerFormatImageMaker
 import java.awt.image.BufferedImage
 import java.io.Serializable
 
-class DicomAttributeCollection : AttributeCollection, Serializable {
-
-    private val dicomAttributes: AttributeList
+class DicomAttributeCollection(
+    private val dicomAttributes: AttributeList,
+    mirfAttributes: Collection<DataAttribute<*>> = ArrayList(),
+) : AttributeCollection(mirfAttributes), Serializable {
 
     var dicomAttributesVersion = 0
         private set
@@ -27,10 +28,6 @@ class DicomAttributeCollection : AttributeCollection, Serializable {
 
     override val version
         get() = maxOf(dicomAttributesVersion, mirfAttributesVersion)
-
-    constructor(dicomAttributes: AttributeList, mirfAttributes: Collection<DataAttribute<*>> = ArrayList()) : super(mirfAttributes) {
-        this.dicomAttributes = dicomAttributes
-    }
 
     fun buildHumanReadableImage(): BufferedImage {
         updateDicomAttrByMirfAttr()
@@ -97,7 +94,7 @@ class DicomAttributeCollection : AttributeCollection, Serializable {
 
             //pixelmed attributeList has no find, so here is try-catch based find
             return try {
-                val createdAttr = MirfPixelmedAttributeMapper.CreateMirfAttribute(attributeTag, dicomAttributes)
+                val createdAttr = MirfPixelmedAttributeMapper.createMirfAttribute(attributeTag, dicomAttributes)
 
                 if (cacheRequestedDicomAttributesInMirfCollection) {
                     attributes.add(createdAttr)

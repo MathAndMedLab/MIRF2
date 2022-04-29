@@ -2,17 +2,17 @@ package com.mirf.features.imagefilters
 
 import com.mirf.core.algorithm.Algorithm
 import com.mirf.core.data.attribute.MirfAttributes
-import com.mirf.core.data.attribute.Switch
 import com.mirf.core.data.medimage.ImageSeries
 import com.mirf.core.data.medimage.MedImage
 
 /**
  * Filters the pixels of all images provided in [ImageSeries] to be within specified boundaries.
  */
-class ImageSeriesThresholdAlg(private val lowerBound: Byte, private val upperBound: Byte) : Algorithm<ImageSeries, ImageSeries> {
+class ImageSeriesThresholdAlg(private val lowerBound: Byte, private val upperBound: Byte) :
+    Algorithm<ImageSeries, ImageSeries> {
 
     override fun execute(input: ImageSeries): ImageSeries {
-        input.images.parallelStream().forEach{ this.thresholdImage(it) }
+        input.images.parallelStream().forEach { this.thresholdImage(it) }
         return input
     }
 

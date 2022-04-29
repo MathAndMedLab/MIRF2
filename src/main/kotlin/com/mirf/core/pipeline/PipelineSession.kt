@@ -9,18 +9,21 @@ open class PipelineSession : IPipelineSession {
     val records
         get() = _records as List<PipelineSessionRecord>
 
-    private  val onNewRecord: EventManager<PipelineSessionRecord> = EventManager()
+    private val onNewRecord: EventManager<PipelineSessionRecord> = EventManager()
 
     override val newRecord
         get() = onNewRecord.event
 
-    override fun addSuccess(message: String) = addInternal(PipelineSessionRecord(PipelineSessionRecord.RecordLevel.Success, message))
+    override fun addSuccess(message: String) =
+        addInternal(PipelineSessionRecord(PipelineSessionRecord.RecordLevel.Success, message))
 
-    override fun addWarning(message: String) = addInternal(PipelineSessionRecord(PipelineSessionRecord.RecordLevel.Warning, message))
+    override fun addWarning(message: String) =
+        addInternal(PipelineSessionRecord(PipelineSessionRecord.RecordLevel.Warning, message))
 
-    override fun addError(message: String) = addInternal(PipelineSessionRecord(PipelineSessionRecord.RecordLevel.Error, message))
+    override fun addError(message: String) =
+        addInternal(PipelineSessionRecord(PipelineSessionRecord.RecordLevel.Error, message))
 
-    override fun addNew(message: String) : PipelineSessionRecord {
+    override fun addNew(message: String): PipelineSessionRecord {
         val result = PipelineSessionRecord(PipelineSessionRecord.RecordLevel.InProgress, message)
         addInternal(result)
         return result

@@ -16,11 +16,12 @@ import com.mirf.features.repositoryaccessors.data.RepoRequest
  * @param <O> Output type
 </O></I> */
 class RepositoryAccessorBlock<I : Data, O : Data>(
-        private val repo: RepositoryCommander,
-        private val algorithm: Algorithm<RepoRequest, O>,
-        private val connectionString: String,
-        name: String = "Repository accessor for $algorithm",
-        pipelineKeeper: PipelineKeeper = DummyPipeKeeper()) : PipelineBlock<I, O>(name, pipelineKeeper){
+    private val repo: RepositoryCommander,
+    private val algorithm: Algorithm<RepoRequest, O>,
+    private val connectionString: String,
+    name: String = "Repository accessor for $algorithm",
+    pipelineKeeper: PipelineKeeper = DummyPipeKeeper(),
+) : PipelineBlock<I, O>(name, pipelineKeeper) {
 
     var enabled = true
 
@@ -40,5 +41,5 @@ class RepositoryAccessorBlock<I : Data, O : Data>(
         }
     }
 
-    override fun flush() { }
+    override fun flush() {}
 }
