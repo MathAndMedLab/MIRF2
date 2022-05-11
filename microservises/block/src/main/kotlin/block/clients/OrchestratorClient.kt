@@ -9,7 +9,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
-import org.springframework.web.bind.annotation.RequestParam
 
 sealed class ProcessingResult{
     object SUCCESS : ProcessingResult()
@@ -60,7 +59,7 @@ class OrchestratorClient constructor(private val orchestratorUri: String,
         return blockId
     }
 
-    fun notify(result: ProcessingResult, sessionId: String, errorMessage: String = "") {
+    fun notify(result: ProcessingResult, sessionId: String) {
         if (result == ProcessingResult.SUCCESS) {
             val httpPost = HttpPost("$orchestratorUri/notifySuccess")
 
@@ -85,7 +84,7 @@ class OrchestratorClient constructor(private val orchestratorUri: String,
             val entity: HttpEntity = builder.build()
             httpPost.entity = entity
 
-            val response = httpclient.execute(httpPost)
+            httpclient.execute(httpPost)
             return
         }
     }

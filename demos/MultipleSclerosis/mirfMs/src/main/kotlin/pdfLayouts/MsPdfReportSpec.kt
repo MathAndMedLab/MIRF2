@@ -1,16 +1,13 @@
 package pdfLayouts
 
-import com.itextpdf.layout.element.IBlockElement
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
 import com.mirf.core.common.VolumeValue
-import com.mirf.core.data.DataTable
-import com.mirf.features.reports.PdfElementData
 import java.awt.image.BufferedImage
 import java.time.LocalDateTime
 import javax.imageio.ImageIO
 
-data class MsPdfReportSpec(val companyImage: BufferedImage,
+data class  MsPdfReportSpec(val companyImage: BufferedImage,
                            val reportCreationTime: LocalDateTime,
                            val patientName: String,
                            val patientAge: String,

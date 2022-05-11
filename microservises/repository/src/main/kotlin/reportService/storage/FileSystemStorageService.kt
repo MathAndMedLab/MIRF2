@@ -44,7 +44,7 @@ class FileSystemStorageService @Autowired constructor(properties: StoragePropert
             Files.createDirectories(Files.createDirectories(rootLocation.resolve(sessionId)))
         }
 
-        val filename = Paths.get(sessionId).resolve(StringUtils.cleanPath(file.originalFilename)).toString()
+        val filename = Paths.get(sessionId).resolve(StringUtils.cleanPath(file.originalFilename!!)).toString()
         try {
             if (file.isEmpty) {
                 throw StorageException("Failed to store empty file $filename")

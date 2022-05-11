@@ -13,7 +13,6 @@ class OrchestratorClient constructor(private val orchestratorUri: String) {
 
     private val httpclient: CloseableHttpClient =
         HttpClients.createDefault()
-    private var blockId: String = ""
 
     fun register(port: String): Boolean {
         val httpPost = HttpPost("$orchestratorUri/registerRepository")

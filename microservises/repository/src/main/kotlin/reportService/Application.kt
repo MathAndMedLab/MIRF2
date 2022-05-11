@@ -1,7 +1,5 @@
 package reportService
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -14,7 +12,6 @@ import org.springframework.util.unit.DataSize
 import reportService.clients.OrchestratorClient
 import reportService.storage.StorageProperties
 import reportService.storage.StorageService
-import java.io.File
 import java.net.URI
 import javax.servlet.MultipartConfigElement
 
@@ -49,21 +46,16 @@ class Application {
 
         val orchestratorUri = URI("http", null, orchestratorHost, orchestratorPort.toInt(), null, null, null)
 
-        println("Orchestrator address:" +  orchestratorUri.toString())
+        println("Orchestrator address:$orchestratorUri")
 
         val orchestratorClient = OrchestratorClient(orchestratorUri.toString())
         orchestratorClient.register(serverPort)
 
-        return CommandLineRunner { args: Array<String?>? ->
+        return CommandLineRunner {
 //            storageService.deleteAll()
 //            storageService.init()
         }
     }
-}
-
-class RepositoryInfo (
-    val orchestratorUri: String) {
-    var port: String = ""
 }
 
 fun main(args: Array<String>) {

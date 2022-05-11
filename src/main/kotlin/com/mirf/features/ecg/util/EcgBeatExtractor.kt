@@ -137,7 +137,7 @@ object EcgBeatExtractor {
 
         var threshold1f: Double
         var threshold2f: Double
-        var peakf = windowAverage[0]
+        var peakf: Double
         var spkf: Double
         var npkf: Double
 

@@ -1,16 +1,13 @@
 package block.storage
 
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem
+//import org.springframework.mock.web.MockMultipartFile
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
-//import org.springframework.mock.web.MockMultipartFile
 import org.springframework.stereotype.Service
 import org.springframework.util.FileSystemUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.multipart.commons.CommonsMultipartFile
-import java.io.FileInputStream
 import java.io.IOException
 import java.net.MalformedURLException
 import java.nio.file.Files
@@ -22,7 +19,7 @@ import java.util.stream.Stream
 
 @Service
 class FileSystemStorageService @Autowired constructor(properties: StorageProperties) :
-        StorageService {
+    StorageService {
 
     private val rootLocation: Path = Paths.get(properties.location)
 
@@ -30,7 +27,7 @@ class FileSystemStorageService @Autowired constructor(properties: StoragePropert
     override fun store(sessionId: String, file: MultipartFile) {
         val filename = rootLocation.toString() + "/" +
                 sessionId + "/" +
-                StringUtils.cleanPath(file.originalFilename)
+                file.originalFilename?.let { StringUtils.cleanPath(it) }
         try {
             if (file.isEmpty) {
                 throw StorageException("Failed to store empty file $filename")

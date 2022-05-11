@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import java.io.File
 
 @Service
-class RepositoryClient() {
+class RepositoryClient {
 //    private val repositoryUri = "http://localhost:8080"
     private val httpclient: CloseableHttpClient = HttpClients.createDefault()
 

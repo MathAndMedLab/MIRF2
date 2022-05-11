@@ -1,5 +1,4 @@
 import com.mirf.core.data.attribute.MirfAttributes
-import com.mirf.core.data.attribute.Switch
 import com.mirf.core.data.medimage.ImageSeries
 import com.mirf.core.pipeline.PipelineBlock
 import com.mirf.core.pipeline.PipelineKeeper
@@ -100,8 +99,7 @@ class LesionSegmentation constructor(val url: String, pipelineKeeper: PipelineKe
         val t1Copy = Paths.get(t1Series!!.dumpToRepository(commander, "T1"))
         val flairCopy = Paths.get(flairSeries!!.dumpToRepository(commander, "FLAIR"))
 
-        val archive = ArchiveCreator.createTar(true, commander.workingDir, t1Copy.toFile().name, flairCopy.toFile().name)
-        return archive
+        return ArchiveCreator.createTar(true, commander.workingDir, t1Copy.toFile().name, flairCopy.toFile().name)
     }
 
     fun setT1Sender(sender: PipelineBlock<*, ImageSeries>) {
