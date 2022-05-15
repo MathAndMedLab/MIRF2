@@ -1,7 +1,6 @@
 package pdfLayouts
 
 import com.itextpdf.io.font.constants.StandardFonts
-import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.colors.ColorConstants
 import com.itextpdf.kernel.colors.DeviceGray
 import com.itextpdf.kernel.font.PdfFontFactory
@@ -19,9 +18,7 @@ import com.itextpdf.layout.property.UnitValue
 import com.itextpdf.layout.property.VerticalAlignment
 import com.mirf.features.pdf.PdfDocumentInfo
 import com.mirf.features.pdf.asPdfImage
-import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
-import javax.imageio.ImageIO
 
 
 class MsPdfReportCreator(private val spec: MsPdfReportSpec) {
@@ -70,11 +67,10 @@ class MsPdfReportCreator(private val spec: MsPdfReportSpec) {
     }
 
     private fun createConclusion(): Paragraph {
-        val result = Paragraph("Conclusion").setFontSize(16f)
-                .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
-                .setWidth(UnitValue.createPercentValue(100f))
-                .setMargins(0f, 5f, 0f, 5f)
-        return result
+        return Paragraph("Conclusion").setFontSize(16f)
+            .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
+            .setWidth(UnitValue.createPercentValue(100f))
+            .setMargins(0f, 5f, 0f, 5f)
     }
 
     private fun createHeader(): Paragraph {

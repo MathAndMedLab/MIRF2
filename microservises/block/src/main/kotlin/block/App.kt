@@ -35,13 +35,13 @@ open class App {
 
     @Bean
     open fun init(storageService: StorageService): CommandLineRunner? {
-        return CommandLineRunner { args: Array<String?>? ->
+        return CommandLineRunner {
             try {
 
                 val classLoader = javaClass.classLoader
-                val blockConfigurationStream: InputStream? = classLoader.getResourceAsStream(blockType + ".json")
+                val blockConfigurationStream: InputStream? = classLoader.getResourceAsStream("$blockType.json")
 
-                val jsonBlockConfiguration : String
+                val jsonBlockConfiguration: String
 
                 if (blockConfigurationStream == null) {
                     throw IllegalArgumentException("Block configuration file not found: " + "blockType" + ".json")
@@ -52,7 +52,8 @@ open class App {
                 val mapper = jacksonObjectMapper()
                 val configuration = mapper.readValue<BlockInfo>(jsonBlockConfiguration)
 
-                val orchestratorAddress = URI("http", null, orchestratorHost, orchestratorPort.toInt(), null, null, null)
+                val orchestratorAddress =
+                    URI("http", null, orchestratorHost, orchestratorPort.toInt(), null, null, null)
 
                 configuration.orchestratorUri = orchestratorAddress.toString()
 
@@ -81,13 +82,13 @@ open class App {
                 configuration.port = serverPort
 
                 Executor.init(
-                        configuration,
-                        OrchestratorClient(
-                                configuration.orchestratorUri,
-                                configuration.blockType,
-                                configuration.taskLimit
-                        ),
-                        ArrayList<Any>()
+                    configuration,
+                    OrchestratorClient(
+                        configuration.orchestratorUri,
+                        configuration.blockType,
+                        configuration.taskLimit
+                    ),
+                    ArrayList()
                 )
 
             } catch (e: Exception) {

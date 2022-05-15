@@ -51,11 +51,11 @@ class SegmentationBlock(val rootFolder: String,
     override fun inputReady(sender: Any, input: Data) {
         val record = pipelineKeeper.session.addNew(
                 "[$name]: segmentation algorithm execution")
-        var classPath = this.javaClass.getProtectionDomain().getCodeSource().getLocation().getPath()
-        var segmentation_pref = "../../../segmentation"
-        var python_arg = rootFolder
-        File(classPath + segmentation_pref).execute(
-                "python3", "run_segmentation.py", python_arg)
+        val classPath = this.javaClass.protectionDomain.codeSource.location.path
+        val segmentationPref = "../../../segmentation"
+        val pythonArg = rootFolder
+        File(classPath + segmentationPref).execute(
+                "python3", "run_segmentation.py", pythonArg)
 
 
         onDataReady(this, MirfData.empty)

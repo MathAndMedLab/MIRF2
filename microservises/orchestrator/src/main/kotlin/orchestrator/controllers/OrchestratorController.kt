@@ -9,8 +9,6 @@ import orchestrator.data.NetworkInfo
 import orchestrator.data.Pipeline
 import orchestrator.data.ProcessSession
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.env.Environment
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URL
@@ -20,9 +18,9 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 class OrchestratorController @Autowired constructor(
-    private val environment: Environment,
     private val repositoryClient: RepositoryClient,
-    private val blockClient: BlockClient) {
+    private val blockClient: BlockClient,
+) {
 
     @Autowired
     private lateinit var resultSenderHelper: ResultSenderHelper
@@ -37,7 +35,7 @@ class OrchestratorController @Autowired constructor(
     @PostMapping("/process")
     fun process(
         @RequestParam("sessionId") sessionId: String,
-        @RequestParam("pipeline") pipelineJson: String
+        @RequestParam("pipeline") pipelineJson: String,
     ) {
         println("RECEIVED REQUEST TO PROCESS PIPELINE")
 
@@ -46,7 +44,7 @@ class OrchestratorController @Autowired constructor(
         val repositoryUri = NetworkInfo.getFreeRepository()
 
         if (repositoryUri == null) {
-            val report: String = "There is no registered repository in the system"
+            val report = "There is no registered repository in the system"
             resultSenderHelper.sendErrorToClient(sessionId, report)
             return
         }
@@ -64,7 +62,7 @@ class OrchestratorController @Autowired constructor(
             if (block == null) {
                 NetworkInfo.removeSession(sessionId)
 
-                val report: String = "There is no block ${pipelineBlock.blockType} in our system"
+                val report = "There is no block ${pipelineBlock.blockType} in our system"
                 resultSenderHelper.sendErrorToClient(sessionId, report)
                 return
             }
@@ -79,13 +77,13 @@ class OrchestratorController @Autowired constructor(
                 val nextBlockId = block.id
                 if (!blockClient.sendCommand(block.uri, sessionId, command, pipelineBlockId, nextBlockId)) {
                     NetworkInfo.removeSession(sessionId)
-                    val report: String = "Internal error"
+                    // val report: String = "Internal error"
                     // TODO: send this report
                     return
                 }
             } catch (e: Exception) {
                 NetworkInfo.removeSession(sessionId)
-                val report: String = "Internal error"
+                // val report: String = "Internal error"
                 // TODO: send this report
                 return
             }
@@ -97,7 +95,7 @@ class OrchestratorController @Autowired constructor(
         @RequestParam("blockType") blockType: String,
         @RequestParam("taskLimit") taskLimit: Int,
         @RequestParam("port") port: String,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<String> {
         val address = request.remoteAddr
         val url = URL("http://$address:$port")
@@ -107,7 +105,7 @@ class OrchestratorController @Autowired constructor(
     @PostMapping("/registeredWebApp")
     fun registerMedWebApp(
 //        @RequestParam("port") port: String,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<String> {
         println("Try to register")
         val address = request.remoteAddr
@@ -121,7 +119,7 @@ class OrchestratorController @Autowired constructor(
     @PostMapping("/registerRepository")
     fun registerRepository(
         @RequestParam("port") port: String,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ) {
         val address = request.remoteAddr
         val url = URL("http://$address:$port")
@@ -144,7 +142,7 @@ class OrchestratorController @Autowired constructor(
     @PostMapping("/notifySuccess")
     fun blockSuccessFinished(
         @RequestParam("blockId") blockId: String,
-        @RequestParam("sessionId") sessionId: String
+        @RequestParam("sessionId") sessionId: String,
     ) {
         val blockIdInt: Int
 
@@ -154,7 +152,7 @@ class OrchestratorController @Autowired constructor(
             throw Exception("Invalid block id.")
         }
 
-        if(!NetworkInfo.blockFinishedSuccess(sessionId, blockIdInt)) {
+        if (!NetworkInfo.blockFinishedSuccess(sessionId, blockIdInt)) {
             return
         }
 
@@ -178,7 +176,7 @@ class OrchestratorController @Autowired constructor(
             if (block == null) {
                 NetworkInfo.removeSession(sessionId)
 
-                val report: String = "There is no block ${pipelineBlock.blockType} in our system"
+                val report = "There is no block ${pipelineBlock.blockType} in our system"
                 resultSenderHelper.sendErrorToClient(sessionId, report)
                 return
             }
@@ -199,7 +197,6 @@ class OrchestratorController @Autowired constructor(
         }
 
 
-
         // TODO: next task and add changes to pipeline
         // TODO: add address for sending results and error reports
 //        if (!NetworkInfo.removeSession(sessionId)) {
@@ -210,7 +207,7 @@ class OrchestratorController @Autowired constructor(
     @PostMapping("/notifyError")
     fun blockFinishedWithError(
         @RequestParam("blockId") blockId: String,
-        @RequestParam("sessionId") sessionId: String
+        @RequestParam("sessionId") sessionId: String,
     ) {
         val blockIdInt: Int
 
@@ -218,7 +215,7 @@ class OrchestratorController @Autowired constructor(
             blockIdInt = blockId.toInt()
             //sessionId.toInt()
         } catch (e: Exception) {
-            throw Exception("Invalid block id. blockId=" + blockId)
+            throw Exception("Invalid block id. blockId=$blockId")
         }
 
         val sessionRepositoryUri = NetworkInfo.getSessionRepositoryUri(sessionId)

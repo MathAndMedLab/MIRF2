@@ -3,12 +3,10 @@ package pdfLayouts
 import com.itextpdf.io.font.constants.StandardFonts
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.colors.ColorConstants
-import com.itextpdf.kernel.colors.DeviceGray
 import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.kernel.pdf.canvas.PdfCanvas
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.borders.SolidBorder
@@ -36,8 +34,6 @@ class BrainPdfReportCreator(private val spec: BrainPdfReportSpec) {
 
         val document = Document(pdf, PageSize.A4)
         document.setMargins(0f, 10f, 10f, 10f)
-        val pageWidth = pdf.defaultPageSize.width
-        val pageHeight = pdf.defaultPageSize.height
 
         document.add(createHeader())
 
@@ -108,11 +104,10 @@ class BrainPdfReportCreator(private val spec: BrainPdfReportSpec) {
     }
 
     private fun createConclusion(): Paragraph {
-        val result = Paragraph("Conclusion").setFontSize(16f)
-                .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
-                .setWidth(UnitValue.createPercentValue(100f))
-                .setMargins(0f, 5f, 0f, 5f)
-        return result
+        return Paragraph("Conclusion").setFontSize(16f)
+            .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
+            .setWidth(UnitValue.createPercentValue(100f))
+            .setMargins(0f, 5f, 0f, 5f)
     }
 
     private fun createSeriesVisual(images: List<BufferedImage>?): IBlockElement {

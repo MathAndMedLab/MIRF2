@@ -60,7 +60,7 @@ class BrainPdfReportSpecBuilder constructor(
 
 
     private fun getSeriesVisualization(currentMasks: ImageSeries, hightlightColor: Color, slices: Iterable<Int>): List<BufferedImage> {
-        var tempImg = currentImageSeries.clone() as ImageSeries
+        val tempImg = currentImageSeries.clone()
         tempImg.attributes.add(MirfAttributes.THRESHOLDED.new(Switch.get()))
         tempImg.applyMask(currentMasks)
         return tempImg.images.slice(slices)

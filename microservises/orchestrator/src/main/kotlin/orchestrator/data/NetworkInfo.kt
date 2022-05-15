@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
 object NetworkInfo {
-    private val blocks: ConcurrentMap<String, ArrayList<BlockData>> = ConcurrentHashMap<String, ArrayList<BlockData>>()
+    private val blocks: ConcurrentMap<String, ArrayList<BlockData>> = ConcurrentHashMap()
     private var blockCounter: Int = 0
 
     private val repositories: ArrayList<String> = ArrayList()
@@ -50,7 +50,7 @@ object NetworkInfo {
     }
 
     private fun addRepositoryToRemove(repositoryUri: String) {
-        val repo = repositoriesToRemove.find { it ->
+        val repo = repositoriesToRemove.find {
             it.repositoryUri == repositoryUri
         }
 
@@ -63,7 +63,7 @@ object NetworkInfo {
     }
 
     private fun addBlockToRemove(block: BlockData) {
-        val blockToRemove = blocksToRemove.find { it ->
+        val blockToRemove = blocksToRemove.find {
             it.blockData.id == block.id
         }
 
@@ -91,7 +91,7 @@ object NetworkInfo {
                 continue
             }
 
-            for ((k, v) in blocks) {
+            for ((_, v) in blocks) {
                 if (v.removeIf { it.id == block.blockData.id }) {
                     continue
                 }
@@ -121,7 +121,7 @@ object NetworkInfo {
         }
 
         // blocks
-        for ((k, v) in blocks) {
+        for ((_, v) in blocks) {
             for (block in v) {
                 if (blockClient.ping(block.uri)) {
                     block.isAvailable = true
@@ -162,7 +162,7 @@ object NetworkInfo {
         }
 
         var i = 0
-        for ((k, v) in blocks) {
+        for ((_, v) in blocks) {
             for (block in v) {
                 printBlock(i, block)
                 i++
@@ -180,7 +180,7 @@ object NetworkInfo {
             return
         }
 
-        for ((k, v) in sessions) {
+        for ((_, v) in sessions) {
             println("sessionId: ${v.sessionId}, repositoryUri: ${v.repositoryUri}")
             println("details:")
             printPipeline(pipeline = v.pipeline)
@@ -290,7 +290,7 @@ object NetworkInfo {
 
     private fun addBlock(blockId: Int, blockType: String, uri: String, taskLimit: Int = 8, taskLaunched: Int = 0) {
         if (blocks.containsKey(blockType)) {
-            if (blocks[blockType]!!.find { it -> it.id == blockId } != null) {
+            if (blocks[blockType]!!.find { it.id == blockId } != null) {
                 throw IllegalArgumentException("This block already added")
             }
             blocks[blockType]!!.add(
