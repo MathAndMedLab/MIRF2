@@ -46,7 +46,7 @@ dependencies {
     implementation fileTree(dir: '../utils/build/libs', include: '*.jar')
 
     // project 'block' is dependent by project 'utils'
-    implementation project(":microservises:utils")
+    implementation project(":microservices:utils")
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
