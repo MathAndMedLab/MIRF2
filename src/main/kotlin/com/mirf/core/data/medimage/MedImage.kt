@@ -29,6 +29,7 @@ open class MedImage : MirfData, Cloneable {
 
     protected constructor(attributes: AttributeCollection) : super(attributes)
 
-    public open override fun clone(): MedImage {return MedImage(attributes.clone())
+    public open override fun clone(): MedImage {
+        return MedImage(attributes.clone())
     }
 }

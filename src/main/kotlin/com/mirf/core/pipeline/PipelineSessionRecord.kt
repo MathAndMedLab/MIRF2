@@ -3,7 +3,11 @@ package com.mirf.core.pipeline
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-data class PipelineSessionRecord(var level: RecordLevel, val message: String, val creationTime: LocalDateTime = LocalDateTime.now()) {
+data class PipelineSessionRecord(
+    var level: RecordLevel,
+    val message: String,
+    val creationTime: LocalDateTime = LocalDateTime.now(),
+) {
 
     enum class RecordLevel {
         InProgress,
@@ -12,12 +16,12 @@ data class PipelineSessionRecord(var level: RecordLevel, val message: String, va
         Error;
 
         override fun toString(): String {
-            return when{
+            return when {
                 this == InProgress -> "In progress"
                 this == Success -> "  Success  "
                 this == Warning -> "  Warning  "
                 this == Error -> "   Error   "
-                else               -> super.toString()
+                else -> super.toString()
             }
         }
     }
@@ -38,7 +42,7 @@ data class PipelineSessionRecord(var level: RecordLevel, val message: String, va
     }
 
     private fun checkState() {
-        if(level != RecordLevel.InProgress)
+        if (level != RecordLevel.InProgress)
             throw PipelineException("Only ${RecordLevel.InProgress} record is allowed to change state")
     }
 

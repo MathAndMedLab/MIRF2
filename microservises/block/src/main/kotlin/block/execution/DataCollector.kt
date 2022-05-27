@@ -1,13 +1,11 @@
 package block.execution
 
 import block.storage.StorageProperties
-import org.springframework.stereotype.Service
 import java.io.*
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-import zip.Zipper
 
 class DataCollector (private val blockId: String) {
 

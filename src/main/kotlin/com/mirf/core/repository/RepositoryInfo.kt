@@ -7,7 +7,7 @@ import java.io.Serializable
  */
 data class RepositoryInfo(val repositoryName: String, val username: String) : Serializable {
 
-        fun copy(): RepositoryInfo {
-            return RepositoryInfo(repositoryName, username)
-        }
+    fun copy(): RepositoryInfo {
+        return RepositoryInfo(repositoryName, username)
+    }
 }

@@ -7,7 +7,6 @@ import com.itextpdf.layout.element.Image
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
 import com.itextpdf.layout.property.UnitValue
-import com.mirf.core.common.debugDisplayInWindow
 import com.mirf.core.data.DataTable
 import com.mirf.core.data.medimage.ImageSeries
 import com.mirf.core.data.medimage.MedImage
@@ -20,9 +19,12 @@ import javax.imageio.ImageIO
 
 //----------------------------------------------------------------------------------------------------------
 
-fun DataTable.asPdfElement(decorator: (Table) -> Table = { it },
-                           displayHeaders: Boolean = true): Table {
-    val table = Table((0 until this.columns.size).map { UnitValue.createPercentValue(100f / this.columns.size) }.toTypedArray())
+fun DataTable.asPdfElement(
+    decorator: (Table) -> Table = { it },
+    displayHeaders: Boolean = true,
+): Table {
+    val table =
+        Table((0 until this.columns.size).map { UnitValue.createPercentValue(100f / this.columns.size) }.toTypedArray())
 
     table.width = UnitValue.createPercentValue(100f)
 
@@ -35,8 +37,10 @@ fun DataTable.asPdfElement(decorator: (Table) -> Table = { it },
     return decorator(table)
 }
 
-fun DataTable.asPdfElementData(decorator: (Table) -> Table = { it },
-                               displayHeaders: Boolean = true): PdfElementData {
+fun DataTable.asPdfElementData(
+    decorator: (Table) -> Table = { it },
+    displayHeaders: Boolean = true,
+): PdfElementData {
     return PdfElementData(this.asPdfElement(decorator, displayHeaders))
 }
 
@@ -46,7 +50,7 @@ fun DataTableAlgorithmReport.asPdfElementData(): PdfElementData {
 
 private fun addRow(table: Table, items: HashMap<String, String>, headers: Collection<String>) {
     for (header in headers)
-        table.addCell(Cell().add(Paragraph(items.get(header))))
+        table.addCell(Cell().add(Paragraph(items[header])))
 }
 
 private fun addHeaders(table: Table, items: Collection<String>) {
@@ -56,9 +60,11 @@ private fun addHeaders(table: Table, items: Collection<String>) {
 
 //----------------------------------------------------------------------------------------------------------
 
-fun ImageSeries.asPdfElement(range: Iterable<Int> = 0 until this.images.size,
-                             imageDecorator: (MedImage) -> BufferedImage = { it.image!! },
-                             elementDecorator: (Paragraph) -> Paragraph = { it }): Paragraph {
+fun ImageSeries.asPdfElement(
+    range: Iterable<Int> = 0 until this.images.size,
+    imageDecorator: (MedImage) -> BufferedImage = { it.image!! },
+    elementDecorator: (Paragraph) -> Paragraph = { it },
+): Paragraph {
     val result = Paragraph()
     try {
         for (i in range) {
@@ -80,21 +86,27 @@ fun ImageSeries.asPdfElement(range: Iterable<Int> = 0 until this.images.size,
     return elementDecorator(result)
 }
 
-fun ImageSeries.asPdfElementData(range: Iterable<Int> = 0 until this.images.size,
-                                 imageDecorator: (MedImage) -> BufferedImage = { it.image!! },
-                                 elementDecorator: (Paragraph) -> Paragraph = { it }): PdfElementData {
+fun ImageSeries.asPdfElementData(
+    range: Iterable<Int> = 0 until this.images.size,
+    imageDecorator: (MedImage) -> BufferedImage = { it.image!! },
+    elementDecorator: (Paragraph) -> Paragraph = { it },
+): PdfElementData {
     return PdfElementData(this.asPdfElement(range, imageDecorator, elementDecorator))
 }
 
-fun List<BufferedImage>.asPdfElementData(range: Iterable<Int> = 0 until this.size,
-                                         imageDecorator: (BufferedImage) -> BufferedImage = { it },
-                                         elementDecorator: (Paragraph) -> Paragraph = { it }): PdfElementData {
+fun List<BufferedImage>.asPdfElementData(
+    range: Iterable<Int> = 0 until this.size,
+    imageDecorator: (BufferedImage) -> BufferedImage = { it },
+    elementDecorator: (Paragraph) -> Paragraph = { it },
+): PdfElementData {
     return PdfElementData(this.asPdfElement(range, imageDecorator, elementDecorator))
 }
 
-fun List<BufferedImage>.asPdfElement(range: Iterable<Int> = 0 until this.size,
-                                     imageDecorator: (BufferedImage) -> BufferedImage = { it },
-                                     elementDecorator: (Paragraph) -> Paragraph = { it }): Paragraph {
+fun List<BufferedImage>.asPdfElement(
+    range: Iterable<Int> = 0 until this.size,
+    imageDecorator: (BufferedImage) -> BufferedImage = { it },
+    elementDecorator: (Paragraph) -> Paragraph = { it },
+): Paragraph {
     val images = this
 
     val result = Paragraph()

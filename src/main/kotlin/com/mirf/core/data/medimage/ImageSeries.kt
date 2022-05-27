@@ -16,5 +16,5 @@ interface ImageSeries : Data, Cloneable {
      */
     fun dumpToRepository(repository: RepositoryCommander, name: String = ""): String
     fun applyMask(masks: ImageSeries)
-    override public fun clone(): ImageSeries
+    public override fun clone(): ImageSeries
 }

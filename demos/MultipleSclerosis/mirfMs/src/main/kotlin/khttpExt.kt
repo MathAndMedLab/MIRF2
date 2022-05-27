@@ -9,9 +9,8 @@ object RetryDefaultOptions{
 fun <T> invokeWithRetry(numOfRetries : Int = RetryDefaultOptions.numOfRetries, retryIntervalMs : Int = RetryDefaultOptions.retryIntervalMs, func: () -> T ) : T{
     for (i in 0 until numOfRetries){
         try {
-            val result = func.invoke()
-            return result
-        }catch (e: Throwable){
+            return func.invoke()
+        } catch (e: Throwable) {
             Thread.sleep(retryIntervalMs.toLong())
         }
     }

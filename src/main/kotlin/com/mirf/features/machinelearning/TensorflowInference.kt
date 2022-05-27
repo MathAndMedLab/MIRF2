@@ -1,16 +1,16 @@
 package com.mirf.features.machinelearning
 
+import com.mirf.features.machinelearning.tensorflow.TensorFlowInferenceInterface
 import org.tensorflow.Graph
 import org.tensorflow.Session
 import org.tensorflow.Tensor
 import org.tensorflow.TensorFlow
-import com.mirf.features.machinelearning.tensorflow.TensorFlowInferenceInterface
 
 /**
  * PbImporter is used to load and run .pb files of Tensorflow models
  */
 class TensorflowInference//
-(modelFile: String, inputName: String, outputName: String) {
+    (modelFile: String, inputName: String, outputName: String) {
     //    private static final String TAG = PbImporter.class.getSimpleName();
     //
     private var modelFile: String? = null
@@ -27,7 +27,8 @@ class TensorflowInference//
             this.modelFile = modelFile
             this.inputName = inputName
             this.outputName = outputName
-            this.numOfOutputDims = inferenceInterface.graph().operation(outputName).output<Any>(0).shape().numDimensions()
+            this.numOfOutputDims =
+                inferenceInterface.graph().operation(outputName).output<Any>(0).shape().numDimensions()
             var numOfOutputs = 1
             for (i in 0 until numOfOutputDims) {
                 numOfOutputs *= inferenceInterface.graph().operation(outputName).output<Any>(0).shape().size(i).toInt()
@@ -46,7 +47,7 @@ class TensorflowInference//
         } catch (e: Error) {
         }
 
-        val outputNames = this!!.outputName?.let { arrayOf<String>(it) }
+        val outputNames = this.outputName?.let { arrayOf(it) }
         val outputValues = FloatArray(numOfOutputValues)
         try {
             if (outputNames != null) {
@@ -80,7 +81,9 @@ class TensorflowInference//
                 }
 
                 // Execute the "MyConst" operation in a Session.
-                Session(g).use { s -> s.runner().fetch("MyConst").run()[0].use { output -> println(String(output.bytesValue())) } }// Generally, there may be multiple output tensors,
+                Session(g).use { s ->
+                    s.runner().fetch("MyConst").run()[0].use { output -> println(String(output.bytesValue())) }
+                }// Generally, there may be multiple output tensors,
                 // all of them must be closed to prevent resource leaks.
             }
         }

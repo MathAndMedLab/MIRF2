@@ -8,5 +8,7 @@ import com.mirf.core.data.attribute.DataAttributeMockup
  */
 object RepoAccessorsAttributes {
 
-    val REPOSITORY_REQUEST_INFO = DataAttributeMockup<RepositoryRequestInfo>("Repository request", "8285b554-ecf3-11e8-8eb2-f2801f1b9fd1", AttributeTagType.UUID)
+    val REPOSITORY_REQUEST_INFO = DataAttributeMockup<RepositoryRequestInfo>("Repository request",
+        "8285b554-ecf3-11e8-8eb2-f2801f1b9fd1",
+        AttributeTagType.UUID)
 }

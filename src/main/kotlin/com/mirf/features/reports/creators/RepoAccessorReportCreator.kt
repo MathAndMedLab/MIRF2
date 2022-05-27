@@ -2,15 +2,11 @@ package com.mirf.features.reports.creators
 
 import com.mirf.core.algorithm.Algorithm
 import com.mirf.core.data.DataTable
-import com.mirf.core.data.medimage.ImageSeries
 import com.mirf.core.data.attribute.MirfAttributes
+import com.mirf.core.data.medimage.ImageSeries
 import com.mirf.core.data.report.AlgorithmReport
 import com.mirf.core.data.report.DataTableAlgorithmReport
 import com.mirf.features.repositoryaccessors.RepoAccessorsAttributes
-
-import java.util.ArrayList
-import java.util.Dictionary
-import java.util.Hashtable
 
 /**
  * [AlgorithmReport] creator for RepositoryAccessors

@@ -9,7 +9,8 @@ fun Algorithm<in MedImage, out MedImage>.asImageSeriesAlg(): Algorithm<ImageSeri
 }
 
 class MedImageEditorPropagator(
-        private val imageAlg: Algorithm<in MedImage, out MedImage>) : Algorithm<ImageSeries, ImageSeries> {
+    private val imageAlg: Algorithm<in MedImage, out MedImage>,
+) : Algorithm<ImageSeries, ImageSeries> {
 
     override fun execute(input: ImageSeries): ImageSeries {
         val newImages = input.images.map { imageAlg.execute(it) }

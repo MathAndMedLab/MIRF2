@@ -8,7 +8,6 @@ import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.borders.Border
-import com.itextpdf.layout.borders.SolidBorder
 import com.itextpdf.layout.element.*
 import com.itextpdf.layout.property.HorizontalAlignment
 import com.itextpdf.layout.property.TextAlignment
@@ -63,11 +62,11 @@ class EcgPdfReportCreator(private val details: EcgPdfReportDetails) {
         return header
     }
 
-    private fun createPatientInfoTable() : Table {
+    private fun createPatientInfoTable(): Table {
 
         val result = Table(arrayOf(UnitValue.createPercentValue(30f), UnitValue.createPercentValue(70f)))
-                .setWidth(UnitValue.createPercentValue(100f))
-                .setMargins(0f, 5f, 0f, 5f)
+            .setWidth(UnitValue.createPercentValue(100f))
+            .setMargins(0f, 5f, 0f, 5f)
 
         val patientNameRow = Text("Patient's name:")
         patientNameRow.setFontSize(14f)
@@ -85,9 +84,9 @@ class EcgPdfReportCreator(private val details: EcgPdfReportDetails) {
         patientDateRow.setFontColor(ColorConstants.GRAY)
 
         val patientRowsParagraph = Paragraph()
-                .add(patientNameRow).add("\n")
-                .add(patientAgeRow).add("\n")
-                .add(patientDateRow)
+            .add(patientNameRow).add("\n")
+            .add(patientAgeRow).add("\n")
+            .add(patientDateRow)
         patientRowsParagraph.setHorizontalAlignment(HorizontalAlignment.LEFT)
 
 
@@ -118,7 +117,7 @@ class EcgPdfReportCreator(private val details: EcgPdfReportDetails) {
         return result
     }
 
-    private fun createEcgImage() : Paragraph {
+    private fun createEcgImage(): Paragraph {
         val result = Paragraph()
 
         result.width = UnitValue.createPercentValue(100f)
@@ -132,11 +131,10 @@ class EcgPdfReportCreator(private val details: EcgPdfReportDetails) {
         return result
     }
 
-    private fun createConclusion() : Paragraph {
-        val result = Paragraph("Conclusion: " + details.reportConclusion).setFontSize(16f)
-                .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
-                .setWidth(UnitValue.createPercentValue(100f))
-                .setMargins(0f, 5f, 0f, 5f)
-        return result
+    private fun createConclusion(): Paragraph {
+        return Paragraph("Conclusion: " + details.reportConclusion).setFontSize(16f)
+            .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
+            .setWidth(UnitValue.createPercentValue(100f))
+            .setMargins(0f, 5f, 0f, 5f)
     }
 }

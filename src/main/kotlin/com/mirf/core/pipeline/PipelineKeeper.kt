@@ -1,6 +1,5 @@
 package com.mirf.core.pipeline
 
-import com.mirf.core.repository.RepositoryCommander
 import com.mirf.features.repository.LocalRepositoryCommander
 
 interface PipelineKeeper {

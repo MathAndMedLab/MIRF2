@@ -118,7 +118,7 @@ class Pipeline(jsonString: String) {
 
         if (!_root.finished) {
             val parents = _root.parents
-            val inputFiles: ArrayList<String> = ArrayList<String>()
+            val inputFiles: ArrayList<String> = ArrayList()
 
             for (parent in parents) {
                 inputFiles.add(parent.resultFile)

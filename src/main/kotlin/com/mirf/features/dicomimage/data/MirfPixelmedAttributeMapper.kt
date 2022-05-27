@@ -1,10 +1,10 @@
 package com.mirf.features.dicomimage.data
 
-import com.pixelmed.dicom.*
 import com.mirf.core.data.attribute.DataAttribute
 import com.mirf.core.data.attribute.DataAttributeMockup
 import com.mirf.core.data.attribute.MirfAttributes
 import com.mirf.core.data.medimage.ImagingData
+import com.pixelmed.dicom.*
 import java.awt.image.BufferedImage
 
 object MirfPixelmedAttributeMapper {
@@ -19,7 +19,9 @@ object MirfPixelmedAttributeMapper {
         val rows = pixelmedAttributes.get(TagFromName.Rows)
         val columns = pixelmedAttributes.get(TagFromName.Columns)
         val rawPixels = pixelmedAttributes.get(TagFromName.PixelData)
-        return ImagingDataFactory.create(rawPixels.shortValues, rows.getSingleIntegerValueOrDefault(0), columns.getSingleIntegerValueOrDefault(0))
+        return ImagingDataFactory.create(rawPixels.shortValues,
+            rows.getSingleIntegerValueOrDefault(0),
+            columns.getSingleIntegerValueOrDefault(0))
     }
 
     private fun syncImagingData(attributes: AttributeList, mirfAttribute: DataAttribute<ImagingData<BufferedImage>>) {
@@ -36,7 +38,7 @@ object MirfPixelmedAttributeMapper {
         attributes.put(columns)
     }
 
-    fun CreateMirfAttribute(mirfAttrTag: String, attributes: AttributeList): DataAttribute<*> {
+    fun createMirfAttribute(mirfAttrTag: String, attributes: AttributeList): DataAttribute<*> {
         return when (mirfAttrTag) {
             MirfAttributes.IMAGING_DATA.tag -> MirfAttributes.IMAGING_DATA.new(createImagingData(attributes))
             else -> throw MirfDicomException("Failed to create mirf attribute: No transform method")
@@ -46,9 +48,11 @@ object MirfPixelmedAttributeMapper {
     /**
      * Updates all [Attribute] related to [mirfAttribute] in [attributes]
      */
+    @Suppress("UNCHECKED_CAST")
     fun syncPixelmedAttributes(attributes: AttributeList, mirfAttribute: DataAttribute<*>) {
         when (mirfAttribute.tag) {
-            MirfAttributes.IMAGING_DATA.tag -> syncImagingData(attributes, mirfAttribute as DataAttribute<ImagingData<BufferedImage>>)
+            MirfAttributes.IMAGING_DATA.tag -> syncImagingData(attributes,
+                mirfAttribute as DataAttribute<ImagingData<BufferedImage>>)
         }
     }
 }

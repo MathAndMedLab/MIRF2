@@ -12,19 +12,19 @@ object ArchiveCreator {
 
     private val log: Logger = MirfLogFactory.currentLogger
 
-    fun createTar(gzipped: Boolean = true, workingDir: Path, vararg filenames : String ) : Path{
+    fun createTar(gzipped: Boolean = true, workingDir: Path, vararg filenames: String): Path {
 
         val files = filenames.joinToString(" ")
         val resultFileName = workingDir.resolve("${getName()}.tar${if (gzipped) ".gz" else ""}")
 
-        val command = "tar -c${if (gzipped ) "z" else ""}f $resultFileName  $files"
+        val command = "tar -c${if (gzipped) "z" else ""}f $resultFileName  $files"
 
         runSync(command, workingDir)
 
         return resultFileName
     }
 
-    private fun getName() : String{
+    private fun getName(): String {
         val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
         return LocalDateTime.now().format(formatter)
     }
@@ -34,8 +34,8 @@ object ArchiveCreator {
         process.waitFor()
     }
 
-    fun runSync(command: String, workingDir: Path): String? {
-        val output=  ProcessBuilder(*command.split(" ".toRegex()).toTypedArray())
+    fun runSync(command: String, workingDir: Path): String {
+        val output = ProcessBuilder(*command.split(" ".toRegex()).toTypedArray())
             .directory(workingDir.toFile())
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
             .redirectError(ProcessBuilder.Redirect.PIPE)
@@ -49,7 +49,7 @@ object ArchiveCreator {
 }
 
 
-fun ByteArray.uncompressGzipArray() : ByteArray{
+fun ByteArray.uncompressGzipArray(): ByteArray {
     val bytein = ByteArrayInputStream(this)
     val gzin = GZIPInputStream(bytein)
     val byteout = ByteArrayOutputStream()

@@ -13,7 +13,7 @@ class ImageSeriesPlugin(pluginDir: String, commandMockup: String) : TerminalPlug
         output = workingRepo.generateLink(outType)
         val command = buildCommand(commandMockup, input, output!!)
 
-        val result = command.runCommand(pluginDir, EXECUTION_TIMEOUT_SEC, TimeUnit.SECONDS)
+        command.runCommand(pluginDir, EXECUTION_TIMEOUT_SEC, TimeUnit.SECONDS)
     }
 
     fun getResultAsIMageSeries(): ImageSeries {

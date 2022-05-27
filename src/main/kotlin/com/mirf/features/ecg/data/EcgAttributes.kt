@@ -1,4 +1,4 @@
-package com.mirf.features.ecg
+package com.mirf.features.ecg.data
 
 import com.mirf.core.data.attribute.AttributeTagType
 import com.mirf.core.data.attribute.DataAttributeMockup
@@ -6,27 +6,27 @@ import com.mirf.core.data.attribute.DataAttributeMockup
 object EcgAttributes {
 
     val LEADS_PRESENTED = DataAttributeMockup<LinkedHashSet<EcgLeadType>>("leadsPresented", "1",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val LEADS = DataAttributeMockup<HashMap<EcgLeadType, ArrayList<Short>>>("leads", "2",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val LEADS_FILTERED = DataAttributeMockup<HashMap<EcgLeadType, DoubleArray>>("leads_filtered", "12",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val NUMBER_OF_SAMPLES = DataAttributeMockup<Int>("numSamples", "3",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val SAMPLING_FREQUENCY = DataAttributeMockup<Int>("samplingFrequency", "4",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val FILE_ID = DataAttributeMockup<String>("fileId", "5",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val RAW_FORMAT = DataAttributeMockup<Int>("rawFormat", "6",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val ADC_GAIN = DataAttributeMockup<HashMap<EcgLeadType, Float>>("adcGain", "7",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val ADC_RESOLUTION = DataAttributeMockup<HashMap<EcgLeadType, Int>>("adcResolution", "8",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val ADC_ZERO_VALUE = DataAttributeMockup<HashMap<EcgLeadType, Short>>("zeroValueADC", "9",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val CHECKSUMS = DataAttributeMockup<HashMap<EcgLeadType, Short>>("checksums", "10",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
     val INITIAL_VALUES = DataAttributeMockup<HashMap<EcgLeadType, Short>>("initialvalues", "11",
-            AttributeTagType.ECG)
+        AttributeTagType.ECG)
 }

@@ -1,17 +1,14 @@
 package com.mirf.playground.IHD.pdf
 
-//class IHDReportBuilderBlock {
-//}
-
 import com.mirf.core.data.Data
 import com.mirf.core.data.FileData
 import com.mirf.core.pipeline.PipelineBlock
 import com.mirf.core.pipeline.PipelineKeeper
 import com.mirf.features.dicomimage.data.DicomData
 import com.mirf.playground.IHD.IntracranialHemorrhageDetectionDiagnosis
-import java.lang.Exception
 
-class IHDReportBuilderBlock(pipelineKeeper: PipelineKeeper) : PipelineBlock<Data, FileData>("IHDPdfCreator", pipelineKeeper) {
+class IHDReportBuilderBlock(pipelineKeeper: PipelineKeeper) :
+    PipelineBlock<Data, FileData>("IHDPdfCreator", pipelineKeeper) {
 
     private var dicomDataSender: Any? = null
     private var ihdDiagnosisSender: Any? = null

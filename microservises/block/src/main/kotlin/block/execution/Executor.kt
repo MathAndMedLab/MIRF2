@@ -3,17 +3,13 @@ package block.execution
 import block.clients.OrchestratorClient
 import block.clients.ProcessingResult
 import block.info.BlockInfo
-import block.info.BlockType
 import block.storage.StorageProperties
 import com.mirf.core.data.CollectionData
 import com.mirf.core.data.Data
-import com.mirf.features.repository.LocalRepositoryCommander
-import com.mirf.features.repositoryaccessors.data.RepoRequest
 import java.io.File
 import java.io.FileInputStream
 import java.io.ObjectInputStream
 import java.lang.reflect.Method
-import java.net.URLClassLoader
 
 object Executor {
     private var id: String? = null
@@ -112,9 +108,7 @@ object Executor {
             throw Exception("empty input list")
         }
 
-        val inputObject: Any
-
-        inputObject =
+        val inputObject: Any =
             if (fileNames.size == 1) {
                 readInputObjects(fileNames)[0]
             } else {
@@ -131,6 +125,6 @@ object Executor {
     }
 
     fun notifyOrchestrator(result: ProcessingResult, sessionId: String, errorMessage: String = "") {
-        orchestratorClient.notify(result, sessionId, errorMessage)
+        orchestratorClient.notify(result, sessionId)
     }
 }

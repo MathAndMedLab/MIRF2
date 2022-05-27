@@ -28,13 +28,13 @@ object DataAttributeCreator {
      * @return created attribute
      */
     fun <T> createFromMock(mockup: DataAttributeMockup<*>, value: T): DataAttribute<*> {
-        if (!isMockupValid(mockup))
+        if (!isMockupValid())
             throw IllegalArgumentException("Invalid mockup")
 
         return DataAttribute(mockup.name, mockup.tag, value)
     }
 
-    private fun isMockupValid(mockup: DataAttributeMockup<*>): Boolean {
+    private fun isMockupValid(): Boolean {
         //TODO: (avlomakin) implement
         return true
     }

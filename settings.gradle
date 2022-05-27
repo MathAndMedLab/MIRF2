@@ -1,2 +1,4 @@
 rootProject.name = 'MIRF'
+include('demos:mirfBrainTumor', 'demos:MultipleSclerosis:mirf-ms-service', 'demos:MultipleSclerosis:mirfMs',
+        'microservises:utils', 'microservises:block', 'microservises:orchestrator', 'microservises:repository')
 

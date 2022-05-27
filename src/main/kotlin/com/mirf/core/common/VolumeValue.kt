@@ -1,6 +1,5 @@
 package com.mirf.core.common
 
-import com.mirf.core.data.MirfException
 import kotlin.math.absoluteValue
 
 class VolumeValue private constructor(val value: Double, val unit: VolumeUnit) {
@@ -14,7 +13,6 @@ class VolumeValue private constructor(val value: Double, val unit: VolumeUnit) {
                 MM3 -> "mm³"
                 CM3 -> "cm³"
                 M3 -> "m³"
-                else -> throw MirfException("undefined volume unit ${this.name}")
             }
         }
 

@@ -1,23 +1,19 @@
 package com.mirf.features.repository
 
 import com.mirf.core.log.MirfLogFactory
-import com.mirf.core.pipeline.Pipeline
 import com.mirf.core.pipeline.PipelineBlock
 import com.mirf.core.repository.LinkType
 import com.mirf.core.repository.RepositoryCommander
 import com.mirf.core.repository.RepositoryCommanderException
 import org.slf4j.Logger
-
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.Exception
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.HashSet
 
 /**
  * Local file system commander, Link = path on a filesystem
@@ -44,7 +40,7 @@ class LocalRepositoryCommander constructor(val workingDir: Path = Paths.get(""))
 
     @Throws(RepositoryCommanderException::class)
     override fun getFile(link: String): ByteArray {
-        println("TRYING TO READ FILE FROM: " + link)
+        println("TRYING TO READ FILE FROM: $link")
         val filePath = workingDir.resolve(link)
         try {
             println("ALMOST STARTED")
@@ -64,10 +60,11 @@ class LocalRepositoryCommander constructor(val workingDir: Path = Paths.get(""))
         val path = workingDir.resolve(link)
 
         if (File(path.toUri()).isFile) {
-            println("CHECKED path for file: " + path.toString())
+            println("CHECKED path for file: $path")
             return arrayOf(path.toString())
         }
-        return File(path.toUri()).listFiles().filter { it.isFile && !it.path.toString().contains("input")}.map { it.path }.toTypedArray()
+        return File(path.toUri()).listFiles()!!.filter { it.isFile && !it.path.toString().contains("input") }
+            .map { it.path }.toTypedArray()
     }
 
     @Throws(RepositoryCommanderException::class)
@@ -94,7 +91,7 @@ class LocalRepositoryCommander constructor(val workingDir: Path = Paths.get(""))
         return path
     }
 
-    fun createSubDir(prefix: String) : Path{
+    fun createSubDir(prefix: String): Path {
 
         val path = workingDir.resolve(prefix + "_" + UUID.randomUUID().toString().replace(Regex("-.*"), ""))
         Files.createDirectory(path)

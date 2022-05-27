@@ -6,61 +6,57 @@ import com.mirf.core.data.medimage.ImagingData
 import com.mirf.features.deeplearning.tensorflow.TensorflowModelInterface
 import java.awt.image.BufferedImage
 
-class IntracranialHemorrhageDetectionDiagnosis : Data {
+class IntracranialHemorrhageDetectionDiagnosis(image: ImagingData<BufferedImage>) : Data {
     // IntracranialHemorrhageDetection
-    lateinit var image : ImagingData<BufferedImage>
+    var image: ImagingData<BufferedImage> = image
         private set
-    var modelName  = "dicom_classifier/model_17_03_2021.pb"
+    var modelName = "dicom_classifier/model_17_03_2021.pb"
         private set
     var inputName = "input_1"
         private set
     var outputName = "dense_output/Sigmoid"
         private set
-    var dims : Long = 512
+    var dims: Long = 512
         private set
 
-    val diagnosisNames = listOf<String>("Epidural hemorrhage",
+    val diagnosisNames = listOf("Epidural hemorrhage",
         "Intraparenchymal hemorrhage",
         "Intraventricular hemorrhage",
         "Subarachnoid hemorrhage",
         "Subdural hemorrhage")
 
-    constructor(image: ImagingData<BufferedImage>) {
-        this.image = image
-    }
-
-    private fun forward_pass(): FloatArray {
+    private fun forwardPass(): FloatArray {
         val tfModel = TensorflowModelInterface(null, modelName, inputName, outputName, 6)
 
         val image1 = image.getImageDataAsFloatArray()
         return tfModel.runModel(image1, 1, dims, dims, 3)
     }
 
-    fun classify() : List<Float> {
-        val answers : FloatArray = forward_pass()
+    fun classify(): List<Float> {
+        val answers: FloatArray = forwardPass()
         return answers.asList()
     }
 
-    fun diagnose() : FloatArray {
-        return forward_pass()
+    fun diagnose(): FloatArray {
+        return forwardPass()
     }
 
-    fun createHumanReadableConclusion(cnnOutput: FloatArray) : String {
-        var conclusion = "";
+    fun createHumanReadableConclusion(cnnOutput: FloatArray): String {
+        val conclusion: String
 
         var maxIndex = 0
-        var maxVal = cnnOutput.get(0)
-        cnnOutput.forEachIndexed{ ind, value ->
+        var maxVal = cnnOutput[0]
+        cnnOutput.forEachIndexed { ind, value ->
             if (value.compareTo(maxVal) > 0) {
                 maxIndex = ind
                 maxVal = value
             }
         }
 
-        if (maxIndex.equals(5)) {
-            conclusion = "Most likely this image does not contain any hemorrhage\n" + cnnOutput.joinToString()
+        conclusion = if (maxIndex == 5) {
+            "Most likely this image does not contain any hemorrhage\n" + cnnOutput.joinToString()
         } else {
-            conclusion = "The most likely diagnosis is ${diagnosisNames.get(maxIndex)} \n" + cnnOutput.joinToString()
+            "The most likely diagnosis is ${diagnosisNames[maxIndex]} \n" + cnnOutput.joinToString()
         }
 
         return conclusion

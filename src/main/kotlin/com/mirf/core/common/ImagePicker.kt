@@ -1,15 +1,18 @@
 package com.mirf.core.common
 
 import java.awt.Color
-import java.awt.event.*
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
+import java.awt.event.MouseWheelEvent
+import java.awt.event.MouseWheelListener
 import java.awt.image.BufferedImage
 import java.util.concurrent.locks.ReentrantLock
-import javax.swing.*
-import java.awt.Color.black
+import javax.swing.ImageIcon
+import javax.swing.JFrame
+import javax.swing.JLabel
+import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
-import java.awt.event.WindowAdapter
-import com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener
 
 
 class ImagePicker(val images: List<BufferedImage>) : JPanel(), MouseWheelListener, MouseListener {
@@ -17,8 +20,8 @@ class ImagePicker(val images: List<BufferedImage>) : JPanel(), MouseWheelListene
     private val lock = ReentrantLock()
     private val condition = lock.newCondition()
     private val frame: JFrame
-    var currentImageIndex: Int = 0
-    var pickedImages: MutableSet<Int> = mutableSetOf()
+    private var currentImageIndex: Int = 0
+    private var pickedImages: MutableSet<Int> = mutableSetOf()
 
     init {
         displayImg(0)

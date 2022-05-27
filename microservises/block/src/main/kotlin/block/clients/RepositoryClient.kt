@@ -33,7 +33,7 @@ class RepositoryClient() {
         val entity: HttpEntity = builder.build()
         post.entity = entity
         var response: HttpResponse = httpclient.execute(post)
-        var time: Long = 1000
+        // var time: Long = 1000
         while (response.statusLine.statusCode != 200) {
             return false
 //            Thread.sleep(time)

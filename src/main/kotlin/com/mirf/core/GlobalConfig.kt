@@ -23,6 +23,7 @@ object GlobalConfig {
 
     fun <T> get(name: String): T {
         val value = options[name] ?: throw ConfigException("no value for $name provided")
+        @Suppress("UNCHECKED_CAST")
         return value as T
     }
 

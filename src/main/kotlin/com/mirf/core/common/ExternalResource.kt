@@ -26,7 +26,7 @@ class ExternalResource(private val properties: Properties) {
             fun String.isGlobalConfigProp() = this.startsWith("GLOBAL_")
 
             for (name in this.propertyNames().toList()) {
-                (name as String).let{
+                (name as String).let {
                     if (it.isGlobalConfigProp())
                         addToGlobal(it)
                 }

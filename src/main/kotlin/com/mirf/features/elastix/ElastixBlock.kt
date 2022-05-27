@@ -6,8 +6,9 @@ import com.mirf.core.pipeline.PipelineBlock
 import com.mirf.core.pipeline.PipelineKeeper
 
 class ElastixBlock(
-        pipelineKeeper: PipelineKeeper = DummyPipeKeeper()) :
-        PipelineBlock<ImageSeries, ImageSeries>("Elastix", pipelineKeeper) {
+    pipelineKeeper: PipelineKeeper = DummyPipeKeeper(),
+) :
+    PipelineBlock<ImageSeries, ImageSeries>("Elastix", pipelineKeeper) {
 
     private var fixedSender: Any? = null
     private var movingSender: Any? = null

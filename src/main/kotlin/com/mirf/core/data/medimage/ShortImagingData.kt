@@ -5,8 +5,10 @@ import com.mirf.core.array.ShortArray2D
 import com.mirf.core.data.AttributeCollection
 import java.awt.image.BufferedImage
 
-class ShortImagingData(val rawPixels: ShortArray2D,
-        val rawPixelTransformer: RawPixelToRgbTransformer) : ImagingData<BufferedImage> {
+class ShortImagingData(
+    private val rawPixels: ShortArray2D,
+    private val rawPixelTransformer: RawPixelToRgbTransformer,
+) : ImagingData<BufferedImage> {
 
 
     override fun applyMask(mask: BooleanArray2D) {
